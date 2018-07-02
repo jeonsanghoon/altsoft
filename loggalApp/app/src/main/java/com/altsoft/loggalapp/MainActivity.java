@@ -11,7 +11,7 @@ import android.util.Log;
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
 
-    TabFragment1 tab1;
+    TabFragment1 tab1; 
     TabFragment2 tab2;
     TabFragment3 tab3;
     @Override
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         tab3 = new TabFragment3();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, tab1).commit();
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setText("통화기록"));
+        tabs.addTab(tabs.newTab().setText("통화기록3"));
         tabs.addTab(tabs.newTab().setText("스팸기록"));
         tabs.addTab(tabs.newTab().setText("연락처"));
 
@@ -58,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabReselected(TabLayout.Tab tab) { }
         });
-
+        //postData();
     }
+
+
+
+
+
+
+
 }
