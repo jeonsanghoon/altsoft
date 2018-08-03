@@ -1,8 +1,9 @@
 package com.altsoft.dao;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
-public class DEVICE_LOCATION {
+public class DEVICE_LOCATION  implements Serializable {
     public String SEARCH_CODE;
     public String LOCATION_NAME;
     public String DEVICE_CODE;

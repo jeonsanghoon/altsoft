@@ -1,11 +1,13 @@
 package com.altsoft.loggalapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,7 +33,7 @@ public class TabFragment1 extends BaseFragment {
     BannerListViewAdapter adapter;
     ListView listview ;
     boolean bLastPage = false;
-    Integer nPageSize = 15;
+    Integer nPageSize = 30;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,14 +61,16 @@ public class TabFragment1 extends BaseFragment {
             }
             Cond.LATITUDE = Global.getMapInfo().latitude;
             Cond.LONGITUDE = Global.getMapInfo().longitude;
+            Cond.PageCount = nPageSize;
             if(page != null) Cond.Page = page;
             String sAddr = Global.getMapInfo().currentLocationAddress;
+            Global.getCommon().ProgressShow(getActivity());
             Call<List<T_AD>> call = service.GetBannerList(Cond);
             call.enqueue(new Callback<List<T_AD>>() {
                 @Override
                 public void onResponse(Call<List<T_AD>> call, Response<List<T_AD>> response) {
                     List<T_AD> list = response.body();
-
+                    Global.getCommon().ProgressHide(getActivity());
                     if(list.size() == 0) {
                         Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                         return;
@@ -86,6 +90,7 @@ public class TabFragment1 extends BaseFragment {
                                 if(lastitemVisibleFlag == true) {
                                     Integer page = (listview.getCount() / nPageSize) + 1;
                                     GetBannerList(page);
+
                                 }
                                 mLockListView = false;
                                 lastitemVisibleFlag = false;
@@ -96,6 +101,18 @@ public class TabFragment1 extends BaseFragment {
                         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                             lastitemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
                         }
+                    });
+
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                           T_AD adItem = adapter.getItem(position);
+                            Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(getContext(), WebViewActivity.class);
+                            intent.putExtra("T_AD", adItem);
+                            getContext().startActivity(intent);
+                         }
                     });
                 }
 
@@ -109,6 +126,4 @@ public class TabFragment1 extends BaseFragment {
             Log.d("로그", ex.getMessage());
         }
     }
-
-
 }

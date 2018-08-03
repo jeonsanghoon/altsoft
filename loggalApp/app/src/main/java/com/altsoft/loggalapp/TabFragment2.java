@@ -27,7 +27,7 @@ public class TabFragment2 extends BaseFragment {
     private boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
     ListView listview;
     boolean bLastPage = false;
-    Integer nPageSize = 15;
+    Integer nPageSize = 30;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

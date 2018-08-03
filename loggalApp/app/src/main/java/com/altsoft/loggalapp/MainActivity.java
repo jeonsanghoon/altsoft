@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Global.getCommon().ProgressHide(this);
+
         toolbar= (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

@@ -1,9 +1,9 @@
 package com.altsoft.dao;
 
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.math.BigInteger;
 
-public class T_AD {
+public class T_AD implements Serializable {
     /// 광고코드
     public BigInteger AD_CODE;
     /// 광고배너표시유형(T_COMMON : A005) (1:제목+이미지, 2:제목,3:이미지)

@@ -1,5 +1,7 @@
 package com.altsoft.Framework;
 
+import com.altsoft.dao.LOGIN_INFO;
+
 public class Global {
     static MapInfo _mapInfo;
     public static MapInfo getMapInfo ( ) {
@@ -18,4 +20,17 @@ public class Global {
         }
         return _common;
     }
+
+    static LOGIN_INFO _loginInfo;
+    public static LOGIN_INFO getLoginInfo ( ) {
+        if (_loginInfo == null) {
+            _loginInfo = new LOGIN_INFO();
+        }
+        return _loginInfo;
+    }
+    public static void SetLoginInfo(LOGIN_INFO login) {
+        _loginInfo = login;
+    }
+
+
 }
