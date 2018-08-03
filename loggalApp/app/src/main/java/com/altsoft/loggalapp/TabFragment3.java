@@ -1,12 +1,12 @@
 package com.altsoft.loggalapp;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.altsoft.Framework.BaseFragment;
 
 
 /**
@@ -17,7 +17,7 @@ import android.view.ViewGroup;
  * Use the {@link TabFragment3#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabFragment3 extends Fragment {
+public class TabFragment3 extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
