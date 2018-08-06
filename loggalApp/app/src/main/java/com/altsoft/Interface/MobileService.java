@@ -25,6 +25,6 @@ public interface MobileService {
     @POST("/api/loggalBox/GetDeviceLocation")
     Call<List<DEVICE_LOCATION>> GetDeviceLocation(@Body DEVICE_LOCATION_COND Cond);
     @POST("/api/advertising/GetMobileAdDetail")
-    Call<List<MOBILE_AD_DETAIL_DATA>> GetMobileAdDetail(@Body MOBILE_AD_DETAIL_COND Cond);
+    Call<MOBILE_AD_DETAIL_DATA> GetMobileAdDetail(@Body MOBILE_AD_DETAIL_COND Cond);
 }
 

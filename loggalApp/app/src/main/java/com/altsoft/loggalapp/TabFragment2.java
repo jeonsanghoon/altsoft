@@ -55,10 +55,12 @@ public class TabFragment2 extends BaseFragment {
             Cond.PAGE_COUNT = nPageSize;
             if(page != null) Cond.PAGE = page;
             String sAddr = Global.getMapInfo().currentLocationAddress;
-            Call<List<DEVICE_LOCATION>> call = service.GetDeviceLocation(Cond);
+            Global.getCommon().ProgressShow(getActivity());
+            Call<List<DEVICE_LOCATION>> call = Global.getAPIService().GetDeviceLocation(Cond);
             call.enqueue(new Callback<List<DEVICE_LOCATION>>() {
                 @Override
                 public void onResponse(Call<List<DEVICE_LOCATION>> call, Response<List<DEVICE_LOCATION>> response) {
+                    Global.getCommon().ProgressHide(getActivity());
                     List<DEVICE_LOCATION> list = response.body();
                     if(list.size() == 0) {
                         bLastPage = true;

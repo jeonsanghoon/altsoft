@@ -1,6 +1,10 @@
 package com.altsoft.Framework;
 
+import com.altsoft.Interface.MobileService;
 import com.altsoft.dao.LOGIN_INFO;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Global {
     static MapInfo _mapInfo;
@@ -32,5 +36,19 @@ public class Global {
         _loginInfo = login;
     }
 
+    static MobileService _apiservice;
+    public static MobileService getAPIService()
+
+    {
+        if(_apiservice == null)
+        {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("http://api.altsoft.ze.am")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            _apiservice = retrofit.create(MobileService.class);
+        }
+        return _apiservice;
+    }
 
 }

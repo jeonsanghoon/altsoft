@@ -65,7 +65,7 @@ public class TabFragment1 extends BaseFragment {
             if(page != null) Cond.Page = page;
             String sAddr = Global.getMapInfo().currentLocationAddress;
             Global.getCommon().ProgressShow(getActivity());
-            Call<List<T_AD>> call = service.GetBannerList(Cond);
+            Call<List<T_AD>> call = Global.getAPIService().GetBannerList(Cond);
             call.enqueue(new Callback<List<T_AD>>() {
                 @Override
                 public void onResponse(Call<List<T_AD>> call, Response<List<T_AD>> response) {
@@ -107,11 +107,19 @@ public class TabFragment1 extends BaseFragment {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                            T_AD adItem = adapter.getItem(position);
-                            Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                            if(adItem.SIGN_CODE == null) {
+                                Intent intent = new Intent(getContext(), WebViewActivity.class);
+                                intent.putExtra("T_AD", adItem);
+                                getContext().startActivity(intent);
+                            }else {
+                                /// 사이니지제어
+                                Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(getContext(), SignageControlActivity.class);
+                                intent.putExtra("T_AD", adItem);
+                                getContext().startActivity(intent);
+                            }
 
-                            Intent intent = new Intent(getContext(), WebViewActivity.class);
-                            intent.putExtra("T_AD", adItem);
-                            getContext().startActivity(intent);
                          }
                     });
                 }
