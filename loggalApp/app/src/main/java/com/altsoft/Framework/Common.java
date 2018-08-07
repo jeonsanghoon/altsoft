@@ -50,4 +50,7 @@ public class Common {
         }
         return paddedString;
     }
+    public static String getCurrentTime(String timeFormat){
+        return new SimpleDateFormat(timeFormat).format(System.currentTimeMillis());
+    }
 }

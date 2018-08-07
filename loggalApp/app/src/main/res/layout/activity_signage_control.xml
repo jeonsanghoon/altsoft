@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:orientation="vertical"
-    android:padding="16dp"
-
-    >
-    <LinearLayout
+    tools:context=".WebViewActivity">
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        >
-        <TextView
-            android:id="@+id/contact_form_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="5dp"
-            android:text="사이니지제어"
-            android:textColor="#3377ff"
-            android:textSize="25dp"
-            />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-
-    </LinearLayout>
-
+    </android.support.design.widget.AppBarLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="50dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,6 +61,37 @@
             android:text="비디오"
             android:layout_weight="1"
             android:onClick="btnVideo_onClick"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <VideoView
+            android:id="@+id/videoPreView"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:id="@+id/imgPreView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#f2f2f2"
+            android:layout_margin="5dp"
+
+
             />
 
     </LinearLayout>
@@ -140,3 +168,4 @@
       />
     </LinearLayout>
 </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
