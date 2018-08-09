@@ -13,12 +13,20 @@ import java.io.FileOutputStream;
 public  class FtpInfo {
     FTPClient  ftp;
     private final String TAG = "Connect FTP";
+
+    public FtpInfo() throws Exception
+    {
+        ftp = new FTPClient();
+        ftpConnect("","","",21);
+    }
+
     public FtpInfo(String host, String user, String pwd,int port  ) throws Exception
     {
         ftp = new FTPClient();
         ftpConnect(host,user,pwd,port);
     }
-
+    ///
+    // FTP 서버와 연결
     public boolean ftpConnect(String host, String username, String pwd, int port) {
         boolean result = false;
         try{
@@ -34,6 +42,7 @@ public  class FtpInfo {
         return result;
     }
 
+    /// FTP 서버와 연결 끊기
     public boolean ftpDisconnect() {
         boolean result = false;
         try {
@@ -45,6 +54,7 @@ public  class FtpInfo {
         }
         return result;
     }
+
     ///현재 작업 경로 가져오기
     public String ftpGetDirectory(){
         String directory = null;
@@ -55,6 +65,7 @@ public  class FtpInfo {
         }
         return directory;
     }
+
     /// 작업 경로 수정
     public boolean ftpChangeDirctory(String directory) {
         try{
@@ -66,6 +77,7 @@ public  class FtpInfo {
         }
         return false;
     }
+
     ///directory 내 파일 리스트 가져오기
     public String[] ftpGetFileList(String directory) {
         String[] fileList = null;
@@ -90,8 +102,7 @@ public  class FtpInfo {
         return fileList;
     }
 
-
-   /// 새로운 directory 생성 및 삭제
+    /// 새로운 directory 생성 및 삭제
     public boolean ftpCreateDirectory(String directory) {
         boolean result = false;
         try {
@@ -112,11 +123,6 @@ public  class FtpInfo {
         return result;
     }
 
-
-
-
-
-
     ///파일 삭제
     public boolean ftpDeleteFile(String file) {
         boolean result = false;
@@ -128,11 +134,6 @@ public  class FtpInfo {
         return result;
     }
 
-
-
-
-
-
     ///파일 이름 변경
     public boolean ftpRenameFile(String from, String to) {
         boolean result = false;
@@ -143,11 +144,6 @@ public  class FtpInfo {
         }
         return result;
     }
-
-
-
-
-
 
     //// 파일 다운로드
     public boolean ftpDownloadFile(String srcFilePath, String desFilePath) {
