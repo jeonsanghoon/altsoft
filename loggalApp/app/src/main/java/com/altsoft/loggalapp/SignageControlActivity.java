@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -54,6 +55,7 @@ public class SignageControlActivity extends AppCompatActivity {
         txtTime =(EditText)findViewById(R.id.txtTime);
         txtDate.setFocusable(false);
         txtTime.setFocusable(false);
+        isImgPreViewShow();
 
     }
     public void btnCarema_onClick(View v){
@@ -88,31 +90,45 @@ public class SignageControlActivity extends AppCompatActivity {
 
       }
       else if (requestCode ==  VIDEO_CAPTURE && resultCode == RESULT_OK) {
-
+            MediaController vidControl = new MediaController(this);
+            vidControl.setAnchorView(videoView);
+            videoView.setMediaController(vidControl);
             videoView.setVideoURI(videoUri);
-
-            videoView.setMediaController(new MediaController(this));
-            videoView.requestFocus();
-            videoView.setZOrderOnTop(true);
             videoView.start();
 
-            //isImgPreViewShow(false);
+            isImgPreViewShow(false);
         }
     }
-
+    //// 업로드 유형에 따른 미리보기 숨김
+    private void isImgPreViewShow()
+    {
+        isImgPreViewShow(null);
+    }
+    //// 업로드 유형에 따른 미리보기 숨김
     private void isImgPreViewShow(Boolean isShow) {
-        /*
+
         LinearLayout layVideo = (LinearLayout)findViewById(R.id.layVideo);
         LinearLayout layImage = (LinearLayout)findViewById(R.id.layImage);
-        if(isShow == true)
+        if(isShow == null)
         {
-            imageView.setVisibility(layImage.VISIBLE);
-            videoView.setVisibility(layVideo.INVISIBLE);
+            layImage.setVisibility(View.INVISIBLE);
+            layVideo.setVisibility(View.INVISIBLE);
+            videoView.getLayoutParams().height = 0;
+            imageView.getLayoutParams().height = 0;
+        }
+        else if(isShow == true)
+        {
+            layImage.setVisibility(View.VISIBLE);
+            layVideo.setVisibility(View.INVISIBLE);
+            imageView.getLayoutParams().height = 400;
+            videoView.getLayoutParams().height = 0;
         }
         else{
-            imageView.setVisibility(layImage.INVISIBLE);
-            videoView.setVisibility(layVideo.VISIBLE);
-        }*/
+            layImage.setVisibility(View.INVISIBLE);
+            layVideo.setVisibility(View.VISIBLE);
+            imageView.getLayoutParams().height = 0;
+            videoView.getLayoutParams().height = 400;
+        }
     }
 
 

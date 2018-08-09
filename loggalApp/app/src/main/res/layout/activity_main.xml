@@ -5,9 +5,21 @@
        >
         <android.support.design.widget.AppBarLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
             <!--  // Toolbar layout for actionbar  -->
-            <android.support.v7.widget.Toolbar android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/colorPrimaryDark" android:theme="@style/ThemeOverlay.AppCompat.Dark" android:elevation="1dp" android:id="@+id/toolbar">
+            <android.support.v7.widget.Toolbar
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/colorPrimaryDark" android:theme="@style/ThemeOverlay.AppCompat.Dark" android:elevation="1dp"
+                android:id="@+id/toolbar">
                 <TextView android:id="@+id/titleText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title" android:text="loggal"/>
+                <android.support.v7.widget.SearchView
+                    android:id="@+id/notice_search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
             </android.support.v7.widget.Toolbar>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/search_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/toolbar"/>
             <!--  // Tab buttons  -->
             <android.support.design.widget.TabLayout android:id="@+id/tabLayout" android:layout_width="match_parent" android:layout_height="wrap_content" app:tabMode="fixed" app:tabGravity="fill" app:tabTextColor="@color/colorPrimary" app:tabSelectedTextColor="@color/colorAccent" android:elevation="1dp" android:background="@android:color/background_light"/>
         </android.support.design.widget.AppBarLayout>
