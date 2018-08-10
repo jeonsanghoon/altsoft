@@ -11,13 +11,16 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public  class FtpInfo {
-    FTPClient  ftp;
+    FTPClient ftp;
     private final String TAG = "Connect FTP";
+    private static final String Host = "ftp://106.246.255.132:27021/";
+    private static final String USER_ID = "ftpfiles" ;
+    private static final String PW = "altsoft!@34";
+    private static final Integer Port = 27021;
 
     public FtpInfo() throws Exception
     {
-        ftp = new FTPClient();
-        ftpConnect("","","",21);
+        ftpConnect(Host,USER_ID,PW,Port);
     }
 
     public FtpInfo(String host, String user, String pwd,int port  ) throws Exception
@@ -87,13 +90,11 @@ public  class FtpInfo {
             fileList = new String[ftpFiles.length];
             for(FTPFile file : ftpFiles) {
                 String fileName = file.getName();
-
                 if (file.isFile()) {
                     fileList[i] = "(File) " + fileName;
                 } else {
                     fileList[i] = "(Directory) " + fileName;
                 }
-
                 i++;
             }
         } catch (Exception e) {

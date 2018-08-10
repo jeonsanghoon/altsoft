@@ -21,7 +21,6 @@ public interface MobileService {
     })
     @POST("/api/advertising/GetAdList")
     Call<List<T_AD>> GetBannerList (@Body AD_SEARCH_COND Cond);
-
     @POST("/api/loggalBox/GetDeviceLocation")
     Call<List<DEVICE_LOCATION>> GetDeviceLocation(@Body DEVICE_LOCATION_COND Cond);
     @POST("/api/advertising/GetMobileAdDetail")

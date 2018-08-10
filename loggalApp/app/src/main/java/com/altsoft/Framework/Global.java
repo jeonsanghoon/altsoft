@@ -25,6 +25,14 @@ public class Global {
         return _common;
     }
 
+    static FileInfo _fileInfo;
+    public static FileInfo getFileInfo ( ) {
+        if (_fileInfo == null) {
+            _fileInfo = new FileInfo();
+        }
+        return _fileInfo;
+    }
+
     static LOGIN_INFO _loginInfo;
     public static LOGIN_INFO getLoginInfo ( ) {
         if (_loginInfo == null) {
@@ -38,7 +46,6 @@ public class Global {
 
     static MobileService _apiservice;
     public static MobileService getAPIService()
-
     {
         if(_apiservice == null)
         {
@@ -51,4 +58,16 @@ public class Global {
         return _apiservice;
     }
 
+    static FtpInfo _ftpInfo;
+    public static FtpInfo getFtpInfo() throws Exception {
+        if(_ftpInfo == null) {
+            _ftpInfo = new FtpInfo();
+        }
+        return _ftpInfo;
+    }
+
+    public static FtpInfo setFtpInfo(String host, String username, String pwd, int port) throws Exception {
+        _ftpInfo = new FtpInfo(host,username,pwd,port);
+        return _ftpInfo;
+    }
 }

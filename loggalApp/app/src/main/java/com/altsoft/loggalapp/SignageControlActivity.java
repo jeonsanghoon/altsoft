@@ -22,6 +22,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.altsoft.Framework.Global;
+import com.altsoft.asynctask.FtpUploadAsyncTask;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -39,6 +40,7 @@ public class SignageControlActivity extends AppCompatActivity {
     ImageView imageView;
     VideoView videoView;
     Uri videoUri;
+    String filePath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,8 @@ public class SignageControlActivity extends AppCompatActivity {
         isImgPreViewShow();
 
     }
+
+    /// 카메라 클릭시 이벤트
     public void btnCarema_onClick(View v){
         Toast.makeText(this,"카메라가 클릭되었습니다.", Toast.LENGTH_LONG).show();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -65,6 +69,35 @@ public class SignageControlActivity extends AppCompatActivity {
             startActivityForResult(takePictureIntent, IMAGE_CAPTURE);
         }
     }
+
+    /// 비디오 클릭시 이벤트
+    public void btnVideo_onClick(View v){
+        Toast.makeText(this,"비디오가 클릭되었습니다.", Toast.LENGTH_LONG).show();
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"  + Global.getCommon().getCurrentTimeString() + ".mp4";
+            File mediaFile = new File( filePath);
+            videoUri = Uri.fromFile(mediaFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+
+            startActivityForResult(intent, VIDEO_CAPTURE);
+        } else {
+            Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /// 겔러리 클릭시 이벤트
+    public void btnGallery_onClick(View v){
+        Toast.makeText(this,"갤러리가 클릭되었습니다.", Toast.LENGTH_LONG).show();
+        Intent i = new Intent(
+                Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        startActivityForResult(i, IMAGE_LOAD);
+
+
+    }
+
+    /// 버튼선택후 결과 이벤트
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         ImageView imageView = (ImageView) findViewById(R.id.imgPreView);
@@ -72,22 +105,36 @@ public class SignageControlActivity extends AppCompatActivity {
         Bitmap bm;
         isImgPreViewShow(true);
         if (requestCode == IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
+            /*Bundle extras = data.getExtras();
             bm = (Bitmap) extras.get("data");
-            imageView.setImageBitmap(bm);
-        }
-        else if (requestCode == IMAGE_LOAD && resultCode == RESULT_OK && null != data) {
 
+            imageView.setImageBitmap(bm); */
 
-            // Let's read picked image data - its URI
             Uri imageUri = data.getData();
+
+            filePath = Global.getFileInfo().getRealPathFromURI(this, imageUri);
+            if(filePath == null) {
+                filePath = Global.getFileInfo().getImagePathFromInputStreamUri(this, imageUri);
+            }
             Glide.with(this)
                     .load(imageUri)
                     .apply(new RequestOptions().override(100, 100))
                     .into(imageView)
             ;
+        }
+        else if (requestCode == IMAGE_LOAD && resultCode == RESULT_OK && null != data) {
+            // Let's read picked image data - its URI
+            Uri imageUri = data.getData();
 
-
+            filePath = Global.getFileInfo().getRealPathFromURI(this, imageUri);
+            if(filePath == null) {
+                filePath = Global.getFileInfo().getImagePathFromInputStreamUri(this, imageUri);
+            }
+            Glide.with(this)
+                    .load(imageUri)
+                    .apply(new RequestOptions().override(100, 100))
+                    .into(imageView)
+            ;
       }
       else if (requestCode ==  VIDEO_CAPTURE && resultCode == RESULT_OK) {
             MediaController vidControl = new MediaController(this);
@@ -131,33 +178,7 @@ public class SignageControlActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-    public void btnVideo_onClick(View v){
-        Toast.makeText(this,"비디오가 클릭되었습니다.", Toast.LENGTH_LONG).show();
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            File mediaFile = new File(
-                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/myvideo.mp4");
-            videoUri = Uri.fromFile(mediaFile);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-            startActivityForResult(intent, VIDEO_CAPTURE);
-        } else {
-            Toast.makeText(this, "No camera on device", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void btnGallery_onClick(View v){
-        Toast.makeText(this,"갤러리가 클릭되었습니다.", Toast.LENGTH_LONG).show();
-        Intent i = new Intent(
-                Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(i, IMAGE_LOAD);
-
-
-    }
-
+    /// 날짜 선택 클릭시 이벤트
     public void txtDate_onClick(View v){
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         final Calendar c = Calendar.getInstance();
@@ -192,6 +213,7 @@ public class SignageControlActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    /// 시간선택 클릭시 이벤트
     public void txtTime_onClick(View view) {
         // Get Current Time
         final Calendar c = Calendar.getInstance();
@@ -214,7 +236,6 @@ public class SignageControlActivity extends AppCompatActivity {
             mMinute = c.get(Calendar.MINUTE);
         }
 
-
         // Launch Time Picker Dialog
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                 new TimePickerDialog.OnTimeSetListener() {
@@ -230,4 +251,11 @@ public class SignageControlActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 
+    /// 저장버튼클릭시  이벤트
+    public void btnSave_onClick(View v) {
+
+        FtpUploadAsyncTask upload = new FtpUploadAsyncTask(this);
+        upload.execute(filePath);
+
+    }
 }
