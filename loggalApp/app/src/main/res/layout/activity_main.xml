@@ -1,49 +1,76 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <android.support.design.widget.CoordinatorLayout android:layout_width="match_parent" android:layout_height="match_parent"
-       >
-        <android.support.design.widget.AppBarLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
             <!--  // Toolbar layout for actionbar  -->
             <android.support.v7.widget.Toolbar
-                android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/colorPrimaryDark" android:theme="@style/ThemeOverlay.AppCompat.Dark" android:elevation="1dp"
-                android:id="@+id/toolbar">
-                <TextView android:id="@+id/titleText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title" android:text="loggal"/>
-                <android.support.v7.widget.SearchView
-                    android:id="@+id/notice_search_view"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:elevation="1dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+                <TextView
+                    android:id="@+id/titleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="loggal"
+                    android:textAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title" />
+
+                <br.com.liveo.searchliveo.SearchLiveo
+                    android:id="@+id/search_liveo"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="wrap_content"
+                    />
 
             </android.support.v7.widget.Toolbar>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/search_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/toolbar"/>
+
             <!--  // Tab buttons  -->
-            <android.support.design.widget.TabLayout android:id="@+id/tabLayout" android:layout_width="match_parent" android:layout_height="wrap_content" app:tabMode="fixed" app:tabGravity="fill" app:tabTextColor="@color/colorPrimary" app:tabSelectedTextColor="@color/colorAccent" android:elevation="1dp" android:background="@android:color/background_light"/>
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/background_light"
+                android:elevation="1dp"
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="@color/colorAccent"
+                app:tabTextColor="@color/colorPrimary" />
         </android.support.design.widget.AppBarLayout>
-        <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+        <FrameLayout
             android:id="@+id/container"
-            > </FrameLayout>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"></FrameLayout>
         <!--Tab View Pager-->
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPagerMain"
-            android:background="#ffffff"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:paddingTop="100dp">
-        </android.support.v4.view.ViewPager>
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:paddingTop="100dp"></android.support.v4.view.ViewPager>
     </android.support.design.widget.CoordinatorLayout>
 
-    <ProgressBar style="?android:attr/progressBarStyleLarge"
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="20dp"
         android:indeterminate="true"
-        android:indeterminateDrawable="@drawable/progress"
-        android:id="@+id/progress"
-        />
+        android:indeterminateDrawable="@drawable/progress" />
 </RelativeLayout>

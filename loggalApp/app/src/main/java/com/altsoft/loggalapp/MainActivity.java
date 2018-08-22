@@ -8,11 +8,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.altsoft.Framework.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.GpsInfo;
 import com.altsoft.Framework.MapInfo;
@@ -20,8 +20,13 @@ import com.altsoft.Framework.MapInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.liveo.searchliveo.SearchLiveo;
 
-public class MainActivity extends AppCompatActivity {
+
+/**
+ *
+ */
+public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchListener {
     Toolbar toolbar;
 
     TabFragment1 tab1; 
@@ -160,6 +165,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    @Override
+    public void changedSearch(CharSequence text) {
 
     }
 }
