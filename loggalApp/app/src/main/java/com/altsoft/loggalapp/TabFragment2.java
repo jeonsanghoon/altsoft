@@ -11,8 +11,9 @@ import android.widget.Toast;
 
 import com.altsoft.Framework.BaseFragment;
 import com.altsoft.Framework.Global;
-import com.altsoft.dao.DEVICE_LOCATION;
-import com.altsoft.dao.DEVICE_LOCATION_COND;
+import com.altsoft.Service.LocalBoxListViewAdapter;
+import com.altsoft.model.DEVICE_LOCATION;
+import com.altsoft.model.DEVICE_LOCATION_COND;
 
 import java.util.List;
 

@@ -1,33 +1,34 @@
 package com.altsoft.loggalapp;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.altsoft.Framework.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.GpsInfo;
 import com.altsoft.Framework.MapInfo;
+import com.altsoft.loggalapp.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.liveo.searchliveo.SearchLiveo;
-
-
 /**
  *
  */
 public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchListener {
-    Toolbar toolbar;
+
 
     TabFragment1 tab1; 
     TabFragment2 tab2;
@@ -42,19 +43,96 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
     private boolean isAccessCoarseLocation = false;
     private boolean isPermission = false;
     private GpsInfo gps;
+    private ActivityMainBinding mBinding;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        this.onInitView();
+        this.tabInit();
+        this.gpsInit();
+        this.initViewPager();
+    }
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        this.fetchCompanies();
+    }
+
+    private void fetchCompanies() {
+     /*   mAdapter = new MainAdapter(Company.getCompanies());
+        mBinding.includeMain.recyclerView.setAdapter(mAdapter);*/
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main2, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (item.getItemId()){
+            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                finish();
+                return true;
+            }
+            case R.id.action_search: {
+                mBinding.searchLiveo.show();
+
+                Intent intent = new Intent(this, SearchActivity.class);
+
+                this.startActivity(intent);
+                return true;
+            }
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void changedSearch(CharSequence text) {
+
+    }
+
+    private void onInitView() {
+        mBinding = (ActivityMainBinding) this.bindView(R.layout.activity_main);
+        this.onInitToolbar(mBinding.toolbar, "loggal");
+
+
+        mBinding.searchLiveo.
+                with(this).
+                removeMinToSearch().
+                removeSearchDelay().
+                build();
+/*
+        if (mBinding.includeMain != null) {
+            mBinding.includeMain.recyclerView.setHasFixedSize(true);
+            mBinding.includeMain.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            mBinding.includeMain.swipeContainer.setEnabled(false);
+            mBinding.includeMain.swipeContainer.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent,
+                    R.color.colorPrimary, R.color.colorAccent);
+        }*/
         Global.getCommon().ProgressHide(this);
 
-        toolbar= (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
 
+       /*ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);*/
+
+
+
+
+    }
+
+    private void tabInit() {
         tab1 = new TabFragment1();
         tab2 = new TabFragment2();
         tab3 = new TabFragment3();
@@ -88,31 +166,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
             @Override
             public void onTabReselected(TabLayout.Tab tab) { }
         });
-        // 권한 요청을 해야 함
-        if(!callPermission()) return;
-
-        gps = new GpsInfo(MainActivity.this);
-        // GPS 사용유무 가져오기
-        if (gps.isGetLocation()) {
-
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
-
-            Global.setMapInfo(new MapInfo(MainActivity.this, latitude, longitude));
-
-
-            Toast.makeText(
-                    getApplicationContext(),
-                    "당신의 위치 - \n위도: " + latitude + "\n경도: " + longitude,
-                    Toast.LENGTH_LONG).show();
-        } else {
-            // GPS 를 사용할수 없으므로
-            gps.showSettingsAlert();
-        }
-        initViewPager();
     }
-
-
     // 위치 권한 요청
     private Boolean callPermission() {
         // Check the SDK version and whether the permission is already granted or not.
@@ -135,6 +189,30 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
             isPermission = true;
         }
         return isPermission;
+    }
+
+    private void gpsInit() {
+        // 권한 요청을 해야 함
+        if(!callPermission()) return;
+
+        gps = new GpsInfo(MainActivity.this);
+        // GPS 사용유무 가져오기
+        if (gps.isGetLocation()) {
+
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+
+            Global.setMapInfo(new MapInfo(MainActivity.this, latitude, longitude));
+
+
+            Toast.makeText(
+                    getApplicationContext(),
+                    "당신의 위치 - \n위도: " + latitude + "\n경도: " + longitude,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            // GPS 를 사용할수 없으므로
+            gps.showSettingsAlert();
+        }
     }
 
     private void initViewPager() {
@@ -168,8 +246,5 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
 
     }
 
-    @Override
-    public void changedSearch(CharSequence text) {
 
-    }
 }

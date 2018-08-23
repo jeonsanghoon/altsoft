@@ -13,9 +13,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.altsoft.Framework.Global;
-import com.altsoft.dao.MOBILE_AD_DETAIL_COND;
-import com.altsoft.dao.MOBILE_AD_DETAIL_DATA;
-import com.altsoft.dao.T_AD;
+import com.altsoft.model.MOBILE_AD_DETAIL_COND;
+import com.altsoft.model.MOBILE_AD_DETAIL_DATA;
+import com.altsoft.model.T_AD;
 
 import retrofit2.Call;
 import retrofit2.Callback;

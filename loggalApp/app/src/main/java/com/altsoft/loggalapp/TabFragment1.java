@@ -13,8 +13,9 @@ import android.widget.Toast;
 
 import com.altsoft.Framework.BaseFragment;
 import com.altsoft.Framework.Global;
-import com.altsoft.dao.AD_SEARCH_COND;
-import com.altsoft.dao.T_AD;
+import com.altsoft.Service.BannerListViewAdapter;
+import com.altsoft.model.AD_SEARCH_COND;
+import com.altsoft.model.T_AD;
 
 import java.util.List;
 

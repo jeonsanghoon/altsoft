@@ -1,7 +1,7 @@
 package com.altsoft.Framework;
 
 import com.altsoft.Interface.MobileService;
-import com.altsoft.dao.LOGIN_INFO;
+import com.altsoft.model.LOGIN_INFO;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

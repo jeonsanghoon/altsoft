@@ -40,7 +40,8 @@
             android:name=".WebViewActivity"
             android:label="@string/title_activity_web_view"
             android:theme="@style/AppTheme" />
-        <activity android:name=".SignageControlActivity"></activity>
+        <activity android:name=".SignageControlActivity" />
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>

@@ -1,11 +1,11 @@
 package com.altsoft.Interface;
 
-import com.altsoft.dao.AD_SEARCH_COND;
-import com.altsoft.dao.DEVICE_LOCATION;
-import com.altsoft.dao.DEVICE_LOCATION_COND;
-import com.altsoft.dao.MOBILE_AD_DETAIL_COND;
-import com.altsoft.dao.MOBILE_AD_DETAIL_DATA;
-import com.altsoft.dao.T_AD;
+import com.altsoft.model.AD_SEARCH_COND;
+import com.altsoft.model.DEVICE_LOCATION;
+import com.altsoft.model.DEVICE_LOCATION_COND;
+import com.altsoft.model.MOBILE_AD_DETAIL_COND;
+import com.altsoft.model.MOBILE_AD_DETAIL_DATA;
+import com.altsoft.model.T_AD;
 
 import java.util.List;
 

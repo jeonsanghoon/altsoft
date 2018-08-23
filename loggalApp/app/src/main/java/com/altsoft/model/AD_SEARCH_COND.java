@@ -1,4 +1,4 @@
-package com.altsoft.dao;
+package com.altsoft.model;
 
 import com.google.gson.annotations.SerializedName;
 

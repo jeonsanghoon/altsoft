@@ -1,4 +1,4 @@
-package com.altsoft.loggalapp;
+package com.altsoft.Service;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.altsoft.dao.DEVICE_LOCATION;
+import com.altsoft.loggalapp.R;
+import com.altsoft.model.DEVICE_LOCATION;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

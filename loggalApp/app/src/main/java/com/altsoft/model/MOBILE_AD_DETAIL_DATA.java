@@ -1,4 +1,4 @@
-package com.altsoft.dao;
+package com.altsoft.model;
 /// 클릭시 정보
 public class MOBILE_AD_DETAIL_DATA {
     /// 배너아이디

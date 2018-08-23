@@ -9,8 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.altsoft.Framework.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.asynctask.FtpUploadAsyncTask;
 import com.bumptech.glide.Glide;
@@ -30,7 +31,7 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public class SignageControlActivity extends AppCompatActivity {
+public class SignageControlActivity extends BaseActivity {
 
     private EditText txtDate;private EditText txtTime;
     private int mYear, mMonth, mDay, mHour, mMinute;
@@ -258,4 +259,15 @@ public class SignageControlActivity extends AppCompatActivity {
         upload.execute(filePath);
 
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

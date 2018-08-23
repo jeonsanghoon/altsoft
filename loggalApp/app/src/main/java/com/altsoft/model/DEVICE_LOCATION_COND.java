@@ -1,4 +1,4 @@
-package com.altsoft.dao;
+package com.altsoft.model;
 
 public class DEVICE_LOCATION_COND
 {

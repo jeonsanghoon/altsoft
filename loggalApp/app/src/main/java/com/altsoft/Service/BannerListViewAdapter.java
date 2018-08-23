@@ -1,4 +1,4 @@
-package com.altsoft.loggalapp;
+package com.altsoft.Service;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,7 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.altsoft.dao.T_AD;
+import com.altsoft.loggalapp.R;
+import com.altsoft.model.T_AD;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
