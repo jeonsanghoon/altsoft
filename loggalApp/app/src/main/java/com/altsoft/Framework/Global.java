@@ -1,5 +1,6 @@
 package com.altsoft.Framework;
 
+import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Interface.MobileService;
 import com.altsoft.model.LOGIN_INFO;
 

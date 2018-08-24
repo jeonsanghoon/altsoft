@@ -1,4 +1,4 @@
-package com.altsoft.Framework;
+package com.altsoft.Framework.module;
 
 
 import android.annotation.SuppressLint;

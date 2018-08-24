@@ -10,17 +10,28 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Common {
+
+    /// 프로그래스바 숨기기
     public void ProgressHide(Activity activity) {
-
-       ProgressBar progress=  activity.findViewById(R.id.progress);
-        progress.setVisibility((int)4);
-
-
+        ProgressBar progress = activity.findViewById(R.id.progress);
+        this.ProgressHide(activity,progress);
     }
+    /// 프로그래스바 숨기기
+    public void ProgressHide(Activity activity, ProgressBar progress) {
+        progress.setVisibility((int) 4);
+    }
+
+    /// 프로그래스바 보여주기
     public void ProgressShow(Activity activity) {
         ProgressBar progress=  activity.findViewById(R.id.progress);
+        this.ProgressShow(activity, progress);
+    }
+    /// 프로그래스바 보여주기
+    public void ProgressShow(Activity activity, ProgressBar progress) {
         progress.setVisibility((int)0);
     }
+
+    /// 날짜형 포맷 여부
     public static boolean isValidDate(String inDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         dateFormat.setLenient(false);
@@ -31,6 +42,7 @@ public class Common {
         }
         return true;
     }
+    /// 시간형 포맷 여부
     public static boolean isValidTime(String inTime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         dateFormat.setLenient(false);

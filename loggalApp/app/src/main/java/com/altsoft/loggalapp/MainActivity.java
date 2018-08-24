@@ -14,10 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.altsoft.Framework.BaseActivity;
+import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
-import com.altsoft.Framework.GpsInfo;
-import com.altsoft.Framework.MapInfo;
+import com.altsoft.Framework.map.GpsInfo;
+import com.altsoft.Framework.map.MapInfo;
+import com.altsoft.loggalapp.Fragement.TabFragment1;
+import com.altsoft.loggalapp.Fragement.TabFragment2;
+import com.altsoft.loggalapp.Fragement.TabFragment3;
 import com.altsoft.loggalapp.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ import br.com.liveo.searchliveo.SearchLiveo;
 public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchListener {
 
 
-    TabFragment1 tab1; 
+    TabFragment1 tab1;
     TabFragment2 tab2;
     TabFragment3 tab3;
 

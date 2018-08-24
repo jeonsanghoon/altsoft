@@ -1,4 +1,4 @@
-package com.altsoft.Framework;
+package com.altsoft.Framework.map;
 
 import android.content.Context;
 import android.location.Address;

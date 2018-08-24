@@ -21,7 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.altsoft.Framework.BaseActivity;
+import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.asynctask.FtpUploadAsyncTask;
 import com.bumptech.glide.Glide;

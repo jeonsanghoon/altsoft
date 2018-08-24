@@ -41,7 +41,8 @@
             android:label="@string/title_activity_web_view"
             android:theme="@style/AppTheme" />
         <activity android:name=".SignageControlActivity" />
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".detail.LocalboxbannerListActivity"></activity>
     </application>
 
 </manifest>

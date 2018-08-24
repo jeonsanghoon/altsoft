@@ -1,4 +1,4 @@
-package com.altsoft.Framework;
+package com.altsoft.Framework.map;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Service;

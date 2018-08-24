@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.altsoft.Framework.BaseActivity;
+import com.altsoft.Framework.module.BaseActivity;
 
 import br.com.liveo.searchliveo.SearchLiveo;
 

@@ -6,6 +6,8 @@ import com.altsoft.model.DEVICE_LOCATION_COND;
 import com.altsoft.model.MOBILE_AD_DETAIL_COND;
 import com.altsoft.model.MOBILE_AD_DETAIL_DATA;
 import com.altsoft.model.T_AD;
+import com.altsoft.model.device.AD_DEVICE_MOBILE_COND;
+import com.altsoft.model.device.AD_DEVICE_MOBILE_M;
 
 import java.util.List;
 
@@ -25,5 +27,7 @@ public interface MobileService {
     Call<List<DEVICE_LOCATION>> GetDeviceLocation(@Body DEVICE_LOCATION_COND Cond);
     @POST("/api/advertising/GetMobileAdDetail")
     Call<MOBILE_AD_DETAIL_DATA> GetMobileAdDetail(@Body MOBILE_AD_DETAIL_COND Cond);
+    @POST("/api/advertising/GetMobileAdDeviceList")
+    Call<AD_DEVICE_MOBILE_M> GetMobileAdDeviceList(@Body AD_DEVICE_MOBILE_COND Cond);
 }
 

@@ -1,4 +1,4 @@
-package com.altsoft.loggalapp;
+package com.altsoft.loggalapp.Fragement;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.altsoft.Framework.BaseFragment;
+import com.altsoft.Framework.module.BaseFragment;
+import com.altsoft.loggalapp.R;
 
 
 /**
