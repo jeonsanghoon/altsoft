@@ -12,14 +12,17 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.altsoft.Framework.Global;
+import com.altsoft.Framework.GsonInfo;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Service.LocalBoxListItemAdapter;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.WebViewActivity;
+import com.altsoft.model.T_AD;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_COND;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_LIST;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_M;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,11 +46,13 @@ public class LocalboxbannerListActivity extends BaseActivity {
         setContentView(R.layout.activity_localboxbanner_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        adapter = new LocalBoxListItemAdapter();
         activity = this;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         deviceCode =  (Long)intent.getLongExtra("DEVICE_CODE",0);
         this.GetLocalBoxBannerList();
+
     }
 
     private void GetLocalBoxBannerList() {
@@ -67,8 +72,9 @@ public class LocalboxbannerListActivity extends BaseActivity {
 
                 Global.getCommon().ProgressHide(activity);
                 AD_DEVICE_MOBILE_M rtn = response.body();
+                activity.setTitle(rtn.DEVICE_NAME);
                 List<AD_DEVICE_MOBILE_LIST> list = rtn.AD_LIST;
-                if(list.size() == 0) {
+                if(bLastPage) {
                     Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -87,7 +93,6 @@ public class LocalboxbannerListActivity extends BaseActivity {
                             if(lastitemVisibleFlag == true) {
                                 Integer page = (listview.getCount() / nPageSize) + 1;
                                 GetLocalBoxBannerList();
-
                             }
                             mLockListView = false;
                             lastitemVisibleFlag = false;
@@ -104,8 +109,16 @@ public class LocalboxbannerListActivity extends BaseActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         AD_DEVICE_MOBILE_LIST adItem = adapter.getItem(position);
+                        T_AD data = new T_AD();
+                        try {
+                            data = (T_AD) new GsonInfo(AD_DEVICE_MOBILE_LIST.class, T_AD.class).ToCopy(adItem);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+
                         Intent intent = new Intent(activity, WebViewActivity.class);
-                        intent.putExtra("T_AD", adItem);
+                        intent.putExtra("T_AD", data);
                         activity.startActivity(intent);
 
                     }

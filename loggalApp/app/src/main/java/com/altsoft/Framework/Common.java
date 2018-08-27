@@ -32,7 +32,7 @@ public class Common {
     }
 
     /// 날짜형 포맷 여부
-    public static boolean isValidDate(String inDate) {
+    public  boolean isValidDate(String inDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         dateFormat.setLenient(false);
         try {
@@ -43,7 +43,7 @@ public class Common {
         return true;
     }
     /// 시간형 포맷 여부
-    public static boolean isValidTime(String inTime) {
+    public boolean isValidTime(String inTime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         dateFormat.setLenient(false);
         try {
@@ -56,11 +56,11 @@ public class Common {
         return true;
     }
     // 현재 일자정보 가져오기
-    public  static String getCurrentTimeString()
+    public  String getCurrentTimeString()
     {
         return getCurrentTimeString("yyyyMMddHHmmss");
     }
-    public static String getCurrentTimeString(String Format) {
+    public String getCurrentTimeString(String Format) {
         long now = System.currentTimeMillis();
         Date date = new Date(now);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -70,7 +70,7 @@ public class Common {
         return getTime;
     }
 
-    public static String leftPad(String originalString, int length,
+    public String leftPad(String originalString, int length,
                                  char padCharacter) {
         String paddedString = originalString;
         while (paddedString.length() < length) {
@@ -78,7 +78,7 @@ public class Common {
         }
         return paddedString;
     }
-    public static String getCurrentTime(String timeFormat){
+    public String getCurrentTime(String timeFormat){
         return new SimpleDateFormat(timeFormat).format(System.currentTimeMillis());
     }
 }
