@@ -90,7 +90,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
             case R.id.action_search: {
               //  mBinding.searchLiveo.show();
 
-                Intent intent = new Intent(this, SearchActivity.class);
+                Intent intent = new Intent(this, Search2Activity.class);
 
                 this.startActivity(intent);
                 return true;

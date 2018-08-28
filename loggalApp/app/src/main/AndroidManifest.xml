@@ -42,7 +42,8 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".SignageControlActivity" />
         <activity android:name=".SearchActivity" />
-        <activity android:name=".detail.LocalboxbannerListActivity"></activity>
+        <activity android:name=".detail.LocalboxbannerListActivity" />
+        <activity android:name=".Search2Activity"></activity>
     </application>
 
 </manifest>
