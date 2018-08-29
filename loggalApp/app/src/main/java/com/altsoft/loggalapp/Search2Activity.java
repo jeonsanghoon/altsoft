@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -52,6 +53,9 @@ public class Search2Activity extends AppCompatActivity  implements SearchView.On
         searchView.setIconifiedByDefault(true);
         searchView.setIconified(false);
         searchView.setQueryHint("검색할 내용을 입력하세요");
+        ImageView closeBtn = (ImageView) searchView.findViewById(R.id.search_close_btn);
+        closeBtn.setEnabled(false);
+        closeBtn.setImageDrawable(null);
         searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
 
             @Override
