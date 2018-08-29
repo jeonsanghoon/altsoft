@@ -54,9 +54,7 @@
             android:paddingStart="12dp"
             android:textColor="#212121"
             android:textColorHint="@color/search_liveo_text_hint"
-            android:textSize="16sp"
-            android:paddingRight="8dp"
-            android:paddingLeft="12dp" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/img_voice"

@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
+
 public class Search2Activity extends AppCompatActivity  implements SearchView.OnQueryTextListener{
     private String TAG = Search2Activity.class.getSimpleName();
     private android.support.v7.widget.Toolbar tbMainSearch;
@@ -37,6 +39,15 @@ public class Search2Activity extends AppCompatActivity  implements SearchView.On
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrays);
         lvToolbarSerch.setAdapter(adapter);
         setSupportActionBar(tbMainSearch);
+
+        MultiSelectToggleGroup multiCustomCompoundButton =
+                (MultiSelectToggleGroup) findViewById(R.id.group_multi_custom_compoundbutton);
+        multiCustomCompoundButton.setOnCheckedChangeListener(new MultiSelectToggleGroup.OnCheckedStateChangeListener() {
+            @Override
+            public void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked) {
+                Log.v("dd", "onCheckedStateChanged(): " + checkedId + ", isChecked = " + isChecked);
+            }
+        });
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
@@ -105,4 +116,5 @@ public class Search2Activity extends AppCompatActivity  implements SearchView.On
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

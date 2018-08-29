@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.github.lzyzsd:circleprogress:1.1.0'
     implementation 'com.wdullaer:materialdatetimepicker:3.6.3'
     implementation 'com.groupbyinc:common-net:172'
-    implementation project(':library')
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation project(':library')
+    implementation project(':togglebuttongroup')
 }
