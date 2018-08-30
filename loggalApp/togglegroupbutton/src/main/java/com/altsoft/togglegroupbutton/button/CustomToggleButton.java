@@ -14,6 +14,7 @@ public class CustomToggleButton extends AppCompatButton implements ToggleButton 
 
     public CustomToggleButton(Context context) {
         this(context, null);
+
     }
 
     public CustomToggleButton(Context context, AttributeSet attrs) {
@@ -66,4 +67,5 @@ public class CustomToggleButton extends AppCompatButton implements ToggleButton 
     public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
         mOnCheckedChangeListener = listener;
     }
+
 }

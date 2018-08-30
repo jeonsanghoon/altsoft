@@ -1,6 +1,7 @@
 package com.altsoft.Framework;
 
 import android.app.Activity;
+import android.content.Context;
 import android.widget.ProgressBar;
 
 import com.altsoft.loggalapp.R;
@@ -80,5 +81,12 @@ public class Common {
     }
     public String getCurrentTime(String timeFormat){
         return new SimpleDateFormat(timeFormat).format(System.currentTimeMillis());
+    }
+
+    public  Integer dpToPx(Context ctx, Integer dp) {
+        float density = ctx.getResources()
+                .getDisplayMetrics()
+                .density;
+        return Math.round((float) dp * density);
     }
 }

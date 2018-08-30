@@ -6,6 +6,8 @@ import com.altsoft.model.DEVICE_LOCATION_COND;
 import com.altsoft.model.MOBILE_AD_DETAIL_COND;
 import com.altsoft.model.MOBILE_AD_DETAIL_DATA;
 import com.altsoft.model.T_AD;
+import com.altsoft.model.category.CATEGORY_COND;
+import com.altsoft.model.category.CATEGORY_LIST;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_COND;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_M;
 
@@ -29,5 +31,7 @@ public interface MobileService {
     Call<MOBILE_AD_DETAIL_DATA> GetMobileAdDetail(@Body MOBILE_AD_DETAIL_COND Cond);
     @POST("/api/advertising/GetMobileAdDeviceList")
     Call<AD_DEVICE_MOBILE_M> GetMobileAdDeviceList(@Body AD_DEVICE_MOBILE_COND Cond);
+    @POST("/api/advertising/GetCategoryList")
+    Call<List<CATEGORY_LIST>> GetCategoryList(@Body CATEGORY_COND Cond);
 }
 

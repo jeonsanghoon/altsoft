@@ -3,7 +3,9 @@ package com.altsoft.togglegroupbutton;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Checkable;
 
 import com.altsoft.togglegroupbutton.button.ToggleButton;
@@ -136,5 +138,36 @@ public class MultiSelectToggleGroup extends ToggleButtonGroup {
 
     public interface OnCheckedStateChangeListener {
         void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked);
+    }
+
+    //동적으로 버튼추가
+    public void addButton(String text) {
+        addButton(getChildCount() + 1, text);
+    }
+
+    //동적으로 버튼추가
+    public void addButton(int id, String text) {
+        com.altsoft.togglegroupbutton.button.CustomToggleButton btn = new com.altsoft.togglegroupbutton.button.CustomToggleButton(getContext());
+        btn.setId(id);
+        btn.setText(text);
+        btn.setTextColor(getResources().getColorStateList(R.color.selector_text_radio_button));
+        btn.setBackgroundResource(R.drawable.selector_bg_radio_button);
+        btn.setGravity(Gravity.CENTER);
+
+        ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(getLayoutParams());
+        margin.setMargins(0, 0, 0, 20);
+        margin.width = LayoutParams.WRAP_CONTENT;
+        margin.height = this.dpToPx(40);
+        margin.width = dpToPx(100);
+        btn.setLayoutParams(margin);
+
+        this.addView(btn);
+    }
+
+    public Integer dpToPx(Integer dp) {
+        float density = getContext().getResources()
+                .getDisplayMetrics()
+                .density;
+        return Math.round((float) dp * density);
     }
 }
