@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
+import com.altsoft.togglegroupbutton.MultiSelectToggleGroup;
 
 public class Search2Activity extends AppCompatActivity  implements SearchView.OnQueryTextListener{
     private String TAG = Search2Activity.class.getSimpleName();
@@ -42,6 +42,7 @@ public class Search2Activity extends AppCompatActivity  implements SearchView.On
 
         MultiSelectToggleGroup multiCustomCompoundButton =
                 (MultiSelectToggleGroup) findViewById(R.id.group_multi_custom_compoundbutton);
+
         multiCustomCompoundButton.setOnCheckedChangeListener(new MultiSelectToggleGroup.OnCheckedStateChangeListener() {
             @Override
             public void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked) {
