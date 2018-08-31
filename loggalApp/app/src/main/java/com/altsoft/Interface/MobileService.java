@@ -10,6 +10,8 @@ import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_COND;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_M;
+import com.altsoft.model.keyword.CODE_DATA;
+import com.altsoft.model.keyword.KEYWORD_COND;
 
 import java.util.List;
 
@@ -33,5 +35,8 @@ public interface MobileService {
     Call<AD_DEVICE_MOBILE_M> GetMobileAdDeviceList(@Body AD_DEVICE_MOBILE_COND Cond);
     @POST("/api/advertising/GetCategoryList")
     Call<List<CATEGORY_LIST>> GetCategoryList(@Body CATEGORY_COND Cond);
+    @POST("/api/advertising/GetKeywordAutoCompleateList")
+    Call<List<CODE_DATA>> GetKeywordAutoCompleateList(@Body KEYWORD_COND Cond);
+
 }
 

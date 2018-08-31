@@ -30,7 +30,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginTop="50dp">
-
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:gravity="center_vertical"
+            android:textColorHint="#555555"
+            android:completionHint="검색어를 입력하세요."
+            android:completionThreshold="1" />
 
           <com.altsoft.togglegroupbutton.MultiSelectToggleGroup
               android:id="@+id/group_multi_custom_compoundbutton"

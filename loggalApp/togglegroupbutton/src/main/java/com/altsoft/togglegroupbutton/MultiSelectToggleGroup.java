@@ -153,11 +153,11 @@ public class MultiSelectToggleGroup extends ToggleButtonGroup {
         btn.setTextColor(getResources().getColorStateList(R.color.selector_text_radio_button));
         btn.setBackgroundResource(R.drawable.selector_bg_radio_button);
         btn.setGravity(Gravity.CENTER);
-
+        btn.setPadding(0,0,0,0);
         ViewGroup.MarginLayoutParams margin = new ViewGroup.MarginLayoutParams(getLayoutParams());
         margin.setMargins(0, 0, 0, 20);
         margin.width = LayoutParams.WRAP_CONTENT;
-        margin.height = this.dpToPx(40);
+        margin.height = this.dpToPx(30);
         margin.width = dpToPx(100);
         btn.setLayoutParams(margin);
 

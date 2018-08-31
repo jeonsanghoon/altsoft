@@ -2,20 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginRight="10dp"
-        android:id="@+id/imageView1"
-        android:scaleType="fitXY"
-        />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_vertical"
+        android:paddingLeft="10dp"
         android:layout_weight="5">
 
         <TextView
@@ -45,5 +37,11 @@
             android:textColor="#000000"
             android:layout_weight="1" />
     </LinearLayout>
-
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/imageView1"
+        android:scaleType="fitXY"
+        />
 </LinearLayout>

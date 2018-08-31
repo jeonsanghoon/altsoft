@@ -1,16 +1,20 @@
 package com.altsoft.loggalapp;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -21,6 +25,7 @@ import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
 import com.altsoft.togglegroupbutton.MultiSelectToggleGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -34,12 +39,14 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
     private ListView lvToolbarSerch;
     MultiSelectToggleGroup multiCustomCompoundButton;
     String[] arrays = new String[]{"98411", "98422", "98433", "98444", "98455"};
+    private List<String> list;          // 데이터를 넣은 리스트변수
     ArrayAdapter<String> adapter;
-
+    Activity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search2);
+        activity = this;
         this.setUpViews();
     }
 
@@ -68,7 +75,69 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
         });
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        settingList();
+        final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+
+        // AutoCompleteTextView 에 아답터를 연결한다.
+        autoCompleteTextView.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line,  list ));
+
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = autoCompleteTextView.getText().toString();
+                list.add(str);
+                autoCompleteTextView.setAdapter(new ArrayAdapter<String>(activity,
+                        android.R.layout.simple_dropdown_item_1line,  list ));
+            }
+        });
     }
+    private void settingList(){
+        list = new ArrayList<String>();
+
+        // 리스트에 검색될 데이터(단어)를 추가한다.
+
+        list.add("채수빈");
+        list.add("박지현");
+        list.add("수지");
+        list.add("남태현");
+        list.add("하성운");
+        list.add("크리스탈");
+        list.add("강승윤");
+        list.add("손나은");
+        list.add("남주혁");
+        list.add("루이");
+        list.add("진영");
+        list.add("슬기");
+        list.add("이해인");
+        list.add("고원희");
+        list.add("설리");
+        list.add("공명");
+        list.add("김예림");
+        list.add("혜리");
+        list.add("웬디");
+        list.add("박혜수");
+        list.add("카이");
+        list.add("진세연");
+        list.add("동호");
+        list.add("박세완");
+        list.add("도희");
+        list.add("창모");
+        list.add("허영지");
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
