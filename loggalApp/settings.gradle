@@ -1,1 +1,1 @@
-include ':app', ':library', ':togglegroupbutton'
+include ':app', ':library', ':togglegroupbutton', ':altframework'

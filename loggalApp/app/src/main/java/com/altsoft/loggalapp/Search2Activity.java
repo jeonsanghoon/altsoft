@@ -23,6 +23,8 @@ import com.altsoft.Framework.Global;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
+import com.altsoft.model.keyword.CODE_DATA;
+import com.altsoft.model.keyword.KEYWORD_COND;
 import com.altsoft.togglegroupbutton.MultiSelectToggleGroup;
 
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
     MultiSelectToggleGroup multiCustomCompoundButton;
     String[] arrays = new String[]{"98411", "98422", "98433", "98444", "98455"};
     private List<String> list;          // 데이터를 넣은 리스트변수
+    AutoCompleteTextView autoCompleteTextView ;
     ArrayAdapter<String> adapter;
     Activity activity;
     @Override
@@ -59,6 +62,7 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrays);
         lvToolbarSerch.setAdapter(adapter);
         setSupportActionBar(tbMainSearch);
+        list = new ArrayList<String>();
 
         multiCustomCompoundButton = (MultiSelectToggleGroup) findViewById(R.id.group_multi_custom_compoundbutton);
         SetCategoryList();
@@ -75,8 +79,9 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
         });
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        settingList();
-        final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+
+
+        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
 
         // AutoCompleteTextView 에 아답터를 연결한다.
         autoCompleteTextView.setAdapter(new ArrayAdapter<String>(this,
@@ -98,44 +103,43 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
             @Override
             public void afterTextChanged(Editable s) {
                 String str = autoCompleteTextView.getText().toString();
-                list.add(str);
-                autoCompleteTextView.setAdapter(new ArrayAdapter<String>(activity,
-                        android.R.layout.simple_dropdown_item_1line,  list ));
+                settingList(str);
+
             }
         });
     }
-    private void settingList(){
+    private void settingList(String query){
         list = new ArrayList<String>();
 
-        // 리스트에 검색될 데이터(단어)를 추가한다.
+        KEYWORD_COND Cond = new KEYWORD_COND();
+        Cond.KEYWORD_NAME = query;
+        try {
 
-        list.add("채수빈");
-        list.add("박지현");
-        list.add("수지");
-        list.add("남태현");
-        list.add("하성운");
-        list.add("크리스탈");
-        list.add("강승윤");
-        list.add("손나은");
-        list.add("남주혁");
-        list.add("루이");
-        list.add("진영");
-        list.add("슬기");
-        list.add("이해인");
-        list.add("고원희");
-        list.add("설리");
-        list.add("공명");
-        list.add("김예림");
-        list.add("혜리");
-        list.add("웬디");
-        list.add("박혜수");
-        list.add("카이");
-        list.add("진세연");
-        list.add("동호");
-        list.add("박세완");
-        list.add("도희");
-        list.add("창모");
-        list.add("허영지");
+
+            Call<List<CODE_DATA>> call = Global.getAPIService().GetKeywordAutoCompleateList(Cond);
+
+            call.enqueue(new Callback<List<CODE_DATA>>() {
+                @Override
+                public void onResponse(Call<List<CODE_DATA>> call, Response<List<CODE_DATA>> response) {
+                    list = new ArrayList<String>();
+                    List<CODE_DATA> rtn = response.body();
+                    for(CODE_DATA data : rtn) {
+                        list.add(data.NAME);
+                    }
+                    autoCompleteTextView.setAdapter(new ArrayAdapter<String>(activity,
+                            android.R.layout.simple_dropdown_item_1line,  list ));
+                    autoCompleteTextView.showDropDown();
+                }
+                @Override
+                public void onFailure(Call<List<CODE_DATA>> call, Throwable t) {
+
+                }
+            });
+
+        }catch(Exception ex) {
+            Log.d("로그", ex.getMessage());
+        }
+
     }
 
 
