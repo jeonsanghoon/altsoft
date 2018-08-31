@@ -127,7 +127,7 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
                         list.add(data.NAME);
                     }
                     autoCompleteTextView.setAdapter(new ArrayAdapter<String>(activity,
-                            android.R.layout.simple_dropdown_item_1line,  list ));
+                            R.layout.autocomplate_list_item,  list ));
                     autoCompleteTextView.showDropDown();
                 }
                 @Override

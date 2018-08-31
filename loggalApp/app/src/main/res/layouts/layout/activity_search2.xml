@@ -36,6 +36,11 @@
             android:layout_height="45dp"
             android:gravity="center_vertical"
             android:textColorHint="#555555"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_centerVertical="true"
             android:completionHint="검색어를 입력하세요."
             android:completionThreshold="1" />
 
