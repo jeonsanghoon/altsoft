@@ -1,6 +1,6 @@
 package com.altsoft.model.keyword;
 
-import java.math.BigDecimal;
+import java.math.Integer;
 
 /// 코드클래스
 public class CODE_DATA
@@ -15,9 +15,9 @@ public class CODE_DATA
     /// 코드명
     public String NAME;
     /// 위도
-    public BigDecimal LATITUDE;
+    public Integer LATITUDE;
     /// 경도
-    public BigDecimal LONGITUDE;
+    public Integer LONGITUDE;
     /// T_CATEGORY_KEYWORD 테이블의 CK_CODE
     public Integer CK_CODE;
 }

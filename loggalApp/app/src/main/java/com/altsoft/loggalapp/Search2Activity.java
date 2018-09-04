@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.altsoft.Adapter.SearchAdapter;
@@ -66,8 +67,7 @@ public class Search2Activity extends BaseActivity {
         tbMainSearch = (android.support.v7.widget.Toolbar) findViewById(R.id.tb_toolbarsearch);
 
         lvToolbarSerch = (ListView) findViewById(R.id.lv_toolbarsearch);
-       /* adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrays);
-        lvToolbarSerch.setAdapter(adapter);*/
+
         setSupportActionBar(tbMainSearch);
         list = new ArrayList<String>();
 
@@ -89,10 +89,7 @@ public class Search2Activity extends BaseActivity {
 
         autoCompleteTextView = (altAutoCmpleateTextView) findViewById(R.id.autoCompleteTextView);
 
-        // AutoCompleteTextView 에 아답터를 연결한다.
-       /* autoCompleteTextView.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line,  list ));
-*/
+
 
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -129,14 +126,47 @@ public class Search2Activity extends BaseActivity {
                     }
                 }
                 beforeData = data;
-
             }
         });
 
+        ImageButton search = (ImageButton)findViewById(R.id.btnSearch);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doQuery();
+            }
+        });
+    }
 
+    /// 전체조회
+    private void doQuery() {
+        this.doQueryMobileBanner();
+        this.doQueryLocalBox();
+        this.doQueryLocalStation();
+        this.doQuerySignage();
+    }
+
+    /// 모바일 조회
+    private void doQueryMobileBanner()
+    {
+    }
+
+    /// 로컬박스조회
+    private void doQueryLocalBox()
+    {
+    }
+    /// 로컬스테이션조회
+    private void doQueryLocalStation()
+    {
+
+    }
+    /// 로컬사이니지 조회
+    private void doQuerySignage() {
     }
 
 
+
+    /// 자동완성 값 셋팅
     private void settingList(String query){
         list = new ArrayList<String>();
 

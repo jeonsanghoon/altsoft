@@ -1,7 +1,7 @@
 package com.altsoft.model.device;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.math.Integer;
 
 public class AD_DEVICE_MOBILE_LIST  implements Serializable {
     /// 로컬박스코드
@@ -37,7 +37,7 @@ public class AD_DEVICE_MOBILE_LIST  implements Serializable {
     /// 클릭수
     public Integer CLICK_CNT ;
     /// 별포인트 5점 만점 평점으로 계산
-    public BigDecimal GRADE_POINT ;
+    public Integer GRADE_POINT ;
     /// 요청한사용자코드 T_MEMBER 테이블의 MEMBER_CODE
     public int MEMBER_CODE ;
     /// 요청한사용자명

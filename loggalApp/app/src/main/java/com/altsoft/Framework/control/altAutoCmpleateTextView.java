@@ -38,6 +38,7 @@ public class altAutoCmpleateTextView extends android.support.v7.widget.AppCompat
     /* Required methods, not used in this implementation */
     public altAutoCmpleateTextView(Context context) {
         super(context);
+
         init();
     }
 
