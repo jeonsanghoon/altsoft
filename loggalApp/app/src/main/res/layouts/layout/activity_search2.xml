@@ -21,6 +21,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.altsoft.Framework.control.altAutoCmpleateTextView
+                        android:id="@+id/autoCompleteTextView"
+                        style="@style/MyAutoCompleteTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:completionHint="검색어를 입력하세요."
+                        android:completionThreshold="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textColorHint="#555555"
+                        android:textSize="14sp" />
+
+                    <ImageButton
+                        android:id="@+id/btnSearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:paddingRight="10dp"
+                        android:src="@drawable/ic_search" />
+                </LinearLayout>
+
 
             </android.support.v7.widget.Toolbar>
         </FrameLayout>
@@ -29,20 +55,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="50dp">
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:gravity="center_vertical"
-            android:textColorHint="#555555"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:layout_centerVertical="true"
-            android:completionHint="검색어를 입력하세요."
-            android:completionThreshold="1" />
+        android:layout_marginTop="55dp">
+
 
           <com.altsoft.togglegroupbutton.MultiSelectToggleGroup
               android:id="@+id/group_multi_custom_compoundbutton"

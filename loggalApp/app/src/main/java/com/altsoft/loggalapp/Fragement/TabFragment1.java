@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.altsoft.Framework.module.BaseFragment;
 import com.altsoft.Framework.Global;
-import com.altsoft.Service.BannerListViewAdapter;
+import com.altsoft.Adapter.BannerListViewAdapter;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.SignageControlActivity;
 import com.altsoft.loggalapp.WebViewActivity;

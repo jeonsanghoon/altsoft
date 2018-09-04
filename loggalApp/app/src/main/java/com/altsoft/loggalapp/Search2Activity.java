@@ -2,24 +2,20 @@ package com.altsoft.loggalapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 
+import com.altsoft.Adapter.SearchAdapter;
 import com.altsoft.Framework.Global;
+import com.altsoft.Framework.control.altAutoCmpleateTextView;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
@@ -35,22 +31,33 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Search2Activity extends BaseActivity implements SearchView.OnQueryTextListener {
+public class Search2Activity extends BaseActivity {
     private String TAG = Search2Activity.class.getSimpleName();
     private android.support.v7.widget.Toolbar tbMainSearch;
     private ListView lvToolbarSerch;
     MultiSelectToggleGroup multiCustomCompoundButton;
-    String[] arrays = new String[]{"98411", "98422", "98433", "98444", "98455"};
+    //String[] arrays = new String[]{"98411", "98422", "98433", "98444", "98455"};
     private List<String> list;          // 데이터를 넣은 리스트변수
-    AutoCompleteTextView autoCompleteTextView ;
-    ArrayAdapter<String> adapter;
+    altAutoCmpleateTextView autoCompleteTextView ;
+   // ArrayAdapter<String> adapter;
     Activity activity;
+    String beforeData = "";
+    Boolean bAutoDrop = false;
+
+    SearchAdapter searchadapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search2);
         activity = this;
+
         this.setUpViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Global.getCommon().hideSoftInputWindow(activity, autoCompleteTextView, true);
     }
 
 
@@ -59,8 +66,8 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
         tbMainSearch = (android.support.v7.widget.Toolbar) findViewById(R.id.tb_toolbarsearch);
 
         lvToolbarSerch = (ListView) findViewById(R.id.lv_toolbarsearch);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrays);
-        lvToolbarSerch.setAdapter(adapter);
+       /* adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrays);
+        lvToolbarSerch.setAdapter(adapter);*/
         setSupportActionBar(tbMainSearch);
         list = new ArrayList<String>();
 
@@ -72,50 +79,70 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
 
                 Set<Integer> chklist = multiCustomCompoundButton.getCheckedIds();
                 for(Integer  data: multiCustomCompoundButton.getCheckedIds())
-
-
                 Log.v("dd", "onCheckedStateChanged(): " + checkedId + ", isChecked = " + isChecked);
+
             }
         });
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 
-        autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        autoCompleteTextView = (altAutoCmpleateTextView) findViewById(R.id.autoCompleteTextView);
 
         // AutoCompleteTextView 에 아답터를 연결한다.
-        autoCompleteTextView.setAdapter(new ArrayAdapter<String>(this,
+       /* autoCompleteTextView.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line,  list ));
+*/
+
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                autoCompleteTextView.dismissDropDown();
+
+                String data = searchadapter.getItem(position);
+
+                bAutoDrop = false;
+            }
+        });
+
+
 
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-
             }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+               // beforeData = s.toString();
+                bAutoDrop = true;
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                String str = autoCompleteTextView.getText().toString();
-                settingList(str);
+                String data = s.toString();
+                if(!beforeData.equals(data)) {
+                    if (data.length() > 0) {
+                        settingList(data);
+                    }
+                }
+                beforeData = data;
 
             }
         });
+
+
     }
+
+
     private void settingList(String query){
         list = new ArrayList<String>();
 
         KEYWORD_COND Cond = new KEYWORD_COND();
         Cond.KEYWORD_NAME = query;
         try {
-
-
             Call<List<CODE_DATA>> call = Global.getAPIService().GetKeywordAutoCompleateList(Cond);
 
             call.enqueue(new Callback<List<CODE_DATA>>() {
@@ -126,9 +153,12 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
                     for(CODE_DATA data : rtn) {
                         list.add(data.NAME);
                     }
-                    autoCompleteTextView.setAdapter(new ArrayAdapter<String>(activity,
-                            R.layout.autocomplate_list_item,  list ));
-                    autoCompleteTextView.showDropDown();
+
+                    searchadapter = new SearchAdapter(activity, R.layout.autocomplate_list_item, rtn);
+                    autoCompleteTextView.setAdapter(searchadapter);
+                    if(bAutoDrop) {
+                        autoCompleteTextView.showDropDown();
+                    }
                 }
                 @Override
                 public void onFailure(Call<List<CODE_DATA>> call, Throwable t) {
@@ -145,7 +175,7 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
+      /*  MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.search_menu, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem mSearchmenuItem = menu.findItem(R.id.menu_toolbarsearch);
@@ -178,21 +208,11 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
         searchView.performClick();
         searchView.requestFocus();
         Log.d(TAG, "onCreateOptionsMenu: mSearchmenuItem->" + mSearchmenuItem.getActionView());
+        */
         return true;
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
 
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        Log.d(TAG, "onQueryTextChange: newText->" + newText);
-        //adapter.getFilter().filter(newText);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -225,6 +245,7 @@ public class Search2Activity extends BaseActivity implements SearchView.OnQueryT
                     {
                         multiCustomCompoundButton.addButton(data.CATEGORY_CODE, data.CATEGORY_NAME);
                     }
+
                 }
                 @Override
                 public void onFailure(Call<List<CATEGORY_LIST>> call, Throwable t) {

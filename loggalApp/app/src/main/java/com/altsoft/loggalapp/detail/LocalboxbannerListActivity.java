@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.GsonInfo;
 import com.altsoft.Framework.module.BaseActivity;
-import com.altsoft.Service.LocalBoxListItemAdapter;
+import com.altsoft.Adapter.LocalBoxListItemAdapter;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.WebViewActivity;
 import com.altsoft.model.T_AD;

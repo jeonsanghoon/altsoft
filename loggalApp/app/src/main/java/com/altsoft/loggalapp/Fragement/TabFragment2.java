@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.module.BaseFragment;
-import com.altsoft.Service.LocalBoxListViewAdapter;
+import com.altsoft.Adapter.LocalBoxListViewAdapter;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
 import com.altsoft.model.DEVICE_LOCATION;

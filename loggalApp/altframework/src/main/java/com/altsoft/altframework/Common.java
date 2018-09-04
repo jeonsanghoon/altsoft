@@ -3,6 +3,8 @@ package com.altsoft.altframework;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
 import java.text.ParseException;
@@ -75,6 +77,18 @@ public class Common {
                 .getDisplayMetrics()
                 .density;
         return Math.round((float) dp * density);
+    }
+
+    /// 키보드 보이기/ 숨기기
+    public boolean hideSoftInputWindow(Context context, View edit_view, boolean bState) {
+
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if ( bState )
+            return imm.showSoftInput(edit_view, 0);
+        else
+            return imm.hideSoftInputFromWindow
+                    (edit_view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }
 

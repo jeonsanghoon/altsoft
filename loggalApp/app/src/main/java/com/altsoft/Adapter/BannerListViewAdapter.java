@@ -1,4 +1,4 @@
-package com.altsoft.Service;
+package com.altsoft.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -85,7 +85,6 @@ public class BannerListViewAdapter extends BaseAdapter {
         }
         this.notifyDataSetChanged();
         return true;
-
     }
 }
 
