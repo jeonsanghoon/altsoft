@@ -57,7 +57,7 @@ public class Search2Activity extends BaseActivity {
     SearchBannerAdapter searchBannerAdapter;
     ListView listview ;
     boolean bLastPage = false;
-    Integer nPageSize = 30;
+    Integer nPageSize = 20;
     boolean lastitemVisibleFlag = false;
     private boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
     @Override
@@ -79,7 +79,7 @@ public class Search2Activity extends BaseActivity {
     @SuppressLint("ResourceAsColor")
     private void setUpViews() {
         tbMainSearch = (android.support.v7.widget.Toolbar) findViewById(R.id.tb_toolbarsearch);
-
+        listview = (ListView) activity.findViewById(R.id.listview1);
 
 
         setSupportActionBar(tbMainSearch);
@@ -96,7 +96,7 @@ public class Search2Activity extends BaseActivity {
                 for(Integer  data: multiCustomCompoundButton.getCheckedIds())
                 Log.v("dd", "onCheckedStateChanged(): " + checkedId + ", isChecked = " + isChecked);
 
-
+                doQueryMobileBanner(1);
             }
         });
         ActionBar actionBar = getSupportActionBar();
@@ -164,7 +164,7 @@ public class Search2Activity extends BaseActivity {
 
     /// 전체조회
     private void doQuery() {
-        this.doQueryMobileBanner();
+        this.doQueryMobileBanner(1,4);
         this.doQueryLocalBox();
         this.doQueryLocalStation();
         this.doQuerySignage();
@@ -173,12 +173,21 @@ public class Search2Activity extends BaseActivity {
     {
         this.doQueryMobileBanner(1);
     }
-    /// 모바일 조회
     private void doQueryMobileBanner(Integer page)
     {
+        doQueryMobileBanner(page,4);
+    }
+    /// 모바일 조회
+    private void doQueryMobileBanner(Integer page, Integer pagesize)
+    {
+        if(page != 1 && bLastPage ) {
+            Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+            return;
+        }
         MOBILE_AD_SEARCH_COND Cond = new MOBILE_AD_SEARCH_COND();
-        Cond.PAGE_COUNT = 4;
-        Cond.PAGE = 1;
+
+        Cond.PAGE_COUNT = pagesize;
+        Cond.PAGE = page;
         Cond.LONGITUDE = Global.getMapInfo().longitude;
         Cond.LATITUDE  = Global.getMapInfo().latitude;
         Cond.USER_ID = Global.getLoginInfo().USER_ID;
@@ -198,6 +207,10 @@ public class Search2Activity extends BaseActivity {
             Cond.KEYWORD_NAME = autoCompleteTextView.getText().toString();
         }
 
+        if(page == 1) {
+            searchBannerAdapter.SetDataBind(new ArrayList<MOBILE_AD_SEARCH_DATA>(),true);
+            listview.setAdapter(searchBannerAdapter);
+        }
         String sJson = new GsonInfo<MOBILE_AD_SEARCH_COND, String>(MOBILE_AD_SEARCH_COND.class).ToString(Cond);
         Global.getCommon().ProgressShow(activity);
         Call<List<MOBILE_AD_SEARCH_DATA>> call = Global.getAPIService().GetMobileAdSearchList(Cond);
@@ -212,10 +225,13 @@ public class Search2Activity extends BaseActivity {
                     Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if(list.size() < nPageSize) bLastPage = true;
+                if(list.size() < nPageSize) {
+                    bLastPage = true;
+
+                }
 
                 if(searchBannerAdapter.SetDataBind(list) == true) return;
-                listview = (ListView) activity.findViewById(R.id.listview1);
+
                 listview.setAdapter(searchBannerAdapter);
 
                 listview.setOnScrollListener(new ListView.OnScrollListener() {
@@ -225,10 +241,11 @@ public class Search2Activity extends BaseActivity {
 
                             // 데이터 로드
                             if(lastitemVisibleFlag == true) {
-                                Integer page = (listview.getCount() / nPageSize) + 1;
-                                doQueryMobileBanner(page);
-                                if(page == 1) nPageSize = 3;
-                                else nPageSize = 20;
+                                Integer page = ((listview.getCount() -4)  / nPageSize) + 2;
+                                if(listview.getCount() <= 4) page = 1;
+
+                                doQueryMobileBanner(page, nPageSize);
+
 
                             }
                             mLockListView = false;

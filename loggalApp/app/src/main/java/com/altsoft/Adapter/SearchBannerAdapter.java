@@ -76,10 +76,17 @@ public class SearchBannerAdapter  extends BaseAdapter {
     }
 
     public Boolean SetDataBind(List<MOBILE_AD_SEARCH_DATA> list) {
-        if (listViewItemList.size() == 0) {
+        return this.SetDataBind(list, false);
+    }
+    public Boolean SetDataBind(List<MOBILE_AD_SEARCH_DATA> list, Boolean bFirst) {
+
+
+        if (listViewItemList.size() == 0  || bFirst) {
+
             listViewItemList = (ArrayList) list;
             return false;
         }
+
         for(int i =0; i< list.size(); i++) {
             listViewItemList.add(list.get(i));
         }
