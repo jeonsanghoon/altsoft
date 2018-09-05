@@ -1,7 +1,5 @@
 package com.altsoft.model.keyword;
 
-import java.math.Integer;
-
 /// 코드클래스
 public class CODE_DATA
 {

@@ -1,7 +1,7 @@
 package com.altsoft.model.device;
 
 import java.io.Serializable;
-import java.math.Integer;
+
 
 public class AD_DEVICE_MOBILE_LIST  implements Serializable {
     /// 로컬박스코드

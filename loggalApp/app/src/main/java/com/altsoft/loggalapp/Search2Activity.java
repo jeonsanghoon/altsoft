@@ -2,6 +2,7 @@ package com.altsoft.loggalapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
@@ -10,20 +11,27 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.altsoft.Adapter.SearchAdapter;
+import com.altsoft.Adapter.SearchBannerAdapter;
 import com.altsoft.Framework.Global;
+import com.altsoft.Framework.GsonInfo;
 import com.altsoft.Framework.control.altAutoCmpleateTextView;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
 import com.altsoft.model.keyword.CODE_DATA;
 import com.altsoft.model.keyword.KEYWORD_COND;
+import com.altsoft.model.search.MOBILE_AD_SEARCH_COND;
+import com.altsoft.model.search.MOBILE_AD_SEARCH_DATA;
 import com.altsoft.togglegroupbutton.MultiSelectToggleGroup;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +54,12 @@ public class Search2Activity extends BaseActivity {
     Boolean bAutoDrop = false;
 
     SearchAdapter searchadapter;
+    SearchBannerAdapter searchBannerAdapter;
+    ListView listview ;
+    boolean bLastPage = false;
+    Integer nPageSize = 30;
+    boolean lastitemVisibleFlag = false;
+    private boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,10 +80,11 @@ public class Search2Activity extends BaseActivity {
     private void setUpViews() {
         tbMainSearch = (android.support.v7.widget.Toolbar) findViewById(R.id.tb_toolbarsearch);
 
-        lvToolbarSerch = (ListView) findViewById(R.id.lv_toolbarsearch);
+
 
         setSupportActionBar(tbMainSearch);
         list = new ArrayList<String>();
+        searchBannerAdapter = new SearchBannerAdapter();
 
         multiCustomCompoundButton = (MultiSelectToggleGroup) findViewById(R.id.group_multi_custom_compoundbutton);
         SetCategoryList();
@@ -80,6 +95,7 @@ public class Search2Activity extends BaseActivity {
                 Set<Integer> chklist = multiCustomCompoundButton.getCheckedIds();
                 for(Integer  data: multiCustomCompoundButton.getCheckedIds())
                 Log.v("dd", "onCheckedStateChanged(): " + checkedId + ", isChecked = " + isChecked);
+
 
             }
         });
@@ -96,7 +112,7 @@ public class Search2Activity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 autoCompleteTextView.dismissDropDown();
 
-                String data = searchadapter.getItem(position);
+                searchadapter.setSelectedItem(searchadapter.getObject(position));;
 
                 bAutoDrop = false;
             }
@@ -114,6 +130,7 @@ public class Search2Activity extends BaseActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                // beforeData = s.toString();
+
                 bAutoDrop = true;
             }
 
@@ -123,6 +140,12 @@ public class Search2Activity extends BaseActivity {
                 if(!beforeData.equals(data)) {
                     if (data.length() > 0) {
                         settingList(data);
+                    }
+                    if(searchadapter != null) {
+                        if(!(searchadapter.getSelectedItem().NAME.equals(s.toString())))
+                        {
+                            searchadapter.setSelectedItem(new CODE_DATA());
+                        }
                     }
                 }
                 beforeData = data;
@@ -136,6 +159,7 @@ public class Search2Activity extends BaseActivity {
                 doQuery();
             }
         });
+        Global.getCommon().ProgressHide(this);
     }
 
     /// 전체조회
@@ -145,10 +169,100 @@ public class Search2Activity extends BaseActivity {
         this.doQueryLocalStation();
         this.doQuerySignage();
     }
-
-    /// 모바일 조회
     private void doQueryMobileBanner()
     {
+        this.doQueryMobileBanner(1);
+    }
+    /// 모바일 조회
+    private void doQueryMobileBanner(Integer page)
+    {
+        MOBILE_AD_SEARCH_COND Cond = new MOBILE_AD_SEARCH_COND();
+        Cond.PAGE_COUNT = 4;
+        Cond.PAGE = 1;
+        Cond.LONGITUDE = Global.getMapInfo().longitude;
+        Cond.LATITUDE  = Global.getMapInfo().latitude;
+        Cond.USER_ID = Global.getLoginInfo().USER_ID;
+        Object[] arrCategory = multiCustomCompoundButton.getCheckedIds().toArray();
+        for(int i=0;  i < arrCategory.length; i++){
+            if(i==0) Cond.CATEGORY_CODES =   arrCategory[i].toString();
+            else Cond.CATEGORY_CODES = Cond.CATEGORY_CODES + "," + arrCategory[i].toString();
+        }
+
+
+        if(searchadapter != null && searchadapter.getSelectedItem() != null)
+        {
+            Cond.KEYWORD_CODE = searchadapter.getSelectedItem().CODE;
+        }
+        else
+        {
+            Cond.KEYWORD_NAME = autoCompleteTextView.getText().toString();
+        }
+
+        String sJson = new GsonInfo<MOBILE_AD_SEARCH_COND, String>(MOBILE_AD_SEARCH_COND.class).ToString(Cond);
+        Global.getCommon().ProgressShow(activity);
+        Call<List<MOBILE_AD_SEARCH_DATA>> call = Global.getAPIService().GetMobileAdSearchList(Cond);
+
+        call.enqueue(new Callback<List<MOBILE_AD_SEARCH_DATA>>() {
+
+            @Override
+            public void onResponse(Call<List<MOBILE_AD_SEARCH_DATA>> call, Response<List<MOBILE_AD_SEARCH_DATA>> response) {
+                List<MOBILE_AD_SEARCH_DATA> list = response.body();
+                Global.getCommon().ProgressHide(activity);
+                if(list.size() == 0) {
+                    Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if(list.size() < nPageSize) bLastPage = true;
+
+                if(searchBannerAdapter.SetDataBind(list) == true) return;
+                listview = (ListView) activity.findViewById(R.id.listview1);
+                listview.setAdapter(searchBannerAdapter);
+
+                listview.setOnScrollListener(new ListView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(AbsListView view, int scrollState) {
+                        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag && mLockListView == false) {
+
+                            // 데이터 로드
+                            if(lastitemVisibleFlag == true) {
+                                Integer page = (listview.getCount() / nPageSize) + 1;
+                                doQueryMobileBanner(page);
+                                if(page == 1) nPageSize = 3;
+                                else nPageSize = 20;
+
+                            }
+                            mLockListView = false;
+                            lastitemVisibleFlag = false;
+                        }
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        lastitemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
+                    }
+                });
+
+                listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        MOBILE_AD_SEARCH_DATA adItem = searchBannerAdapter.getItem(position);
+                        //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+
+                            /// 사이니지제어
+                            Toast.makeText(activity,adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(activity, WebViewActivity.class);
+                            intent.putExtra("T_AD", (Serializable) adItem);
+                            activity.startActivity(intent);
+
+
+                    }
+                });
+            }
+            @Override
+            public void onFailure(Call<List<MOBILE_AD_SEARCH_DATA>> call, Throwable t) {
+                Global.getCommon().ProgressHide(activity);
+            }
+        });
     }
 
     /// 로컬박스조회
@@ -189,6 +303,8 @@ public class Search2Activity extends BaseActivity {
                     if(bAutoDrop) {
                         autoCompleteTextView.showDropDown();
                     }
+
+
                 }
                 @Override
                 public void onFailure(Call<List<CODE_DATA>> call, Throwable t) {

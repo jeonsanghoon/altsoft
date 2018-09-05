@@ -66,12 +66,26 @@
               app:tbgChildSpacing="8dp">
 
           </com.altsoft.togglegroupbutton.MultiSelectToggleGroup>
-         <ListView
-            android:id="@+id/lv_toolbarsearch"
+        <ListView
+            android:id="@+id/listview1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tb_toolbarsearch"></ListView>
-    </LinearLayout>
+            android:layout_height="match_parent"/>
 
+        <android.support.v7.widget.RecyclerView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="20dp"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/progress" />
 
 </android.support.design.widget.CoordinatorLayout>

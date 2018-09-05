@@ -32,9 +32,18 @@ public class SearchAdapter extends ArrayAdapter {
     public String getItem(int position) {
         return listViewItemList.get(position).NAME;
     }
-
     public CODE_DATA getObject(int position) {
         return listViewItemList.get(position);
+    }
+    private CODE_DATA selectedItem;
+    public CODE_DATA getSelectedItem() {
+        selectedItem = selectedItem == null ? new CODE_DATA() : selectedItem;
+        selectedItem.NAME = "";
+        return selectedItem;
+    }
+
+    public void setSelectedItem(CODE_DATA selectedItem) {
+        this.selectedItem = selectedItem;
     }
 
     @Override
