@@ -40,25 +40,33 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.altsoft.loggalapp.Search2Activity.SearchCategory.multiCustomCompoundButton;
+
 public class Search2Activity extends BaseActivity {
     private String TAG = Search2Activity.class.getSimpleName();
     private android.support.v7.widget.Toolbar tbMainSearch;
-    private ListView lvToolbarSerch;
-    MultiSelectToggleGroup multiCustomCompoundButton;
-    //String[] arrays = new String[]{"98411", "98422", "98433", "98444", "98455"};
-    private List<String> list;          // 데이터를 넣은 리스트변수
-    altAutoCmpleateTextView autoCompleteTextView ;
-   // ArrayAdapter<String> adapter;
     Activity activity;
-    String beforeData = "";
-    Boolean bAutoDrop = false;
-
-
-    public static class ListPageParam {
+    /// 자동완성
+    public static class SearchAutoCompleate
+    {
         public static SearchAdapter searchadapter;
+        public static List<String> list;          // 데이터를 넣은 리스트변수
+        public static altAutoCmpleateTextView autoCompleteTextView ;
+        public static Boolean bAutoDrop = false;
+        public static String beforeData = "";
+    }
+
+    /// 카테고리 검색
+    public static class SearchCategory {
+        public static MultiSelectToggleGroup multiCustomCompoundButton;
+    }
+    /// 배너검색
+    public static class ListPageParam {
+
         public static SearchBannerAdapter searchBannerAdapter;
         public static ListView listview ;
         public static boolean bLastPage = false;
+        public static Integer nFirstPageSize = 4;
         public static Integer nPageSize = 20;
         public static Integer nPage = 1;
         public static boolean lastitemVisibleFlag = false;
@@ -77,7 +85,7 @@ public class Search2Activity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Global.getCommon().hideSoftInputWindow(activity, autoCompleteTextView, true);
+        Global.getCommon().hideSoftInputWindow(activity, SearchAutoCompleate.autoCompleteTextView, true);
     }
 
 
@@ -88,7 +96,7 @@ public class Search2Activity extends BaseActivity {
 
 
         setSupportActionBar(tbMainSearch);
-        list = new ArrayList<String>();
+        SearchAutoCompleate.list = new ArrayList<String>();
         ListPageParam.searchBannerAdapter = new SearchBannerAdapter();
 
         multiCustomCompoundButton = (MultiSelectToggleGroup) findViewById(R.id.group_multi_custom_compoundbutton);
@@ -108,24 +116,24 @@ public class Search2Activity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 
-        autoCompleteTextView = (altAutoCmpleateTextView) findViewById(R.id.autoCompleteTextView);
+        SearchAutoCompleate.autoCompleteTextView = (altAutoCmpleateTextView) findViewById(R.id.autoCompleteTextView);
 
 
 
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        SearchAutoCompleate.autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                autoCompleteTextView.dismissDropDown();
+                SearchAutoCompleate.autoCompleteTextView.dismissDropDown();
 
-                ListPageParam.searchadapter.setSelectedItem(ListPageParam.searchadapter.getObject(position));;
+                SearchAutoCompleate.searchadapter.setSelectedItem(SearchAutoCompleate.searchadapter.getObject(position));;
 
-                bAutoDrop = false;
+                SearchAutoCompleate.bAutoDrop = false;
             }
         });
 
 
 
-        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+        SearchAutoCompleate.autoCompleteTextView.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -134,26 +142,25 @@ public class Search2Activity extends BaseActivity {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-               // beforeData = s.toString();
-
-                bAutoDrop = true;
+               // SearchAutoCompleate.beforeData = s.toString();
+                SearchAutoCompleate.bAutoDrop = true;
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 String data = s.toString();
-                if(!beforeData.equals(data)) {
+                if(!SearchAutoCompleate.beforeData.equals(data)) {
                     if (data.length() > 0) {
                         settingList(data);
                     }
-                    if(ListPageParam.searchadapter != null) {
-                        if(!(ListPageParam.searchadapter.getSelectedItem().NAME.equals(s.toString())))
+                    if(SearchAutoCompleate.searchadapter != null) {
+                        if(!(SearchAutoCompleate.searchadapter.getSelectedItem().NAME.equals(s.toString())))
                         {
-                            ListPageParam.searchadapter.setSelectedItem(new CODE_DATA());
+                            SearchAutoCompleate.searchadapter.setSelectedItem(new CODE_DATA());
                         }
                     }
                 }
-                beforeData = data;
+                SearchAutoCompleate.beforeData = data;
             }
         });
 
@@ -169,7 +176,7 @@ public class Search2Activity extends BaseActivity {
 
     /// 전체조회
     private void doQuery() {
-        this.doQueryMobileBanner(1,4);
+        this.doQueryMobileBanner(1);
         this.doQueryLocalBox();
         this.doQueryLocalStation();
         this.doQuerySignage();
@@ -180,15 +187,16 @@ public class Search2Activity extends BaseActivity {
     }
     private void doQueryMobileBanner(Integer page)
     {
-        ListPageParam.nPageSize = 4;
+
         try {
-            doQueryMobileBanner(page, ListPageParam.nPageSize);
+            ListPageParam.bLastPage = false;
+            doQueryMobileBanner(page, ListPageParam.nFirstPageSize);
         }catch(Exception ex){ Log.d(TAG, ex.getMessage());}
     }
     /// 모바일 조회
     private void doQueryMobileBanner(Integer page, Integer pagesize)
     {
-        if(page != 1 && ListPageParam.bLastPage ) {
+        if( ListPageParam.bLastPage ) {
             Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
             return;
         }
@@ -206,16 +214,16 @@ public class Search2Activity extends BaseActivity {
             else Cond.CATEGORY_CODES = Cond.CATEGORY_CODES + "," + arrCategory[i].toString();
         }
 
-        if(ListPageParam.searchadapter != null
-                && ListPageParam.searchadapter.getSelectedItem() != null
-                && ListPageParam.searchadapter.getSelectedItem().CODE != null)
+        if(SearchAutoCompleate.searchadapter != null
+                && SearchAutoCompleate.searchadapter.getSelectedItem() != null
+                && SearchAutoCompleate.searchadapter.getSelectedItem().CODE != null)
         {
-            Cond.KEYWORD_CODE = ListPageParam.searchadapter.getSelectedItem().CODE;
+            Cond.KEYWORD_CODE = SearchAutoCompleate.searchadapter.getSelectedItem().CODE;
             Cond.KEYWORD_CODE = (Cond.KEYWORD_CODE == null || Cond.KEYWORD_CODE < 0) ? null : Cond.KEYWORD_CODE;
         }
         else
         {
-            Cond.KEYWORD_NAME = autoCompleteTextView.getText().toString();
+            Cond.KEYWORD_NAME = SearchAutoCompleate.autoCompleteTextView.getText().toString();
         }
 
 
@@ -230,12 +238,13 @@ public class Search2Activity extends BaseActivity {
                 List<MOBILE_AD_SEARCH_DATA> list = response.body();
                 Global.getCommon().ProgressHide(activity);
 
-                if(list.size() < ListPageParam.nPageSize) {
+                if((ListPageParam.nPage ==  1 &&  list.size() < ListPageParam.nFirstPageSize)
+                        || ( list.size() > ListPageParam.nFirstPageSize && list.size() < ListPageParam.nPageSize)) {
                     ListPageParam.bLastPage = true;
                 }
 
                 //if(searchBannerAdapter.SetDataBind(list, (list.size() <= 4) ? true : false  ) == true) return;
-                ListPageParam.searchBannerAdapter.SetDataBind(list, (ListPageParam.nPage == 1) ? true : false  );
+                if(ListPageParam.searchBannerAdapter.SetDataBind(list, (ListPageParam.nPage == 1) ? true : false  )) return;
                 ListPageParam.listview.setAdapter(ListPageParam.searchBannerAdapter);
 
                 ListPageParam.listview.setOnScrollListener(new ListView.OnScrollListener() {
@@ -245,12 +254,13 @@ public class Search2Activity extends BaseActivity {
 
                             // 데이터 로드
                             if(ListPageParam.lastitemVisibleFlag == true) {
-                                Integer page = ((ListPageParam.listview.getCount() -4)  / ListPageParam.nPageSize) + 2;
-                                if(ListPageParam.listview.getCount() == 4) page = 1;
+                                Integer page = ((ListPageParam.listview.getCount() - ListPageParam.nFirstPageSize)  / ListPageParam.nPageSize) + 2;
+                                if( ListPageParam.nPage == 1 && ListPageParam.listview.getCount() == ListPageParam.nFirstPageSize) {
+                                    page = 1;
+                                }
+
 
                                 doQueryMobileBanner(page, ListPageParam.nPageSize);
-
-
                             }
                             ListPageParam.mLockListView = false;
                             ListPageParam.lastitemVisibleFlag = false;
@@ -303,7 +313,7 @@ public class Search2Activity extends BaseActivity {
 
     /// 자동완성 값 셋팅
     private void settingList(String query){
-        list = new ArrayList<String>();
+        SearchAutoCompleate.list = new ArrayList<String>();
 
         KEYWORD_COND Cond = new KEYWORD_COND();
         Cond.KEYWORD_NAME = query;
@@ -313,18 +323,16 @@ public class Search2Activity extends BaseActivity {
             call.enqueue(new Callback<List<CODE_DATA>>() {
                 @Override
                 public void onResponse(Call<List<CODE_DATA>> call, Response<List<CODE_DATA>> response) {
-                    list = new ArrayList<String>();
+                    SearchAutoCompleate.list = new ArrayList<String>();
                     List<CODE_DATA> rtn = response.body();
                     for(CODE_DATA data : rtn) {
-                        list.add(data.NAME);
+                        SearchAutoCompleate.list.add(data.NAME);
                     }
-                    ListPageParam.searchadapter = new SearchAdapter(activity, R.layout.autocomplate_list_item, rtn);
-                    autoCompleteTextView.setAdapter(ListPageParam.searchadapter);
-                    if(bAutoDrop) {
-                        autoCompleteTextView.showDropDown();
+                    SearchAutoCompleate.searchadapter = new SearchAdapter(activity, R.layout.autocomplate_list_item, rtn);
+                    SearchAutoCompleate.autoCompleteTextView.setAdapter(SearchAutoCompleate.searchadapter);
+                    if(SearchAutoCompleate.bAutoDrop) {
+                        SearchAutoCompleate.autoCompleteTextView.showDropDown();
                     }
-
-
                 }
                 @Override
                 public void onFailure(Call<List<CODE_DATA>> call, Throwable t) {
@@ -340,40 +348,6 @@ public class Search2Activity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-      /*  MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.search_menu, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        MenuItem mSearchmenuItem = menu.findItem(R.id.menu_toolbarsearch);
-        android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) mSearchmenuItem.getActionView();
-        mSearchmenuItem.expandActionView();
-        MenuItemCompat.collapseActionView(mSearchmenuItem);
-        searchView.setIconifiedByDefault(true);
-        searchView.setIconified(false);
-        searchView.setQueryHint("검색할 내용을 입력하세요");
-        ImageView closeBtn = (ImageView) searchView.findViewById(R.id.search_close_btn);
-        closeBtn.setEnabled(false);
-        closeBtn.setImageDrawable(null);
-        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Log.d(TAG, "onQueryTextSubmit: query->" + query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-
-
-        mSearchmenuItem.expandActionView();
-        searchView.performClick();
-        searchView.requestFocus();
-        Log.d(TAG, "onCreateOptionsMenu: mSearchmenuItem->" + mSearchmenuItem.getActionView());
-        */
         return true;
     }
 

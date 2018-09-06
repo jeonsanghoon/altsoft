@@ -82,6 +82,7 @@ public class SearchBannerAdapter  extends BaseAdapter {
 
         if (listViewItemList.size() == 0  || bFirst) {
             listViewItemList = (ArrayList) list;
+            return false;
         }
         else {
             for (int i = 0; i < list.size(); i++) {
