@@ -1,8 +1,9 @@
 package com.altsoft.model.search;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class MOBILE_AD_SEARCH_DATA {
+public class MOBILE_AD_SEARCH_DATA implements Serializable {
     /// 순번
     public long IDX;
     /// 광고코드

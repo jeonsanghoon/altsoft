@@ -1,6 +1,8 @@
 package com.altsoft.model;
 
-public class DEVICE_LOCATION_COND
+import java.io.Serializable;
+
+public class DEVICE_LOCATION_COND implements Serializable
 {
     public String MODE;
     public Integer STATION_CODE;

@@ -2,9 +2,10 @@ package com.altsoft.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 
-public  class AD_SEARCH_COND
+public  class AD_SEARCH_COND implements Serializable
 {
     /// 카테고리 멀티 선택시 사용, 검색요청시 5자리로 만듦, 코드가 240 일경우 요청코드 : 00240
     @SerializedName("SEARCH_CATEGORY_CODE")

@@ -1,7 +1,9 @@
 package com.altsoft.model.category;
 
 
-public class CATEGORY_LIST {
+import java.io.Serializable;
+
+public class CATEGORY_LIST implements Serializable {
     /// 카테고리코드
     public Integer CATEGORY_CODE;
     /// 카테고리유형 T_COMMON 테이블의 B004 코드 사용, 1:광고 2:지역

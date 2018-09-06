@@ -1,6 +1,8 @@
 package com.altsoft.model.category;
 
-public class CATEGORY_COND {
+import java.io.Serializable;
+
+public class CATEGORY_COND implements Serializable {
     /// 카테고리 일련번호 => 값이 있으면 equal 검색
     public Integer CATEGORY_CODE;
     /// 카테고리유형 T_COMMON 테이블의 B004 코드 사용, 1:광고 2:지역=> 값이 있으면 equal 검색

@@ -1,6 +1,9 @@
 package com.altsoft.model;
+
+import java.io.Serializable;
+
 /// 클릭시 정보
-public class MOBILE_AD_DETAIL_DATA {
+public class MOBILE_AD_DETAIL_DATA implements Serializable {
     /// 배너아이디
     public Long AD_CODE;
     /// 제목

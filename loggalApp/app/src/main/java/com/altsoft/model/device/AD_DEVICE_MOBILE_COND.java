@@ -1,6 +1,8 @@
 package com.altsoft.model.device;
 
-public class AD_DEVICE_MOBILE_COND {
+import java.io.Serializable;
+
+public class AD_DEVICE_MOBILE_COND implements Serializable {
     /// 검색페이지 디폴트 1
     public Integer PAGE;
     /// 페이지당 데이터 건수 10000

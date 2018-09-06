@@ -1,7 +1,9 @@
 package com.altsoft.model.keyword;
 
+import java.io.Serializable;
+
 /// 코드클래스
-public class CODE_DATA
+public class CODE_DATA implements Serializable
 {
 
     /// 코드(숫자형)

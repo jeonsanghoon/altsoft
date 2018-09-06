@@ -23,6 +23,7 @@ import com.altsoft.Framework.Global;
 import com.altsoft.Framework.GsonInfo;
 import com.altsoft.Framework.control.altAutoCmpleateTextView;
 import com.altsoft.Framework.module.BaseActivity;
+import com.altsoft.model.T_AD;
 import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
 import com.altsoft.model.keyword.CODE_DATA;
@@ -31,7 +32,7 @@ import com.altsoft.model.search.MOBILE_AD_SEARCH_COND;
 import com.altsoft.model.search.MOBILE_AD_SEARCH_DATA;
 import com.altsoft.togglegroupbutton.MultiSelectToggleGroup;
 
-import java.io.Serializable;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -276,14 +277,19 @@ public class Search2Activity extends BaseActivity {
                 ListPageParam.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        MOBILE_AD_SEARCH_DATA adItem = ListPageParam.searchBannerAdapter.getItem(position);
+                        MOBILE_AD_SEARCH_DATA data = ListPageParam.searchBannerAdapter.getItem(position);
+                        T_AD adItem = new T_AD();
+                        try {
+                            adItem = new GsonInfo<MOBILE_AD_SEARCH_DATA, T_AD>(MOBILE_AD_SEARCH_DATA.class, T_AD.class).ToCopy(data);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
                         //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity,adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
 
-                            /// 사이니지제어
-                            Toast.makeText(activity,adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(activity, WebViewActivity.class);
-                            intent.putExtra("T_AD", (Serializable) adItem);
-                            activity.startActivity(intent);
+                        Intent intent = new Intent(activity, WebViewActivity.class);
+                        intent.putExtra("T_AD", adItem);
+                        activity.startActivity(intent);
 
 
                     }
