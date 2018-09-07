@@ -69,9 +69,11 @@ public class LocalBoxListViewAdapter extends BaseAdapter {
     }
 
 
-
-    public boolean SetDataBind(List<DEVICE_LOCATION> list) {
-        if (listViewItemList.size() == 0) {
+    public boolean SetDataBind(List<DEVICE_LOCATION> list){
+        return SetDataBind(list,false);
+    }
+    public boolean SetDataBind(List<DEVICE_LOCATION> list, Boolean bFirst) {
+        if (listViewItemList.size() == 0 || bFirst) {
             listViewItemList = (ArrayList) list;
             return false;
         }

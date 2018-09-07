@@ -11,18 +11,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.altsoft.Adapter.LocalBoxListViewAdapter;
 import com.altsoft.Adapter.SearchAdapter;
 import com.altsoft.Adapter.SearchBannerAdapter;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.GsonInfo;
 import com.altsoft.Framework.control.altAutoCmpleateTextView;
 import com.altsoft.Framework.module.BaseActivity;
+import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
+import com.altsoft.model.DEVICE_LOCATION;
+import com.altsoft.model.DEVICE_LOCATION_COND;
 import com.altsoft.model.T_AD;
 import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
@@ -35,219 +38,249 @@ import com.altsoft.togglegroupbutton.MultiSelectToggleGroup;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.altsoft.loggalapp.Search2Activity.SearchCategory.multiCustomCompoundButton;
-
 public class Search2Activity extends BaseActivity {
     private String TAG = Search2Activity.class.getSimpleName();
     private android.support.v7.widget.Toolbar tbMainSearch;
+
     Activity activity;
+    SearchAutoCompleate searchAutoCompleate;
+    SearchCategory searchCategory;
+    SearchBanner searchBanner;
+    SearchLocalBox searchLocalBox;
+
     /// 자동완성
-    public static class SearchAutoCompleate
-    {
-        public static SearchAdapter searchadapter;
-        public static List<String> list;          // 데이터를 넣은 리스트변수
-        public static altAutoCmpleateTextView autoCompleteTextView ;
-        public static Boolean bAutoDrop = false;
-        public static String beforeData = "";
-    }
+    private  class SearchAutoCompleate{
+        SearchAdapter adapter;
+        List<String> list;          // 데이터를 넣은 리스트변수
+        altAutoCmpleateTextView autoCompleteTextView ;
+        Boolean bAutoDrop = false;
+        String beforeData = "";
 
-    /// 카테고리 검색
-    public static class SearchCategory {
-        public static MultiSelectToggleGroup multiCustomCompoundButton;
-    }
-    /// 배너검색
-    public static class ListPageParam {
+        private SearchAutoCompleate(){}
 
-        public static SearchBannerAdapter searchBannerAdapter;
-        public static ListView listview ;
-        public static boolean bLastPage = false;
-        public static Integer nFirstPageSize = 4;
-        public static Integer nPageSize = 20;
-        public static Integer nPage = 1;
-        public static boolean lastitemVisibleFlag = false;
-        public static boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
-
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search2);
-        activity = this;
-
-        this.setUpViews();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Global.getCommon().hideSoftInputWindow(activity, SearchAutoCompleate.autoCompleteTextView, true);
-    }
+        private void onResume() {
+            Global.getCommon().hideSoftInputWindow(activity, autoCompleteTextView, true);
+        }
 
 
-    @SuppressLint("ResourceAsColor")
-    private void setUpViews() {
-        tbMainSearch = (android.support.v7.widget.Toolbar) findViewById(R.id.tb_toolbarsearch);
-        ListPageParam.listview = (ListView) activity.findViewById(R.id.listview1);
+        private void setUpViews() {
 
+            list = new ArrayList<String>();
+            autoCompleteTextView = (altAutoCmpleateTextView) activity.findViewById(R.id.autoCompleteTextView);
+            autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    autoCompleteTextView.dismissDropDown();
 
-        setSupportActionBar(tbMainSearch);
-        SearchAutoCompleate.list = new ArrayList<String>();
-        ListPageParam.searchBannerAdapter = new SearchBannerAdapter();
+                    adapter.setSelectedItem(adapter.getObject(position));;
 
-        multiCustomCompoundButton = (MultiSelectToggleGroup) findViewById(R.id.group_multi_custom_compoundbutton);
-        SetCategoryList();
-        multiCustomCompoundButton.setOnCheckedChangeListener(new MultiSelectToggleGroup.OnCheckedStateChangeListener() {
-            @Override
-            public void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked) {
+                    bAutoDrop = false;
+                }
+            });
+            autoCompleteTextView.addTextChangedListener(new TextWatcher() {
 
-                Set<Integer> chklist = multiCustomCompoundButton.getCheckedIds();
-                for(Integer  data: multiCustomCompoundButton.getCheckedIds())
-                Log.v("dd", "onCheckedStateChanged(): " + checkedId + ", isChecked = " + isChecked);
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                doQueryMobileBanner(1);
-            }
-        });
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+                }
 
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    // SearchAutoCompleate.beforeData = s.toString();
+                    bAutoDrop = true;
+                }
 
-        SearchAutoCompleate.autoCompleteTextView = (altAutoCmpleateTextView) findViewById(R.id.autoCompleteTextView);
-
-
-
-        SearchAutoCompleate.autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SearchAutoCompleate.autoCompleteTextView.dismissDropDown();
-
-                SearchAutoCompleate.searchadapter.setSelectedItem(SearchAutoCompleate.searchadapter.getObject(position));;
-
-                SearchAutoCompleate.bAutoDrop = false;
-            }
-        });
-
-
-
-        SearchAutoCompleate.autoCompleteTextView.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-               // SearchAutoCompleate.beforeData = s.toString();
-                SearchAutoCompleate.bAutoDrop = true;
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String data = s.toString();
-                if(!SearchAutoCompleate.beforeData.equals(data)) {
-                    if (data.length() > 0) {
-                        settingList(data);
-                    }
-                    if(SearchAutoCompleate.searchadapter != null) {
-                        if(!(SearchAutoCompleate.searchadapter.getSelectedItem().NAME.equals(s.toString())))
-                        {
-                            SearchAutoCompleate.searchadapter.setSelectedItem(new CODE_DATA());
+                @Override
+                public void afterTextChanged(Editable s) {
+                    String data = s.toString();
+                    if(!beforeData.equals(data)) {
+                        if (data.length() > 0) {
+                            settingList(data);
+                        }
+                        if(adapter != null) {
+                            if(!(adapter.getSelectedItem().NAME.equals(s.toString())))
+                            {
+                                adapter.setSelectedItem(new CODE_DATA());
+                            }
                         }
                     }
+                    beforeData = data;
                 }
-                SearchAutoCompleate.beforeData = data;
+            });
+        }
+
+        /// 자동완성 값 셋팅
+        private void settingList(String query){
+            list = new ArrayList<String>();
+
+            KEYWORD_COND Cond = new KEYWORD_COND();
+            Cond.KEYWORD_NAME = query;
+            try {
+                Call<List<CODE_DATA>> call = Global.getAPIService().GetKeywordAutoCompleateList(Cond);
+
+                call.enqueue(new Callback<List<CODE_DATA>>() {
+                    @Override
+                    public void onResponse(Call<List<CODE_DATA>> call, Response<List<CODE_DATA>> response) {
+                        list = new ArrayList<String>();
+                        List<CODE_DATA> rtn = response.body();
+                        for(CODE_DATA data : rtn) {
+                           list.add(data.NAME);
+                        }
+                        adapter = new SearchAdapter(activity, R.layout.autocomplate_list_item, rtn);
+                        autoCompleteTextView.setAdapter(adapter);
+                        if(bAutoDrop) {
+                            autoCompleteTextView.showDropDown();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<List<CODE_DATA>> call, Throwable t) {
+
+                    }
+                });
+
+            }catch(Exception ex) {
+                Log.d("로그", ex.getMessage());
             }
-        });
-
-        ImageButton search = (ImageButton)findViewById(R.id.btnSearch);
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doQuery();
-            }
-        });
-        Global.getCommon().ProgressHide(this);
-    }
-
-    /// 전체조회
-    private void doQuery() {
-        this.doQueryMobileBanner(1);
-        this.doQueryLocalBox();
-        this.doQueryLocalStation();
-        this.doQuerySignage();
-    }
-    private void doQueryMobileBanner()
-    {
-        this.doQueryMobileBanner(1);
-    }
-    private void doQueryMobileBanner(Integer page)
-    {
-
-        try {
-            ListPageParam.bLastPage = false;
-            doQueryMobileBanner(page, ListPageParam.nFirstPageSize);
-        }catch(Exception ex){ Log.d(TAG, ex.getMessage());}
-    }
-    /// 모바일 조회
-    private void doQueryMobileBanner(Integer page, Integer pagesize)
-    {
-        if( ListPageParam.bLastPage ) {
-            Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
-            return;
         }
-        ListPageParam.nPage = page;
-        MOBILE_AD_SEARCH_COND Cond = new MOBILE_AD_SEARCH_COND();
+    }
+    /// 카테고리 검색
+    private  class SearchCategory {
+        MultiSelectToggleGroup multiCustomCompoundButton;
+        private SearchCategory(){
+            multiCustomCompoundButton = activity.findViewById(R.id.group_multi_custom_compoundbutton);
+            SetCategoryList();
+            multiCustomCompoundButton.setOnCheckedChangeListener(new MultiSelectToggleGroup.OnCheckedStateChangeListener() {
+                @Override
+                public void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked) {
+                    //Set<Integer> chklist = multiCustomCompoundButton.getCheckedIds();
+                    for(Integer  data: multiCustomCompoundButton.getCheckedIds())
+                        Log.v("dd", "onCheckedStateChanged(): " + checkedId + ", isChecked = " + isChecked);
 
-        Cond.PAGE_COUNT = pagesize;
-        Cond.PAGE = page;
-        Cond.LONGITUDE = Global.getMapInfo().longitude;
-        Cond.LATITUDE  = Global.getMapInfo().latitude;
-        Cond.USER_ID = Global.getLoginInfo().USER_ID;
-        Object[] arrCategory = multiCustomCompoundButton.getCheckedIds().toArray();
-        for(int i=0;  i < arrCategory.length; i++){
-            if(i==0) Cond.CATEGORY_CODES =   arrCategory[i].toString();
-            else Cond.CATEGORY_CODES = Cond.CATEGORY_CODES + "," + arrCategory[i].toString();
-        }
-
-        if(SearchAutoCompleate.searchadapter != null
-                && SearchAutoCompleate.searchadapter.getSelectedItem() != null
-                && SearchAutoCompleate.searchadapter.getSelectedItem().CODE != null)
-        {
-            Cond.KEYWORD_CODE = SearchAutoCompleate.searchadapter.getSelectedItem().CODE;
-            Cond.KEYWORD_CODE = (Cond.KEYWORD_CODE == null || Cond.KEYWORD_CODE < 0) ? null : Cond.KEYWORD_CODE;
-        }
-        else
-        {
-            Cond.KEYWORD_NAME = SearchAutoCompleate.autoCompleteTextView.getText().toString();
-        }
-
-
-        String sJson = new GsonInfo<MOBILE_AD_SEARCH_COND, String>(MOBILE_AD_SEARCH_COND.class).ToString(Cond);
-        Global.getCommon().ProgressShow(activity);
-        Call<List<MOBILE_AD_SEARCH_DATA>> call = Global.getAPIService().GetMobileAdSearchList(Cond);
-
-        call.enqueue(new Callback<List<MOBILE_AD_SEARCH_DATA>>() {
-
-            @Override
-            public void onResponse(Call<List<MOBILE_AD_SEARCH_DATA>> call, Response<List<MOBILE_AD_SEARCH_DATA>> response) {
-                List<MOBILE_AD_SEARCH_DATA> list = response.body();
-                Global.getCommon().ProgressHide(activity);
-
-                if((ListPageParam.nPage ==  1 &&  list.size() < ListPageParam.nFirstPageSize)
-                        || ( list.size() > ListPageParam.nFirstPageSize && list.size() < ListPageParam.nPageSize)) {
-                    ListPageParam.bLastPage = true;
+                    searchBanner.doQuery(1);
                 }
+            });
+        }
 
-                //if(searchBannerAdapter.SetDataBind(list, (list.size() <= 4) ? true : false  ) == true) return;
-                if(ListPageParam.searchBannerAdapter.SetDataBind(list, (ListPageParam.nPage == 1) ? true : false  )) return;
-                ListPageParam.listview.setAdapter(ListPageParam.searchBannerAdapter);
+        /// 배너정보가져오기
+        private void SetCategoryList() {
 
+            CATEGORY_COND Cond = new CATEGORY_COND();
+
+            try {
+                Cond.HIDE = false;
+                Cond.CATEGORY_TYPE = 1;
+
+                Call<List<CATEGORY_LIST>> call = Global.getAPIService().GetCategoryList(Cond);
+
+                call.enqueue(new Callback<List<CATEGORY_LIST>>() {
+                    @Override
+                    public void onResponse(Call<List<CATEGORY_LIST>> call, Response<List<CATEGORY_LIST>> response) {
+                        List<CATEGORY_LIST> list = response.body();
+                        for(CATEGORY_LIST data  : list)
+                        {
+                            multiCustomCompoundButton.addButton(data.CATEGORY_CODE, data.CATEGORY_NAME);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<List<CATEGORY_LIST>> call, Throwable t) {
+                    }
+                });
+
+            }catch(Exception ex) {
+                Log.d("로그", ex.getMessage());
+            }
+        }
+    }
+    /// 배너검색
+    private  class SearchBanner {
+
+        SearchBannerAdapter adapter;
+        ListView listview ;
+        boolean bLastPage = false;
+        Integer nFirstPageSize = 3;
+        Integer nPageSize = 20;
+        Integer nPage = 1;
+
+
+
+
+        private void setUpViews()
+        {
+            listview = (ListView) activity.findViewById(R.id.listview1);
+            adapter = new SearchBannerAdapter();
+
+        }
+        private void doQuery()
+        {
+            this.doQuery(1);
+        }
+        private void doQuery(Integer page)
+        {
+
+            try {
+                bLastPage = false;
+                doQuery(page, nFirstPageSize);
+            }catch(Exception ex){ Log.d(TAG, ex.getMessage());}
+        }
+        /// 모바일 조회
+        private void doQuery(Integer page, Integer pagesize)
+        {
+            if( bLastPage ) {
+                Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                return;
+            }
+            nPage = page;
+            MOBILE_AD_SEARCH_COND Cond = new MOBILE_AD_SEARCH_COND();
+
+            Cond.PAGE_COUNT = pagesize;
+            Cond.PAGE = page;
+            Cond.LONGITUDE = Global.getMapInfo().longitude;
+            Cond.LATITUDE  = Global.getMapInfo().latitude;
+            Cond.USER_ID = Global.getLoginInfo().USER_ID;
+            Object[] arrCategory = searchCategory.multiCustomCompoundButton.getCheckedIds().toArray();
+            for(int i=0;  i < arrCategory.length; i++){
+                if(i==0) Cond.CATEGORY_CODES =   arrCategory[i].toString();
+                else Cond.CATEGORY_CODES = Cond.CATEGORY_CODES + "," + arrCategory[i].toString();
+            }
+
+            if(searchAutoCompleate.adapter != null
+                    && searchAutoCompleate.adapter.getSelectedItem() != null
+                    && searchAutoCompleate.adapter.getSelectedItem().CODE != null)
+            {
+                Cond.KEYWORD_CODE = searchAutoCompleate.adapter.getSelectedItem().CODE;
+                Cond.KEYWORD_CODE = (Cond.KEYWORD_CODE == null || Cond.KEYWORD_CODE < 0) ? null : Cond.KEYWORD_CODE;
+            }
+            else
+            {
+                Cond.KEYWORD_NAME = searchAutoCompleate.autoCompleteTextView.getText().toString();
+            }
+
+
+            String sJson = new GsonInfo<MOBILE_AD_SEARCH_COND, String>(MOBILE_AD_SEARCH_COND.class).ToString(Cond);
+            Global.getCommon().ProgressShow(activity);
+            Call<List<MOBILE_AD_SEARCH_DATA>> call = Global.getAPIService().GetMobileAdSearchList(Cond);
+
+            call.enqueue(new Callback<List<MOBILE_AD_SEARCH_DATA>>() {
+
+                @Override
+                public void onResponse(Call<List<MOBILE_AD_SEARCH_DATA>> call, Response<List<MOBILE_AD_SEARCH_DATA>> response) {
+                    List<MOBILE_AD_SEARCH_DATA> list = response.body();
+                    Global.getCommon().ProgressHide(activity);
+
+                    if((nPage ==  1 &&  list.size() < nFirstPageSize)
+                            || ( list.size() > nFirstPageSize && list.size() < nPageSize)) {
+                        bLastPage = true;
+                    }
+
+                    //if(searchBannerAdapter.SetDataBind(list, (list.size() <= 4) ? true : false  ) == true) return;
+                    if(adapter.SetDataBind(list, nPage == 1 ? true : false) ) return;
+                    listview.setAdapter(adapter);
+/*
                 ListPageParam.listview.setOnScrollListener(new ListView.OnScrollListener() {
                     @Override
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -273,34 +306,187 @@ public class Search2Activity extends BaseActivity {
                         ListPageParam.lastitemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
                     }
                 });
+*/
+                   listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            MOBILE_AD_SEARCH_DATA data = adapter.getItem(position);
+                            T_AD adItem = new T_AD();
+                            try {
+                                adItem = new GsonInfo<MOBILE_AD_SEARCH_DATA, T_AD>(MOBILE_AD_SEARCH_DATA.class, T_AD.class).ToCopy(data);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity,adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
 
-                ListPageParam.listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        MOBILE_AD_SEARCH_DATA data = ListPageParam.searchBannerAdapter.getItem(position);
-                        T_AD adItem = new T_AD();
-                        try {
-                            adItem = new GsonInfo<MOBILE_AD_SEARCH_DATA, T_AD>(MOBILE_AD_SEARCH_DATA.class, T_AD.class).ToCopy(data);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
+                            Intent intent = new Intent(activity, WebViewActivity.class);
+                            intent.putExtra("T_AD", adItem);
+                            activity.startActivity(intent);
+
+
                         }
-                        //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-                        Toast.makeText(activity,adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                    });
+                }
+                @Override
+                public void onFailure(Call<List<MOBILE_AD_SEARCH_DATA>> call, Throwable t) {
+                    Global.getCommon().ProgressHide(activity);
+                }
+            });
+        }
 
-                        Intent intent = new Intent(activity, WebViewActivity.class);
-                        intent.putExtra("T_AD", adItem);
-                        activity.startActivity(intent);
+    }
 
 
-                    }
-                });
+    /// 로컬박스 조회
+    private  class SearchLocalBox {
+        LocalBoxListViewAdapter adapter;
+        ListView listview ;
+        boolean bLastPage = false;
+        Integer nFirstPageSize = 3;
+        Integer nPageSize = 20;
+        Integer nPage = 1;
+        boolean lastitemVisibleFlag = false;
+        boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
+
+        private void setUpViews()
+        {
+            listview = (ListView) activity.findViewById(R.id.listview_localbox);
+            adapter = new LocalBoxListViewAdapter();
+
+        }
+        private void doQuery()
+        {
+            doQuery(1);
+        }
+        private void doQuery(Integer page)
+        {
+
+            try {
+                bLastPage = false;
+                doQuery(page, nFirstPageSize);
+            }catch(Exception ex){ Log.d(TAG, ex.getMessage());}
+        }
+        /// 모바일 조회
+        private void doQuery(Integer page, Integer pagesize)
+        {
+            if( bLastPage ) {
+                Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                return;
             }
+            nPage = page;
+            DEVICE_LOCATION_COND Cond = new DEVICE_LOCATION_COND();
+
+            Cond.PAGE_COUNT = pagesize;
+            Cond.PAGE = page;
+            Cond.LONGITUDE = Global.getMapInfo().longitude;
+            Cond.LATITUDE  = Global.getMapInfo().latitude;
+
+            Object[] arrCategory = searchCategory.multiCustomCompoundButton.getCheckedIds().toArray();
+
+            Cond.SEARCH_TEXT = searchAutoCompleate.autoCompleteTextView.getText().toString();
+
+            String sJson = new GsonInfo<DEVICE_LOCATION_COND, String>(DEVICE_LOCATION_COND.class).ToString(Cond);
+            Global.getCommon().ProgressShow(activity);
+            Call<List<DEVICE_LOCATION>> call = Global.getAPIService().GetDeviceLocation(Cond);
+
+            call.enqueue(new Callback<List<DEVICE_LOCATION>>() {
+
+                @Override
+                public void onResponse(Call<List<DEVICE_LOCATION>> call, Response<List<DEVICE_LOCATION>> response) {
+                    List<DEVICE_LOCATION> list = response.body();
+                    Global.getCommon().ProgressHide(activity);
+
+                    if((nPage ==  1 &&  list.size() < nFirstPageSize)
+                            || ( list.size() > nFirstPageSize && list.size() < nPageSize)) {
+                        bLastPage = true;
+                    }
+
+                    //if(searchBannerAdapter.SetDataBind(list, (list.size() <= 4) ? true : false  ) == true) return;
+                    if(adapter.SetDataBind(list, (nPage == 1 ? true : false)) ) return;
+                    listview.setAdapter(adapter);
+
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            DEVICE_LOCATION data = adapter.getItem(position);
+                            //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(activity, LocalboxbannerListActivity.class);
+                            intent.putExtra("DEVICE_CODE", Long.parseLong(data.DEVICE_CODE) );
+                            activity.startActivity(intent);
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<List<DEVICE_LOCATION>> call, Throwable t) {
+                    Global.getCommon().ProgressHide(activity);
+                }
+            });
+        }
+
+    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search2);
+        activity = this;
+        searchAutoCompleate = new SearchAutoCompleate();
+        searchCategory = new SearchCategory();
+        searchBanner = new SearchBanner();
+        searchLocalBox = new SearchLocalBox();
+        this.setUpViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        searchAutoCompleate.onResume();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.searchAutoCompleate = null;
+        this.searchBanner = null;
+        this.searchCategory = null;
+        this.searchLocalBox = null;
+    }
+
+
+    @SuppressLint("ResourceAsColor")
+    protected void setUpViews() {
+
+        tbMainSearch = (android.support.v7.widget.Toolbar) findViewById(R.id.tb_toolbarsearch);
+        setSupportActionBar(tbMainSearch);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        searchAutoCompleate.setUpViews();
+        searchBanner.setUpViews();;
+        searchLocalBox.setUpViews();
+
+        ImageButton search = (ImageButton)findViewById(R.id.btnSearch);
+        search.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFailure(Call<List<MOBILE_AD_SEARCH_DATA>> call, Throwable t) {
-                Global.getCommon().ProgressHide(activity);
+            public void onClick(View v) {
+                doQuery();
             }
         });
+        Global.getCommon().ProgressHide(this);
+        doQuery();
     }
+
+
+    /// 전체조회
+    private void doQuery() {
+        searchBanner.doQuery();
+        searchLocalBox.doQuery();
+
+        this.doQueryLocalStation();
+        this.doQuerySignage();
+    }
+
 
     /// 로컬박스조회
     private void doQueryLocalBox()
@@ -314,44 +500,6 @@ public class Search2Activity extends BaseActivity {
     /// 로컬사이니지 조회
     private void doQuerySignage() {
     }
-
-
-
-    /// 자동완성 값 셋팅
-    private void settingList(String query){
-        SearchAutoCompleate.list = new ArrayList<String>();
-
-        KEYWORD_COND Cond = new KEYWORD_COND();
-        Cond.KEYWORD_NAME = query;
-        try {
-            Call<List<CODE_DATA>> call = Global.getAPIService().GetKeywordAutoCompleateList(Cond);
-
-            call.enqueue(new Callback<List<CODE_DATA>>() {
-                @Override
-                public void onResponse(Call<List<CODE_DATA>> call, Response<List<CODE_DATA>> response) {
-                    SearchAutoCompleate.list = new ArrayList<String>();
-                    List<CODE_DATA> rtn = response.body();
-                    for(CODE_DATA data : rtn) {
-                        SearchAutoCompleate.list.add(data.NAME);
-                    }
-                    SearchAutoCompleate.searchadapter = new SearchAdapter(activity, R.layout.autocomplate_list_item, rtn);
-                    SearchAutoCompleate.autoCompleteTextView.setAdapter(SearchAutoCompleate.searchadapter);
-                    if(SearchAutoCompleate.bAutoDrop) {
-                        SearchAutoCompleate.autoCompleteTextView.showDropDown();
-                    }
-                }
-                @Override
-                public void onFailure(Call<List<CODE_DATA>> call, Throwable t) {
-
-                }
-            });
-
-        }catch(Exception ex) {
-            Log.d("로그", ex.getMessage());
-        }
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
@@ -369,36 +517,4 @@ public class Search2Activity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-    /// 배너정보가져오기
-    private void SetCategoryList() {
-
-        CATEGORY_COND Cond = new CATEGORY_COND();
-
-        try {
-            Cond.HIDE = false;
-            Cond.CATEGORY_TYPE = 1;
-
-            Call<List<CATEGORY_LIST>> call = Global.getAPIService().GetCategoryList(Cond);
-
-            call.enqueue(new Callback<List<CATEGORY_LIST>>() {
-                @Override
-                public void onResponse(Call<List<CATEGORY_LIST>> call, Response<List<CATEGORY_LIST>> response) {
-                    List<CATEGORY_LIST> list = response.body();
-                    for(CATEGORY_LIST data  : list)
-                    {
-                        multiCustomCompoundButton.addButton(data.CATEGORY_CODE, data.CATEGORY_NAME);
-                    }
-                }
-                @Override
-                public void onFailure(Call<List<CATEGORY_LIST>> call, Throwable t) {
-                }
-            });
-
-        }catch(Exception ex) {
-            Log.d("로그", ex.getMessage());
-        }
-    }
-
 }

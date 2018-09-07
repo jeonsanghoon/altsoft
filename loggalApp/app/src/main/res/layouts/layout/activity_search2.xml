@@ -51,27 +51,82 @@
             </android.support.v7.widget.Toolbar>
         </FrameLayout>
     </android.support.design.widget.AppBarLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="55dp">
-
-
-          <com.altsoft.togglegroupbutton.MultiSelectToggleGroup
-              android:id="@+id/group_multi_custom_compoundbutton"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:padding="8dp"
-              app:tbgChildSpacing="8dp">
-
-          </com.altsoft.togglegroupbutton.MultiSelectToggleGroup>
-        <ListView
-            android:id="@+id/listview1"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="5dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textSize="16dp" android:text="배너"
+                android:gravity="center"/>
+            <LinearLayout android:layout_height="1dp" android:layout_width="match_parent"
+                android:background="@color/gray"
+                />
+            <com.altsoft.togglegroupbutton.MultiSelectToggleGroup
+                android:id="@+id/group_multi_custom_compoundbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                app:tbgChildSpacing="8dp">
+            </com.altsoft.togglegroupbutton.MultiSelectToggleGroup>
+            <LinearLayout android:layout_height="1dp" android:layout_width="match_parent"
+                android:background="@color/gray"
+                />
+            <ListView
+                android:id="@+id/listview1"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:scrollbars="none"
+              />
+            <LinearLayout android:layout_height="1dp" android:layout_width="match_parent"
+                android:background="@color/gray"
+                />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="더보기"
+                android:gravity="right"
+                android:paddingTop="5dp"
+
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="5dp" android:background="@color/gray"></LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:textSize="16dp" android:text="로컬박스"
+            android:gravity="center"/>
+        <LinearLayout android:layout_height="1dp" android:layout_width="match_parent"
+            android:background="@color/gray"
+            />
+        <ListView
+            android:id="@+id/listview_localbox"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:scrollbars="none"
+            />
+        <LinearLayout android:layout_height="1dp" android:layout_width="match_parent"
+            android:background="@color/gray"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="더보기"
+            android:gravity="right"
+            android:paddingTop="5dp"
+            />
     </LinearLayout>
+    </ScrollView>
     <ProgressBar
         android:id="@+id/progress"
         style="?android:attr/progressBarStyleLarge"
