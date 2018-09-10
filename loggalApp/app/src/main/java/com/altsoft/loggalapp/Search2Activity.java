@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -280,6 +281,13 @@ public class Search2Activity extends BaseActivity {
                     //if(searchBannerAdapter.SetDataBind(list, (list.size() <= 4) ? true : false  ) == true) return;
                     if(adapter.SetDataBind(list, nPage == 1 ? true : false) ) return;
                     listview.setAdapter(adapter);
+                    Global.getCommon().getTotalHeightofListView(listview);
+                    if(listview.getCount() == 0) {
+                        activity.findViewById(R.id.laybanner).setVisibility(LinearLayout.GONE);
+                    }
+                    else {
+                        activity.findViewById(R.id.laybanner).setVisibility(LinearLayout.VISIBLE);
+                    }
 /*
                 ListPageParam.listview.setOnScrollListener(new ListView.OnScrollListener() {
                     @Override
@@ -405,7 +413,13 @@ public class Search2Activity extends BaseActivity {
                     //if(searchBannerAdapter.SetDataBind(list, (list.size() <= 4) ? true : false  ) == true) return;
                     if(adapter.SetDataBind(list, (nPage == 1 ? true : false)) ) return;
                     listview.setAdapter(adapter);
-
+                    if(listview.getCount() == 0) {
+                        activity.findViewById(R.id.laylocalbox).setVisibility(LinearLayout.GONE);
+                    }
+                    else {
+                        activity.findViewById(R.id.laylocalbox).setVisibility(LinearLayout.VISIBLE);
+                    }
+                    Global.getCommon().getTotalHeightofListView(listview);
                     listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

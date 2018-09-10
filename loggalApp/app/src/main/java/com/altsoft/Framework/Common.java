@@ -3,7 +3,10 @@ package com.altsoft.Framework;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.altsoft.loggalapp.R;
@@ -102,5 +105,32 @@ public class Common {
         else
             return imm.hideSoftInputFromWindow
                     (edit_view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+
+    public  void getTotalHeightofListView(ListView listView) {
+
+        ListAdapter mAdapter = listView.getAdapter();
+
+        int totalHeight = 0;
+
+        for (int i = 0; i < mAdapter.getCount(); i++) {
+            View mView = mAdapter.getView(i, null, listView);
+
+            mView.measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+            totalHeight += mView.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (mAdapter.getCount() - 1));
+
+
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }

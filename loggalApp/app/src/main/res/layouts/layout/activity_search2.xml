@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -20,7 +21,8 @@
                 android:id="@+id/tb_toolbarsearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary" >
+                android:background="@color/colorPrimary">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -51,82 +53,125 @@
             </android.support.v7.widget.Toolbar>
         </FrameLayout>
     </android.support.design.widget.AppBarLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="55dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="5dp">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:textSize="16dp" android:text="배너"
-                android:gravity="center"/>
-            <LinearLayout android:layout_height="1dp" android:layout_width="match_parent"
-                android:background="@color/gray"
-                />
-            <com.altsoft.togglegroupbutton.MultiSelectToggleGroup
-                android:id="@+id/group_multi_custom_compoundbutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                app:tbgChildSpacing="8dp">
-            </com.altsoft.togglegroupbutton.MultiSelectToggleGroup>
-            <LinearLayout android:layout_height="1dp" android:layout_width="match_parent"
-                android:background="@color/gray"
-                />
-            <ListView
-                android:id="@+id/listview1"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:scrollbars="none"
-              />
-            <LinearLayout android:layout_height="1dp" android:layout_width="match_parent"
-                android:background="@color/gray"
-                />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="더보기"
-                android:gravity="right"
-                android:paddingTop="5dp"
-
-                />
-        </LinearLayout>
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="5dp" android:background="@color/gray"></LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:textSize="16dp" android:text="로컬박스"
-            android:gravity="center"/>
-        <LinearLayout android:layout_height="1dp" android:layout_width="match_parent"
-            android:background="@color/gray"
-            />
-        <ListView
-            android:id="@+id/listview_localbox"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:scrollbars="none"
-            />
-        <LinearLayout android:layout_height="1dp" android:layout_width="match_parent"
-            android:background="@color/gray"/>
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="더보기"
-            android:gravity="right"
-            android:paddingTop="5dp"
-            />
-    </LinearLayout>
+            android:layout_marginTop="55dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/laybanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:background="@color/gray"></LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="배너"
+                    android:textSize="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <com.altsoft.togglegroupbutton.MultiSelectToggleGroup
+                    android:id="@+id/group_multi_custom_compoundbutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    app:tbgChildSpacing="8dp"></com.altsoft.togglegroupbutton.MultiSelectToggleGroup>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <ListView
+                    android:id="@+id/listview1"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:scrollbars="none" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right"
+                    android:paddingTop="5dp"
+                    android:text="더보기"
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/laylocalbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:background="@color/gray"></LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="로컬박스"
+                    android:textSize="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <ListView
+                    android:id="@+id/listview_localbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:scrollbars="none" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right"
+                    android:paddingTop="5dp"
+                    android:text="더보기" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtSearchNo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:textSize="20dp"
+                android:text="검색된 데이터가 없습니다."/>
+        </LinearLayout>
     </ScrollView>
+
     <ProgressBar
         android:id="@+id/progress"
         style="?android:attr/progressBarStyleLarge"
@@ -134,9 +179,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:layout_gravity="center"
         android:layout_marginBottom="20dp"
         android:indeterminate="true"
-        android:layout_gravity="center"
         android:indeterminateDrawable="@drawable/progress" />
 
 </android.support.design.widget.CoordinatorLayout>
