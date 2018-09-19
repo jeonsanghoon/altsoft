@@ -33,6 +33,7 @@ public class TabFragment2 extends BaseFragment {
     ListView listview;
     boolean bLastPage = false;
     Integer nPageSize = 30;
+    Integer nPage = 1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,15 +51,14 @@ public class TabFragment2 extends BaseFragment {
 
         DEVICE_LOCATION_COND Cond = new DEVICE_LOCATION_COND();
         try {
-
-            if(bLastPage) {
-                Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
-                return;
-            }
             Cond.LATITUDE = Global.getMapInfo().latitude;
             Cond.LONGITUDE = Global.getMapInfo().longitude;
             Cond.PAGE_COUNT = nPageSize;
-            if(page != null) Cond.PAGE = page;
+            Cond.PAGE  = page == null ? 1 : page;
+            if(Cond.PAGE != 1 && bLastPage) {
+                Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                return;
+            }
             String sAddr = Global.getMapInfo().currentLocationAddress;
             Global.getCommon().ProgressShow(getActivity());
             Call<List<DEVICE_LOCATION>> call = Global.getAPIService().GetDeviceLocation(Cond);
@@ -75,7 +75,7 @@ public class TabFragment2 extends BaseFragment {
                     if(list.size() < nPageSize) bLastPage = true;
                     if(adapter.SetDataBind(list) == true) return;
 
-                    listview = (ListView) getView().findViewById(R.id.listview1);
+                    listview = (ListView) getView().findViewById(R.id.listview2);
                     listview.setAdapter(adapter);
                     listview.setOnScrollListener(new ListView.OnScrollListener() {
                         @Override
@@ -83,8 +83,9 @@ public class TabFragment2 extends BaseFragment {
                             if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag && mLockListView == false) {
                                 // 데이터 로드
                                 if(lastitemVisibleFlag == true) {
-                                    Integer page = (listview.getCount() / nPageSize) + 1;
-                                    GetDeviceLocation(page);
+                                   // Integer page = (listview.getCount() / nPageSize) + 1;
+                                    nPage = nPage + 1;
+                                    GetDeviceLocation(nPage);
                                 }
                                 mLockListView = false;
                                 lastitemVisibleFlag = false;

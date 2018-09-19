@@ -32,19 +32,19 @@ import retrofit2.Response;
 
  */
 public class TabFragment1 extends BaseFragment {
+    BannerListViewAdapter adapter;
     boolean lastitemVisibleFlag = false;
     private boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
-    BannerListViewAdapter adapter;
     ListView listview ;
     boolean bLastPage = false;
     Integer nPageSize = 30;
+    Integer nPage = 1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         adapter = new BannerListViewAdapter();
         GetBannerList();
-
 
         return inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
     }
@@ -59,14 +59,15 @@ public class TabFragment1 extends BaseFragment {
         AD_SEARCH_COND Cond = new AD_SEARCH_COND();
 
         try {
-            if(bLastPage) {
-                Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
-                return;
-            }
+
             Cond.LATITUDE = Global.getMapInfo().latitude;
             Cond.LONGITUDE = Global.getMapInfo().longitude;
             Cond.PageCount = nPageSize;
-            if(page != null) Cond.Page = page;
+            Cond.Page  = page == null ? 1 : page;
+            if(Cond.Page != 1 && bLastPage) {
+                Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                return;
+            }
             String sAddr = Global.getMapInfo().currentLocationAddress;
             Global.getCommon().ProgressShow(getActivity());
             Call<List<T_AD>> call = Global.getAPIService().GetBannerList(Cond);
@@ -92,8 +93,9 @@ public class TabFragment1 extends BaseFragment {
 
                                 // 데이터 로드
                                 if(lastitemVisibleFlag == true) {
-                                    Integer page = (listview.getCount() / nPageSize) + 1;
-                                    GetBannerList(page);
+                                    //Integer page = (listview.getCount() / nPageSize) + 1;
+                                    nPage = nPage + 1;
+                                    GetBannerList(nPage);
 
                                 }
                                 mLockListView = false;
