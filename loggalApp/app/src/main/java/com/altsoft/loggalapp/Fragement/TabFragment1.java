@@ -122,7 +122,7 @@ public class TabFragment1 extends BaseFragment {
                                 /// 사이니지제어
                                 Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getContext(), SignageControlActivity.class);
-                                intent.putExtra("T_AD", adItem);
+                                intent.putExtra("SIGN_CODE", adItem.SIGN_CODE);
                                 getContext().startActivity(intent);
                             }
 

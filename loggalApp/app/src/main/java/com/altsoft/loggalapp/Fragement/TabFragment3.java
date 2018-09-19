@@ -15,7 +15,7 @@ import com.altsoft.Adapter.SignageListViewAdapter;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.module.BaseFragment;
 import com.altsoft.loggalapp.R;
-import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
+import com.altsoft.loggalapp.SignageControlActivity;
 import com.altsoft.model.signage.MOBILE_SIGNAGE_COND;
 import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
 
@@ -106,8 +106,8 @@ public class TabFragment3 extends BaseFragment {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             MOBILE_SIGNAGE_LIST data = adapter.getItem(position);
                             //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getContext(), LocalboxbannerListActivity.class);
-                            intent.putExtra("DEVICE_CODE", data.SIGN_CODE);
+                            Intent intent = new Intent(getContext(), SignageControlActivity.class);
+                            intent.putExtra("SIGN_CODE", data.SIGN_CODE);
                             getContext().startActivity(intent);
                         }
                     });

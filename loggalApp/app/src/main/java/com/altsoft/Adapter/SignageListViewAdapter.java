@@ -23,7 +23,7 @@ public class SignageListViewAdapter extends BaseAdapter {
 
     @Override
     public MOBILE_SIGNAGE_LIST getItem(int position) {
-        return null;
+        return listViewItemList.get(position);
     }
 
     @Override
@@ -55,9 +55,12 @@ public class SignageListViewAdapter extends BaseAdapter {
 
         return convertView;
     }
-
-    public Boolean SetDataBind(List<MOBILE_SIGNAGE_LIST> list) {
-        if (listViewItemList.size() == 0) {
+    public Boolean SetDataBind(List<MOBILE_SIGNAGE_LIST> list)
+    {
+        return SetDataBind(list, false);
+    }
+    public Boolean SetDataBind(List<MOBILE_SIGNAGE_LIST> list, Boolean bFirst) {
+        if (listViewItemList.size() == 0 || bFirst) {
             listViewItemList = (ArrayList) list;
             return false;
         }
