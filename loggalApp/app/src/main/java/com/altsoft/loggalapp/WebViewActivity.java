@@ -57,8 +57,6 @@ public class WebViewActivity extends AppCompatActivity {
             public void onResponse(Call<MOBILE_AD_DETAIL_DATA> call, Response<MOBILE_AD_DETAIL_DATA> response) {
 //                Global.getCommon().ProgressHide(activity);
                 mWebView.loadUrl(  response.body().CONTENT_URL);
-              //
-
             }
 
             @Override
