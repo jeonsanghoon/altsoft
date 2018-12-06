@@ -67,7 +67,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
 
     private void fetchCompanies() {
      /*   mAdapter = new MainAdapter(Company.getCompanies());
-        mBinding.includeMain.recyclerView.setAdapter(mAdapter);*/
+        mBinding.includeMain.recycler~iew.setAdapter(mAdapter);*/
     }
 
 
@@ -95,7 +95,12 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
                 this.startActivity(intent);
                 return true;
             }
+            case R.id.action_map_search: {
+                Intent intent = new Intent(this, locationMapActivity.class);
 
+                this.startActivity(intent);
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -108,12 +113,13 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
         mBinding = (ActivityMainBinding) this.bindView(R.layout.activity_main);
         this.onInitToolbar(mBinding.toolbar, "loggal");
 
-
+/*
         mBinding.searchLiveo.
                 with(this).
                 removeMinToSearch().
                 removeSearchDelay().
                 build();
+                */
 /*
         if (mBinding.includeMain != null) {
             mBinding.includeMain.recyclerView.setHasFixedSize(true);
@@ -219,7 +225,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
     }
 
     private void initViewPager() {
-        viewPager = (ViewPager)findViewById(R.id.viewPagerMain);
+        viewPager = findViewById(R.id.viewPagerMain);
 
         List<Fragment> listFragments = new ArrayList<>();
         listFragments.add(new TabFragment1());
