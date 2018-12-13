@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.altsoft.Framework.Global;
+import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.model.MOBILE_AD_DETAIL_COND;
 import com.altsoft.model.MOBILE_AD_DETAIL_DATA;
 import com.altsoft.model.T_AD;
@@ -21,7 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class WebViewActivity extends AppCompatActivity {
+public class WebViewActivity extends BaseActivity {
     private WebView mWebView;
 
     Activity activity;

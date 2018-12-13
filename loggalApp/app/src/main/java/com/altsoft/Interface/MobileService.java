@@ -21,6 +21,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
@@ -45,5 +46,6 @@ public interface MobileService {
     Call<List<MOBILE_AD_SEARCH_DATA>> GetMobileAdSearchList(@Body MOBILE_AD_SEARCH_COND Cond);
     @POST("/api/signage/GetMobileSignageList")
     Call<List<MOBILE_SIGNAGE_LIST>> GetMobileSignageList(@Body MOBILE_SIGNAGE_COND Cond);
+
 }
 

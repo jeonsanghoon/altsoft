@@ -252,8 +252,5 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
 
             }
         });
-
     }
-
-
 }

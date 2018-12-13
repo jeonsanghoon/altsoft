@@ -27,5 +27,9 @@
     </string>
     <string name="clear" />
     <string name="search">Pesquisar</string>
-    <string name="googlekey">AIzaSyC6FAdVKiWVyDazhk0qabdbNOQsiIdAnEA</string>
+    <string name="googlekey">AIzaSyCqW-VLVCAVH_qON1XaTsNRgk1azLwxBwQ</string>
+    <string name="kakaoNativekey">KakaoAK f4b6fcf0929c22fb0ddf22fea58a757f</string>
+    <string name="kakaoRestkey">KakaoAK f14891693c4c1e9ed1ab2195e941c3dd</string>
+    <string name="kakaoJavascriptkey">KakaoAK 79c5a9e9a6ecd88786c0522e33fe184d</string>
+    <string name="kakaoAdminkey">KakaoAK 0abb521fbfea1e9cccf7057079e82af4</string>
 </resources>

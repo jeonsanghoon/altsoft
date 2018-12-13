@@ -1,6 +1,9 @@
 package com.altsoft.Framework;
 
+import android.app.Activity;
+
 import com.altsoft.Framework.map.MapInfo;
+import com.altsoft.Interface.DaumMapService;
 import com.altsoft.Interface.MobileService;
 import com.altsoft.model.LOGIN_INFO;
 
@@ -8,6 +11,23 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Global {
+
+    static ResourceInfo _resourceInfo;
+    public static ResourceInfo getResourceInfo ( ) {
+        if (_resourceInfo == null) {
+            _resourceInfo = new ResourceInfo();
+        }
+        return _resourceInfo;
+    }
+
+    static Activity _currentactivity;
+    public static void setCurrentActivity(Activity activity) {
+        _currentactivity = activity;
+    }
+    public static Activity getCurrentActivity() {
+        return _currentactivity;
+    }
+
     static MapInfo _mapInfo;
     public static MapInfo getMapInfo ( ) {
         if (_mapInfo == null) {
@@ -50,8 +70,10 @@ public class Global {
     {
         if(_apiservice == null)
         {
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://api.altsoft.ze.am")
+
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             _apiservice = retrofit.create(MobileService.class);
@@ -59,6 +81,20 @@ public class Global {
         return _apiservice;
     }
 
+    static DaumMapService _daumMapService;
+    public static DaumMapService getDaumMapAPIService()
+    {
+        if(_daumMapService == null)
+        {
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://dapi.kakao.com")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            _daumMapService = retrofit.create(DaumMapService.class);
+        }
+        return _daumMapService;
+    }
     static FtpInfo _ftpInfo;
     public static FtpInfo getFtpInfo() throws Exception {
         if(_ftpInfo == null) {

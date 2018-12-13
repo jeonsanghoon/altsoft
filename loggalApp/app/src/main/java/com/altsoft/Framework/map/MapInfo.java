@@ -88,4 +88,6 @@ public class MapInfo {
         }
         return loc;
     }
+
+
 }
