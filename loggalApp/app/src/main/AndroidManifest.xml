@@ -30,8 +30,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="HardcodedDebugMode">
-
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,13 +55,18 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/googlekey" />
-
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/googlekey" />
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="f4b6fcf0929c22fb0ddf22fea58a757f" />
+
+        <activity android:name=".kakaoMapActivity"></activity>
     </application>
 
 </manifest>

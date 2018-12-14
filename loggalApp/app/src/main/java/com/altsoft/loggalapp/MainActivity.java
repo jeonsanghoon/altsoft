@@ -96,7 +96,8 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
                 return true;
             }
             case R.id.action_map_search: {
-                Intent intent = new Intent(this, locationMapActivity.class);
+                //Intent intent = new Intent(this, locationMapActivity.class);
+                Intent intent = new Intent(this, kakaoMapActivity.class);
 
                 this.startActivity(intent);
                 return true;
