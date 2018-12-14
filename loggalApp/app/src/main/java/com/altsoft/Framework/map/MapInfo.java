@@ -6,9 +6,13 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Response;
 
 public class MapInfo {
     public Double latitude  = 37.5609447;
@@ -89,5 +93,16 @@ public class MapInfo {
         return loc;
     }
 
+    public String getKakaoAddressName(Response<JsonObject> response)
+    {
+        if(response.body().get("documents").getAsJsonArray().size() == 0) return "";
+        JsonObject obj = response.body().get("documents").getAsJsonArray().get(0).getAsJsonObject();
+
+        if(!obj.get("road_address").isJsonNull()) {
+            return obj.get("road_address").getAsJsonObject().get("address_name").getAsString();
+        }
+        else
+            return obj.get("address").getAsJsonObject().get("address_name").getAsString();
+    }
 
 }

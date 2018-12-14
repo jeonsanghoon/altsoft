@@ -126,7 +126,7 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
 
         ComponentInit();
 /*
-        Call<JsonObject> call = Global.getDaumMapAPIService().GetLatiLongiToAddress(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
+        Call<JsonObject> call = Global.getKakaoMapAPIService().GetLatiLongiToAddress(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
 
         call.enqueue(new Callback<JsonObject>() {
             @Override
@@ -140,7 +140,7 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
             }
         });
 
-        Call<JsonObject> call3 = Global.getDaumMapAPIService().GetLatiLongiToRegioncode(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
+        Call<JsonObject> call3 = Global.getKakaoMapAPIService().GetLatiLongiToRegioncode(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
 
         call3.enqueue(new Callback<JsonObject>() {
             @Override
@@ -154,7 +154,7 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
             }
         });
 
-        Call<JsonObject> call2 = Global.getDaumMapAPIService().GetAddressSearch("경기도 안성시");
+        Call<JsonObject> call2 = Global.getKakaoMapAPIService().GetAddressSearch("경기도 안성시");
 
         call2.enqueue(new Callback<JsonObject>() {
             @Override
@@ -168,7 +168,7 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
             }
         });
 
-        Call<JsonObject> call2 = Global.getDaumMapAPIService().GetAddressKeyword("카카오프렌즈");
+        Call<JsonObject> call2 = Global.getKakaoMapAPIService().GetAddressKeyword("카카오프렌즈");
 
         call2.enqueue(new Callback<JsonObject>() {
             @Override
@@ -380,7 +380,7 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
         // 마커 타이틀
 
         JSONObject obj = new JSONObject();
-        Call<JsonObject> call = Global.getDaumMapAPIService().GetLatiLongiToAddress(lati, longi);
+        Call<JsonObject> call = Global.getKakaoMapAPIService().GetLatiLongiToAddress(lati, longi);
 
         call.enqueue(new Callback<JsonObject>() {
             @Override

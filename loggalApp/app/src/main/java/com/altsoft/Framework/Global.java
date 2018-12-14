@@ -3,7 +3,7 @@ package com.altsoft.Framework;
 import android.app.Activity;
 
 import com.altsoft.Framework.map.MapInfo;
-import com.altsoft.Interface.DaumMapService;
+import com.altsoft.Interface.KakaoMapService;
 import com.altsoft.Interface.MobileService;
 import com.altsoft.model.LOGIN_INFO;
 
@@ -81,19 +81,19 @@ public class Global {
         return _apiservice;
     }
 
-    static DaumMapService _daumMapService;
-    public static DaumMapService getDaumMapAPIService()
+    static KakaoMapService _kakaoService;
+    public static KakaoMapService getKakaoMapAPIService()
     {
-        if(_daumMapService == null)
+        if(_kakaoService == null)
         {
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://dapi.kakao.com")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-            _daumMapService = retrofit.create(DaumMapService.class);
+            _kakaoService = retrofit.create(KakaoMapService.class);
         }
-        return _daumMapService;
+        return _kakaoService;
     }
     static FtpInfo _ftpInfo;
     public static FtpInfo getFtpInfo() throws Exception {

@@ -14,7 +14,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 
-public interface DaumMapService {
+public interface KakaoMapService {
     @Headers({
             "Accept:application/vnd.github.v3.full+json",
             "User-Agent:Retrofit-DaumMap",
