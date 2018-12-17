@@ -28,6 +28,8 @@ public class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
         String[] arrData = poiItem.getItemName().split("\\|");
         ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(arrData[0]);
         ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText(arrData[1]);
+        ImageView iconImageView  = (ImageView) mCalloutBalloon.findViewById(R.id.badge);
+        iconImageView.setImageBitmap(Global.getCommon().loadBitmap(arrData[2],200,200));
         return mCalloutBalloon;
     }
 

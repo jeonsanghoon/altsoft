@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -17,8 +18,10 @@ import com.bumptech.glide.Glide;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -146,45 +149,84 @@ public class Common {
         listView.requestLayout();
     }
 
-    public Bitmap getBitmapFromURL(String src) throws ExecutionException, InterruptedException {
-        Bitmap bitmap = null;
-        InputStream stream = null;
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inSampleSize = 1;
 
-        try {
-            stream = getHttpConnection(src);
-            bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
-            stream.close();
-        }
-        catch (IOException e1) {
-            e1.printStackTrace();
-            System.out.println("downloadImage"+ e1.toString());
-        }
-        return bitmap;
+    private  String TAG = "Panoramio";
+
+    private  int IO_BUFFER_SIZE = 4 * 1024;
+
+    /**
+     * Loads a bitmap from the specified url. This can take a while, so it should not
+     * be called from the UI thread.
+     *
+     * @param url The location of the bitmap asset
+     *
+     * @return The bitmap, or null if it could not be loaded
+     */
+
+    public  Bitmap loadBitmap(String url) {
+       return loadBitmap(url, -1,-1);
     }
 
-    private  InputStream getHttpConnection(String urlString)  throws IOException {
-
-        InputStream stream = null;
-        URL url = new URL(urlString);
-        URLConnection connection = url.openConnection();
-
-        try {
-            HttpURLConnection httpConnection = (HttpURLConnection) connection;
-            httpConnection.setRequestMethod("GET");
-            httpConnection.connect();
-
-            if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                stream = httpConnection.getInputStream();
+    /**
+     * Closes the specified stream.
+     *
+     * @param stream The stream to close.
+     */
+    private  void closeStream(Closeable stream) {
+        if (stream != null) {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                android.util.Log.e(TAG, "Could not close stream", e);
             }
         }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            System.out.println("downloadImage" + ex.toString());
-        }
-        return stream;
     }
+    public  Bitmap loadBitmap(String url, int width, int height)
+    {
+        Bitmap bitmap = null;
+        InputStream in = null;
+        BufferedOutputStream out = null;
+
+        try {
+            in = new BufferedInputStream(new URL(url).openStream(), IO_BUFFER_SIZE);
+
+            final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+            out = new BufferedOutputStream(dataStream, IO_BUFFER_SIZE);
+            copy(in, out);
+            out.flush();
+
+            final byte[] data = dataStream.toByteArray();
+            if(width == -1) {
+                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            }
+            else{
+                bitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(data, 0, data.length), width,height,true);
+            }
 
 
+        } catch (IOException e) {
+            Log.e(TAG, "Could not load Bitmap from: " + url);
+        } finally {
+            closeStream(in);
+            closeStream(out);
+        }
+
+        return bitmap;
+    }
+    /**
+     * Copy the content of the input stream into the output stream, using a
+     * temporary byte array buffer whose size is defined by
+     * {@link #IO_BUFFER_SIZE}.
+     *
+     * @param in The input stream to copy from.
+     * @param out The output stream to copy to.
+     * @throws IOException If any error occurs during the copy.
+     */
+    private  void copy(InputStream in, OutputStream out) throws IOException {
+        byte[] b = new byte[IO_BUFFER_SIZE];
+        int read;
+        while ((read = in.read(b)) != -1) {
+            out.write(b, 0, read);
+        }
+    }
 }
