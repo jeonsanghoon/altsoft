@@ -246,6 +246,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     }
 
 
+
     /// 자동완성
     private  class SearchAutoCompleate{
         KakayAddressAdapter adapter;
@@ -271,8 +272,16 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     autoCompleteTextView.dismissDropDown();
 
-                    adapter.setSelectedItem(adapter.getObject(position));;
+                    adapter.setSelectedItem(adapter.getObject(position));
 
+                    mapPoint = MapPoint.mapPointWithGeoCoord(adapter.getObject(position).latitude, adapter.getObject(position).longitude);
+                    mapView.moveCamera(CameraUpdateFactory.newMapPoint(mapPoint));
+                    MapPOIItem[] poliItems = mapView.getPOIItems();
+                    if (poliItems.length > 0) {
+                        poliItems[0].setMapPoint(mapPoint);
+                    }
+                    MapPoint.GeoCoordinate mapPointGeo = mapPoint.getMapPointGeoCoord();
+                    SetMarkerAddress(adapter.getObject(position).latitude,adapter.getObject(position).longitude );
                     bAutoDrop = false;
                 }
             });
@@ -332,8 +341,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                                 } else
                                     obj.road_address_name = data.getAsJsonObject().get("road_address").getAsJsonObject().get("address_name").getAsString();
 
-                                obj.latitude = data.getAsJsonObject().get("y").getAsBigDecimal();
-                                obj.longitude = data.getAsJsonObject().get("x").getAsBigDecimal();
+                                obj.latitude = data.getAsJsonObject().get("y").getAsDouble();
+                                obj.longitude = data.getAsJsonObject().get("x").getAsDouble();
                                 obj.zip_code = data.getAsJsonObject().get("address").getAsJsonObject().get("zip_code").getAsString();
                                 list.add(obj);
                                 //list.add(data.NAME);

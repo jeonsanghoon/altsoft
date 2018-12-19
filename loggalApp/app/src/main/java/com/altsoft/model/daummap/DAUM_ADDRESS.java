@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class DAUM_ADDRESS{
     public String address_name;
     public String road_address_name;
-    public BigDecimal latitude;
-    public BigDecimal longitude;
+    public Double latitude;
+    public Double longitude;
     public String zip_code;
 }

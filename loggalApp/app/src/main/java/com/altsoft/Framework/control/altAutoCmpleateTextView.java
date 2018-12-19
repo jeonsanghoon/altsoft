@@ -103,10 +103,12 @@ public class altAutoCmpleateTextView extends android.support.v7.widget.AppCompat
                 }
             }
         } );
-      /*  this.setLineSpacing(0, 1.2f);
+        this.setLineSpacing(0, 1.2f);
         this.setTextSize(18);
         this.setPadding(15,0,15,0);
-        this.setSingleLine();*/
+        this.setSingleLine();
+
+
     }
 
     public void setImgClearButton(Drawable imgClearButton) {
