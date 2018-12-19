@@ -97,6 +97,13 @@ public class MapInfo {
     {
         if(response.body().get("documents").getAsJsonArray().size() == 0) return "";
         JsonObject obj = response.body().get("documents").getAsJsonArray().get(0).getAsJsonObject();
+        return obj.get("address").getAsJsonObject().get("address_name").getAsString();
+    }
+
+    public String getKakaoRoadAddressName(Response<JsonObject> response)
+    {
+        if(response.body().get("documents").getAsJsonArray().size() == 0) return "";
+        JsonObject obj = response.body().get("documents").getAsJsonArray().get(0).getAsJsonObject();
 
         if(!obj.get("road_address").isJsonNull()) {
             return obj.get("road_address").getAsJsonObject().get("address_name").getAsString();

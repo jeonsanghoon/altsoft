@@ -15,18 +15,11 @@ import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 public interface KakaoMapService {
-    @Headers({
-            "Accept:application/vnd.github.v3.full+json",
-            "User-Agent:Retrofit-DaumMap",
-            "Authorization:KakaoAK f14891693c4c1e9ed1ab2195e941c3dd"
-    })
     /// 좌표로 주소 검색
     @GET("/v2/local/geo/coord2address.json?input_coord=WGS84")
     Call<JsonObject> GetLatiLongiToAddress (@Query("y") double y, @Query("x") double x); /*y : latitude, x: longititude */
-
     @GET("/v2/local/search/address.json?")
     Call<JsonObject> GetAddressSearch (@Query("query") String query); /*query 주소 예) 경기도 */
-    @FormUrlEncoded
     @GET("/v2/local/search/keyword.json?y=37.514322572335935&x=127.06283102249932&radius=20000")
     Call<JsonObject> GetAddressKeyword (@Query("query") String query); /*query 주소 예) 경기도 */
 }

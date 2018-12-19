@@ -26,10 +26,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface MobileService {
-    @Headers({
-            "Accept: application/vnd.github.v3.full+json",
-            "User-Agent: Retrofit-Sample-App"
-    })
+
     @POST("/api/advertising/GetAdList")
     Call<List<T_AD>> GetBannerList (@Body AD_SEARCH_COND Cond);
     @POST("/api/loggalBox/GetDeviceLocation")

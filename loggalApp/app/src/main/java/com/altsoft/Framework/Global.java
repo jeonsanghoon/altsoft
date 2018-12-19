@@ -7,6 +7,11 @@ import com.altsoft.Interface.KakaoMapService;
 import com.altsoft.Interface.MobileService;
 import com.altsoft.model.LOGIN_INFO;
 
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -71,9 +76,24 @@ public class Global {
         if(_apiservice == null)
         {
 
+            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+            httpClient.addInterceptor(new Interceptor() {
+                @Override
+                public okhttp3.Response intercept(Chain chain) throws IOException {
+                    Request original = chain.request();
+
+                    // Request customization: add request headers
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .addHeader("Accept", "application/vnd.github.v3.full+json")
+                            .addHeader("User-Agent", "Retrofit-MobileService");
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                }
+            });
+            OkHttpClient client = httpClient.build();
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://api.altsoft.ze.am")
-
+                    .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             _apiservice = retrofit.create(MobileService.class);
@@ -87,9 +107,28 @@ public class Global {
         if(_kakaoService == null)
         {
 
+            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+            httpClient.addInterceptor(new Interceptor() {
+                @Override
+                public okhttp3.Response intercept(Chain chain) throws IOException {
+                    Request original = chain.request();
+
+                    // Request customization: add request headers
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .addHeader("Accept", "application/vnd.github.v3.full+json")
+                            .addHeader("User-Agent", "Retrofit-DaumMap")
+                            .addHeader("Authorization", Global.getResourceInfo().getkakaoRestkey());
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                }
+            });
+
+            OkHttpClient client = httpClient.build();
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://dapi.kakao.com")
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
                     .build();
             _kakaoService = retrofit.create(KakaoMapService.class);
         }

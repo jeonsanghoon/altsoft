@@ -154,19 +154,7 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
             }
         });
 
-        Call<JsonObject> call2 = Global.getKakaoMapAPIService().GetAddressSearch("경기도 안성시");
 
-        call2.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call2, Response<JsonObject> response2) {
-
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call2, Throwable t) {
-
-            }
-        });
 
         Call<JsonObject> call2 = Global.getKakaoMapAPIService().GetAddressKeyword("카카오프렌즈");
 
@@ -182,6 +170,19 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
             }
         });
 */
+        Call<JsonObject> call2 = Global.getKakaoMapAPIService().GetAddressSearch("경기도 안성시");
+
+        call2.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call2, Response<JsonObject> response2) {
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call2, Throwable t) {
+
+            }
+        });
     }
 
     private void ComponentInit() {
