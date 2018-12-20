@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 
 import com.altsoft.Adapter.CustomCalloutBalloonAdapter;
@@ -20,6 +23,7 @@ import com.altsoft.Adapter.KakayAddressAdapter;
 import com.altsoft.Adapter.SearchAdapter;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.control.altAutoCmpleateTextView;
+import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.model.daummap.DAUM_ADDRESS;
 import com.altsoft.model.keyword.CODE_DATA;
@@ -112,10 +116,13 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         });*/
         searchAutoCompleate = new SearchAutoCompleate();
         this.setUpViews();
+        android.support.v7.widget.Toolbar mToolbar = (android.support.v7.widget.Toolbar)findViewById(R.id.tb_toolbarsearch);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     protected void setUpViews() {
         searchAutoCompleate.setUpViews();
-        ImageButton search = (ImageButton)findViewById(R.id.btnSearch);
+        Button search = (Button)findViewById(R.id.btnSearch);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,6 +133,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     }
 
     private void SetMarker() {
+        Global.setMapInfo(new MapInfo(mapPoint.getMapPointCONGCoord().y,mapPoint.getMapPointCONGCoord().x));
     }
 
     private void SetMarkerAddress(double latitude, double longitude) {
@@ -171,26 +179,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         try {
             MapPoint.GeoCoordinate mapPointGeo = mapPoint.getMapPointGeoCoord();
             Log.i(LOG_TAG, String.format("MapView onMapViewCenterPointMoved (%f,%f)", mapPointGeo.latitude, mapPointGeo.longitude));
-
-            mapPoint = mapPoint;
-           /* MapPOIItem[] poliItems = mapView.getPOIItems();
-            if (poliItems.length > 0) {
-                poliItems[0].setMapPoint(mapPoint);
-            }*/
-           // this.SetMarkerAddress(mapPointGeo.latitude, mapPointGeo.longitude);
-        }catch(Exception ex) {
-
+        } catch (Exception ex) {
         }
-        //mapView.removePOIItem(marker);
-
-    /*    MapPOIItem marker = new MapPOIItem();
-        marker.setItemName("기준위치"); // + Global.getMapInfo().getKakaoAddressName(response)
-        marker.setTag(0);
-        marker.setMapPoint(mapPoint);
-        marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-        marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-
-        mapView.addPOIItem(marker);*/
     }
 
     @Override
@@ -273,6 +263,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                     autoCompleteTextView.dismissDropDown();
 
                     adapter.setSelectedItem(adapter.getObject(position));
+
 
                     mapPoint = MapPoint.mapPointWithGeoCoord(adapter.getObject(position).latitude, adapter.getObject(position).longitude);
                     mapView.moveCamera(CameraUpdateFactory.newMapPoint(mapPoint));
@@ -366,5 +357,14 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             }
         }
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+                finish();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

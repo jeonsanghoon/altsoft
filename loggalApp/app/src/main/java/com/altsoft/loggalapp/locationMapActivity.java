@@ -295,16 +295,12 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
             Log.d(TAG, "startLocationUpdates : call FusedLocationApi.requestLocationUpdates");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
             mRequestingLocationUpdates = true;
-
             mMap.setMyLocationEnabled(true);
-
         }
-
     }
 
 
     private void stopLocationUpdates() {
-
         Log.d(TAG, "stopLocationUpdates : LocationServices.FusedLocationApi.removeLocationUpdates");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, (com.google.android.gms.location.LocationListener) this);
         mRequestingLocationUpdates = false;

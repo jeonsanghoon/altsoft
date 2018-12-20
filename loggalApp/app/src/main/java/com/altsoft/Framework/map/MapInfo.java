@@ -17,6 +17,9 @@ import retrofit2.Response;
 public class MapInfo {
     public Double latitude  = 37.5609447;
     public Double longitude =126.9795475;
+    public Double currentLatitude = 0.0;
+    public Double currentLongitude = 0.0;
+
     public String currentLocationAddress = "";
     public MapInfo() {
     }

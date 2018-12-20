@@ -41,15 +41,12 @@
                         android:textSize="14sp"
 
                     />
-
-                    <ImageButton
+                    <Button
                         android:id="@+id/btnSearch"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
-                        android:background="@android:color/transparent"
-                        android:paddingRight="10dp"
+                        android:text="확인"/>
 
-                        android:src="@drawable/ic_search" />
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>
         </FrameLayout>
@@ -60,8 +57,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="55dp"
-        android:orientation="vertical"></RelativeLayout>
+        android:orientation="vertical"
+        android:layout_alignParentLeft ="true">
 
+    </RelativeLayout>
+    <ImageButton
+
+        android:layout_marginTop="65dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:paddingRight="10dp"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/ic_mylocation"/>
     <ProgressBar
         android:id="@+id/progress"
         style="?android:attr/progressBarStyleLarge"
