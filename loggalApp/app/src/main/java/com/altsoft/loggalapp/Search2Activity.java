@@ -286,12 +286,12 @@ public class Search2Activity extends BaseActivity {
                     if(adapter.SetDataBind(list, nPage == 1 ? true : false) ) return;
                     listview.setAdapter(adapter);
                     Global.getCommon().getTotalHeightofListView(listview);
-                    if(listview.getCount() == 0) {
+                    /*if(listview.getCount() == 0) {
                         activity.findViewById(R.id.laybanner).setVisibility(LinearLayout.GONE);
                     }
                     else {
                         activity.findViewById(R.id.laybanner).setVisibility(LinearLayout.VISIBLE);
-                    }
+                    }*/
 /*
                 ListPageParam.listview.setOnScrollListener(new ListView.OnScrollListener() {
                     @Override
@@ -413,7 +413,7 @@ public class Search2Activity extends BaseActivity {
                     }
 
                     //if(searchBannerAdapter.SetDataBind(list, (list.size() <= 4) ? true : false  ) == true) return;
-                    if(adapter.SetDataBind(list, (nPage == 1 ? true : false)) ) return;
+                    if(adapter.SetDataBind(list) ) return;
                     listview.setAdapter(adapter);
                     if(listview.getCount() == 0) {
                         activity.findViewById(R.id.laylocalbox).setVisibility(LinearLayout.GONE);
@@ -507,7 +507,7 @@ public class Search2Activity extends BaseActivity {
                     }
 
                     //if(searchBannerAdapter.SetDataBind(list, (list.size() <= 4) ? true : false  ) == true) return;
-                    adapter.SetDataBind(list, (nPage == 1? true:false) );
+                    adapter.SetDataBind(list);
                     listview.setAdapter(adapter);
                     if(listview.getCount() == 0) {
                         activity.findViewById(R.id.laySignage).setVisibility(LinearLayout.GONE);

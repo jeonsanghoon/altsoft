@@ -36,4 +36,5 @@ public  class AD_SEARCH_COND implements Serializable
     /// 선택된 페이지 기본 1
     public Integer Page;
     public String SORT_ORDER;
+    public Integer nCnt;
 }

@@ -44,7 +44,8 @@
                     <Button
                         android:id="@+id/btnSearch"
                         android:layout_width="wrap_content"
-                        android:layout_height="48dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/custom_button"
                         android:text="확인"/>
 
                 </LinearLayout>
@@ -58,18 +59,24 @@
         android:layout_height="match_parent"
         android:layout_marginTop="55dp"
         android:orientation="vertical"
+
         android:layout_alignParentLeft ="true">
 
     </RelativeLayout>
     <ImageButton
-
+        android:id="@+id/btnMylocation"
         android:layout_marginTop="65dp"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:paddingRight="10dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginRight="10dp"
+        android:alpha="0.8"
+        android:layout_gravity="right"
+
+        android:scaleType="centerInside"
         android:background="@android:color/transparent"
-        android:layout_alignParentBottom="true"
+        android:padding="0dp"
         android:src="@drawable/ic_mylocation"/>
+
     <ProgressBar
         android:id="@+id/progress"
         style="?android:attr/progressBarStyleLarge"

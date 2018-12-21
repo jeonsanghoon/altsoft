@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.map.GpsInfo;
@@ -45,10 +46,8 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
     private boolean isAccessFineLocation = false;
     private boolean isAccessCoarseLocation = false;
     private boolean isPermission = false;
-    private GpsInfo gps;
+
     private ActivityMainBinding mBinding;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +69,6 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
         mBinding.includeMain.recycler~iew.setAdapter(mAdapter);*/
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main2, menu);
@@ -81,17 +78,13 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         switch (item.getItemId()){
             case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
                 finish();
                 return true;
             }
             case R.id.action_search: {
-              //  mBinding.searchLiveo.show();
-
                 Intent intent = new Intent(this, Search2Activity.class);
-
                 this.startActivity(intent);
                 return true;
             }
@@ -99,11 +92,25 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
                 //Intent intent = new Intent(this, locationMapActivity.class);
                 Intent intent = new Intent(this, kakaoMapActivity.class);
 
-                this.startActivity(intent);
+                this.startActivityForResult(intent, enResult.Request.getValue());
                 return true;
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            tab1.GetBannerList(1);
+            tabLayout.setTabMode(2);
+            tabLayout.setSelected(true);
+            tabLayout.setTabMode(1);
+            tabLayout.setSelected(true);
+            //tab2.GetDeviceLocation();
+            tab3.GetSignageList();
+            return;
+        }
     }
     @Override
     public void changedSearch(CharSequence text) {
@@ -114,32 +121,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
         mBinding = (ActivityMainBinding) this.bindView(R.layout.activity_main);
         this.onInitToolbar(mBinding.toolbar, "loggal");
 
-/*
-        mBinding.searchLiveo.
-                with(this).
-                removeMinToSearch().
-                removeSearchDelay().
-                build();
-                */
-/*
-        if (mBinding.includeMain != null) {
-            mBinding.includeMain.recyclerView.setHasFixedSize(true);
-            mBinding.includeMain.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            mBinding.includeMain.swipeContainer.setEnabled(false);
-            mBinding.includeMain.swipeContainer.setColorSchemeResources(R.color.colorPrimary, R.color.colorAccent,
-                    R.color.colorPrimary, R.color.colorAccent);
-        }*/
         Global.getCommon().ProgressHide(this);
-
-
-
-       /*ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);*/
-
-
-
-
     }
 
     private void tabInit() {
@@ -161,6 +143,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
                 Fragment selected = null;
                 if (position == 0) {
                     selected = tab1;
+
                 } else if (position == 1) {
                     selected = tab2;
                 } else if (position == 2) {
@@ -205,12 +188,12 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
         // 권한 요청을 해야 함
         if(!callPermission()) return;
 
-        gps = new GpsInfo(MainActivity.this);
-        // GPS 사용유무 가져오기
-        if (gps.isGetLocation()) {
 
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
+        // GPS 사용유무 가져오기
+        if (Global.getGpsInfo().isGetLocation()) {
+
+            double latitude = Global.getGpsInfo().getLatitude();
+            double longitude = Global.getGpsInfo().getLongitude();
 
             Global.setMapInfo(new MapInfo(MainActivity.this, latitude, longitude));
 
@@ -221,7 +204,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
                     Toast.LENGTH_LONG).show();
         } else {
             // GPS 를 사용할수 없으므로
-            gps.showSettingsAlert();
+            Global.getGpsInfo().showSettingsAlert();
         }
     }
 

@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 
+import com.altsoft.Framework.Global;
 
 
 public class GpsInfo extends Service implements LocationListener {
@@ -42,8 +43,8 @@ public class GpsInfo extends Service implements LocationListener {
 
     protected LocationManager locationManager;
 
-    public GpsInfo(Context context) {
-        this.mContext = context;
+    public GpsInfo() {
+        this.mContext = Global.getCurrentActivity();
         getLocation();
     }
 

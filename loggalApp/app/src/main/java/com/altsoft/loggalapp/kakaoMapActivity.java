@@ -23,6 +23,7 @@ import com.altsoft.Adapter.KakayAddressAdapter;
 import com.altsoft.Adapter.SearchAdapter;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.control.altAutoCmpleateTextView;
+import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.model.daummap.DAUM_ADDRESS;
@@ -130,10 +131,26 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             }
         });
         Global.getCommon().ProgressHide(this);
+        ImageButton mylocationsearch = (ImageButton)findViewById(R.id.btnMylocation);
+        mylocationsearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SetMyLocation();
+            }
+        });
+
+    }
+
+    private void SetMyLocation() {
+
+        //Global.setMapInfo(new MapInfo( Global.getGpsInfo().getLatitude(), Global.getGpsInfo().getLongitude()));
+        searchAutoCompleate.moveMarker(Global.getGpsInfo().getLatitude(), Global.getGpsInfo().getLongitude());
     }
 
     private void SetMarker() {
-        Global.setMapInfo(new MapInfo(mapPoint.getMapPointCONGCoord().y,mapPoint.getMapPointCONGCoord().x));
+        Global.setMapInfo(new MapInfo(mapPoint.getMapPointGeoCoord().latitude,mapPoint.getMapPointGeoCoord().longitude));
+        setResult(RESULT_OK);
+        finish();
     }
 
     private void SetMarkerAddress(double latitude, double longitude) {
@@ -190,13 +207,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
 
     @Override
     public void onMapViewSingleTapped(MapView mapView, MapPoint mapPoint) {
-        mapView.moveCamera(CameraUpdateFactory.newMapPoint(mapPoint));
-        MapPOIItem[] poliItems = mapView.getPOIItems();
-        if (poliItems.length > 0) {
-            poliItems[0].setMapPoint(mapPoint);
-        }
-        MapPoint.GeoCoordinate mapPointGeo = mapPoint.getMapPointGeoCoord();
-        this.SetMarkerAddress(mapPointGeo.latitude, mapPointGeo.longitude);
+        searchAutoCompleate.moveMarker(mapPoint.getMapPointGeoCoord().latitude, mapPoint.getMapPointGeoCoord().longitude);
+
     }
 
     @Override
@@ -264,16 +276,9 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
 
                     adapter.setSelectedItem(adapter.getObject(position));
 
+                    moveMarker(adapter.getObject(position).latitude,adapter.getObject(position).longitude);
 
-                    mapPoint = MapPoint.mapPointWithGeoCoord(adapter.getObject(position).latitude, adapter.getObject(position).longitude);
-                    mapView.moveCamera(CameraUpdateFactory.newMapPoint(mapPoint));
-                    MapPOIItem[] poliItems = mapView.getPOIItems();
-                    if (poliItems.length > 0) {
-                        poliItems[0].setMapPoint(mapPoint);
-                    }
-                    MapPoint.GeoCoordinate mapPointGeo = mapPoint.getMapPointGeoCoord();
-                    SetMarkerAddress(adapter.getObject(position).latitude,adapter.getObject(position).longitude );
-                    bAutoDrop = false;
+
                 }
             });
             autoCompleteTextView.addTextChangedListener(new TextWatcher() {
@@ -306,6 +311,19 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                     beforeData = data;
                 }
             });
+        }
+
+        private void moveMarker(Double latitude, Double longitude)
+        {
+            mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude);
+            mapView.moveCamera(CameraUpdateFactory.newMapPoint(mapPoint));
+            MapPOIItem[] poliItems = mapView.getPOIItems();
+            if (poliItems.length > 0) {
+                poliItems[0].setMapPoint(mapPoint);
+            }
+            MapPoint.GeoCoordinate mapPointGeo = mapPoint.getMapPointGeoCoord();
+            SetMarkerAddress( latitude, longitude);
+            bAutoDrop = false;
         }
 
         /// 자동완성 값 셋팅

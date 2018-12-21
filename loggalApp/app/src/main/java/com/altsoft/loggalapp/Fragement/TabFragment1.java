@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,22 +40,37 @@ public class TabFragment1 extends BaseFragment {
     boolean bLastPage = false;
     Integer nPageSize = 30;
     Integer nPage = 1;
+    int nCnt = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        adapter = new BannerListViewAdapter();
-        GetBannerList();
+
+            adapter = new BannerListViewAdapter();
+            GetBannerList();
+
 
         return inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
     }
 
-    private void GetBannerList() {
-        this.GetBannerList(null);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+
+
+    }
+
+    private void setContentView(int activity_main) {
+    }
+
+    public void GetBannerList() {
+        this.GetBannerList(1);
     }
 
     /// 배너정보가져오기
-    private void GetBannerList(Integer page) {
+    public void GetBannerList(Integer page) {
 
         AD_SEARCH_COND Cond = new AD_SEARCH_COND();
 
@@ -63,11 +79,14 @@ public class TabFragment1 extends BaseFragment {
             Cond.LATITUDE = Global.getMapInfo().latitude;
             Cond.LONGITUDE = Global.getMapInfo().longitude;
             Cond.PageCount = nPageSize;
-            Cond.Page  = page == null ? 1 : page;
+            Cond.Page  =page;// page == null ? 1 : page;
             if(Cond.Page != 1 && bLastPage) {
                 Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                 return;
             }
+            Cond.nCnt = nCnt ++;
+
+
             String sAddr = Global.getMapInfo().currentLocationAddress;
             Global.getCommon().ProgressShow(getActivity());
             Call<List<T_AD>> call = Global.getAPIService().GetBannerList(Cond);
@@ -84,7 +103,8 @@ public class TabFragment1 extends BaseFragment {
 
                     if(adapter.SetDataBind(list) == true) return;
                     listview = (ListView) getView().findViewById(R.id.listview1);
-                    listview.setAdapter(adapter);
+
+                     listview.setAdapter(adapter);
 
                     listview.setOnScrollListener(new ListView.OnScrollListener() {
                         @Override

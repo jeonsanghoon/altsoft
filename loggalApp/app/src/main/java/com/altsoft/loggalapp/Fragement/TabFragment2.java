@@ -43,7 +43,7 @@ public class TabFragment2 extends BaseFragment {
         GetDeviceLocation();
         return inflater.inflate(R.layout.fragment_tab_fragment2, container, false);
     }
-    private void GetDeviceLocation()
+    public void GetDeviceLocation()
     {
         this.GetDeviceLocation(null);
     }

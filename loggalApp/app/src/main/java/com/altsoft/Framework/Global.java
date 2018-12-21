@@ -2,6 +2,7 @@ package com.altsoft.Framework;
 
 import android.app.Activity;
 
+import com.altsoft.Framework.map.GpsInfo;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Interface.KakaoMapService;
 import com.altsoft.Interface.MobileService;
@@ -17,7 +18,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Global {
 
+
+
+
     static ResourceInfo _resourceInfo;
+
     public static ResourceInfo getResourceInfo ( ) {
         if (_resourceInfo == null) {
             _resourceInfo = new ResourceInfo();
@@ -43,6 +48,15 @@ public class Global {
     public static void setMapInfo(MapInfo val) {
         _mapInfo = val;
     }
+
+    static GpsInfo _gpsInfo;
+    public static GpsInfo getGpsInfo ( ) {
+        if (_gpsInfo == null) {
+            _gpsInfo = new GpsInfo();
+        }
+        return _gpsInfo;
+    }
+
     static Common _common;
     public static Common getCommon ( ) {
         if (_common == null) {

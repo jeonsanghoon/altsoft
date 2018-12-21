@@ -43,7 +43,7 @@ public class TabFragment3 extends BaseFragment {
         GetSignageList();
         return inflater.inflate(R.layout.fragment_tab_fragment3, container, false);
     }
-    private void GetSignageList()
+    public void GetSignageList()
     {
         this.GetSignageList(null);
     }
