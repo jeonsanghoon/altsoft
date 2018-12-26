@@ -28,7 +28,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-
 /**
 
  */
@@ -36,30 +35,27 @@ public class TabFragment1 extends BaseFragment {
     BannerListViewAdapter adapter;
     boolean lastitemVisibleFlag = false;
     private boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
-    ListView listview ;
+    ListView listview;
     boolean bLastPage = false;
     Integer nPageSize = 30;
     Integer nPage = 1;
     int nCnt = 0;
+
+    public static List<T_AD> list;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-            adapter = new BannerListViewAdapter();
-            GetBannerList();
-
-
+        adapter = new BannerListViewAdapter();
+        GetBannerList();
         return inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
-
     }
 
     private void setContentView(int activity_main) {
@@ -79,12 +75,12 @@ public class TabFragment1 extends BaseFragment {
             Cond.LATITUDE = Global.getMapInfo().latitude;
             Cond.LONGITUDE = Global.getMapInfo().longitude;
             Cond.PageCount = nPageSize;
-            Cond.Page  =page;// page == null ? 1 : page;
-            if(Cond.Page != 1 && bLastPage) {
-                Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+            Cond.Page = page;// page == null ? 1 : page;
+            if (Cond.Page != 1 && bLastPage) {
+                Toast.makeText(getActivity(), "데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                 return;
             }
-            Cond.nCnt = nCnt ++;
+            Cond.nCnt = nCnt++;
 
 
             String sAddr = Global.getMapInfo().currentLocationAddress;
@@ -93,18 +89,18 @@ public class TabFragment1 extends BaseFragment {
             call.enqueue(new Callback<List<T_AD>>() {
                 @Override
                 public void onResponse(Call<List<T_AD>> call, Response<List<T_AD>> response) {
-                    List<T_AD> list = response.body();
+                    list = response.body();
                     Global.getCommon().ProgressHide(getActivity());
-                    if(list.size() == 0) {
-                        Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                    if (list.size() == 0) {
+                        Toast.makeText(getActivity(), "데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                         return;
                     }
-                    if(list.size() < nPageSize) bLastPage = true;
+                    if (list.size() < nPageSize) bLastPage = true;
 
-                    if(adapter.SetDataBind(list) == true) return;
+                    if (adapter.SetDataBind(list) == true) return;
                     listview = (ListView) getView().findViewById(R.id.listview1);
 
-                     listview.setAdapter(adapter);
+                    listview.setAdapter(adapter);
 
                     listview.setOnScrollListener(new ListView.OnScrollListener() {
                         @Override
@@ -112,7 +108,7 @@ public class TabFragment1 extends BaseFragment {
                             if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag && mLockListView == false) {
 
                                 // 데이터 로드
-                                if(lastitemVisibleFlag == true) {
+                                if (lastitemVisibleFlag == true) {
                                     //Integer page = (listview.getCount() / nPageSize) + 1;
                                     nPage = nPage + 1;
                                     GetBannerList(nPage);
@@ -132,21 +128,21 @@ public class TabFragment1 extends BaseFragment {
                     listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                           T_AD adItem = adapter.getItem(position);
+                            T_AD adItem = adapter.getItem(position);
                             //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-                            if(adItem.SIGN_CODE == null) {
+                            if (adItem.SIGN_CODE == null) {
                                 Intent intent = new Intent(getContext(), WebViewActivity.class);
                                 intent.putExtra("T_AD", adItem);
                                 getContext().startActivity(intent);
-                            }else {
+                            } else {
                                 /// 사이니지제어
-                                Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), adItem.TITLE + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getContext(), SignageControlActivity.class);
                                 intent.putExtra("SIGN_CODE", adItem.SIGN_CODE);
                                 getContext().startActivity(intent);
                             }
 
-                         }
+                        }
                     });
                 }
 
@@ -156,7 +152,7 @@ public class TabFragment1 extends BaseFragment {
                 }
             });
 
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             Log.d("로그", ex.getMessage());
         }
     }

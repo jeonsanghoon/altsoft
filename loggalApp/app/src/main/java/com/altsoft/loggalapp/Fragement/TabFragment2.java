@@ -34,6 +34,7 @@ public class TabFragment2 extends BaseFragment {
     boolean bLastPage = false;
     Integer nPageSize = 30;
     Integer nPage = 1;
+    public static List<DEVICE_LOCATION> list;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class TabFragment2 extends BaseFragment {
                 @Override
                 public void onResponse(Call<List<DEVICE_LOCATION>> call, Response<List<DEVICE_LOCATION>> response) {
                     Global.getCommon().ProgressHide(getActivity());
-                    List<DEVICE_LOCATION> list = response.body();
+                    list = response.body();
                     if(list.size() == 0) {
                         bLastPage = true;
                         Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();

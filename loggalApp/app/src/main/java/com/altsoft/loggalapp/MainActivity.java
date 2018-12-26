@@ -23,6 +23,9 @@ import com.altsoft.loggalapp.Fragement.TabFragment1;
 import com.altsoft.loggalapp.Fragement.TabFragment2;
 import com.altsoft.loggalapp.Fragement.TabFragment3;
 import com.altsoft.loggalapp.databinding.ActivityMainBinding;
+import com.altsoft.model.DEVICE_LOCATION;
+import com.altsoft.model.T_AD;
+import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +78,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -92,6 +96,22 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
                 //Intent intent = new Intent(this, locationMapActivity.class);
                 Intent intent = new Intent(this, kakaoMapActivity.class);
 
+
+                switch(tabLayout.getSelectedTabPosition()) {
+                    case 1:
+                        intent.putExtra("list2", (ArrayList<DEVICE_LOCATION> )TabFragment2.list);
+                        intent.putExtra("mapType","localbox");
+                        break;
+                    case 2:
+                        intent.putExtra("list3", (ArrayList<MOBILE_SIGNAGE_LIST> )TabFragment3.list);
+                        intent.putExtra("mapType","signage");
+                        break;
+                    default:
+                        intent.putExtra("list1",(ArrayList<T_AD>)TabFragment1.list);
+                        intent.putExtra("mapType","banner");
+                        break;
+                }
+
                 this.startActivityForResult(intent, enResult.Request.getValue());
                 return true;
             }
@@ -102,12 +122,9 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            tab1.GetBannerList(1);
-            tabLayout.setTabMode(2);
-            tabLayout.setSelected(true);
-            tabLayout.setTabMode(1);
-            tabLayout.setSelected(true);
-            //tab2.GetDeviceLocation();
+            tab1 = null;
+            tab1 = new TabFragment1();//.GetBannerList();
+            tab2.GetDeviceLocation();
             tab3.GetSignageList();
             return;
         }
@@ -126,6 +143,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
 
     private void tabInit() {
         tab1 = new TabFragment1();
+
         tab2 = new TabFragment2();
         tab3 = new TabFragment3();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, tab1).commit();
