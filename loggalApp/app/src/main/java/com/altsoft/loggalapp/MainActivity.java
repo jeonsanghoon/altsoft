@@ -12,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.altsoft.Framework.enResult;
@@ -59,6 +61,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
         this.tabInit();
         this.gpsInit();
         this.initViewPager();
+
     }
 
     @Override
@@ -99,11 +102,11 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
 
                 switch(tabLayout.getSelectedTabPosition()) {
                     case 1:
-                        intent.putExtra("list2", (ArrayList<DEVICE_LOCATION> )TabFragment2.list);
+                        intent.putExtra("list2", (ArrayList<DEVICE_LOCATION> )Global.getData().devicelist);
                         intent.putExtra("mapType","localbox");
                         break;
                     case 2:
-                        intent.putExtra("list3", (ArrayList<MOBILE_SIGNAGE_LIST> )TabFragment3.list);
+                        intent.putExtra("list3", (ArrayList<MOBILE_SIGNAGE_LIST> )Global.getData().signagelist);
                         intent.putExtra("mapType","signage");
                         break;
                     default:
@@ -122,10 +125,10 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            tab1 = null;
-            tab1 = new TabFragment1();//.GetBannerList();
-            tab2.GetDeviceLocation();
-            tab3.GetSignageList();
+
+            tab1.GetBannerList();//.GetBannerList();
+            //tab2.GetDeviceLocation();
+            //tab3.GetSignageList();
             return;
         }
     }

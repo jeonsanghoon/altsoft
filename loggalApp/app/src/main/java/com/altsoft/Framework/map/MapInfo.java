@@ -51,7 +51,8 @@ public class MapInfo {
                 //세번째 파라미터는 좌표에 대해 주소를 리턴 받는 갯수로
                 //한좌표에 대해 두개이상의 이름이 존재할수있기에 주소배열을 리턴받기 위해 최대갯수 설정
                 address = geocoder.getFromLocation(lat, lng, 1);
-
+                currentLatitude = lat;
+                currentLongitude = lng;
                 if (address != null && address.size() > 0) {
                     // 주소 받아오기
                     currentLocationAddress = address.get(0).getAddressLine(0).toString();

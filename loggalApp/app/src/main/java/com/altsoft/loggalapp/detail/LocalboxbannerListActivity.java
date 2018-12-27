@@ -72,6 +72,8 @@ public class LocalboxbannerListActivity extends BaseActivity {
 
                 Global.getCommon().ProgressHide(activity);
                 AD_DEVICE_MOBILE_M rtn = response.body();
+                if(rtn == null) return;
+
                 activity.setTitle(rtn.DEVICE_NAME);
                 List<AD_DEVICE_MOBILE_LIST> list = rtn.AD_LIST;
                 if(bLastPage) {

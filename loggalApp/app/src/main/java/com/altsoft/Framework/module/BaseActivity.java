@@ -27,7 +27,12 @@ public class BaseActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Global.setCurrentActivity(this);
     }
-
+    @Override
+    protected  void onStart()
+    {
+        super.onStart();
+        Global.setCurrentActivity(this);
+    }
     protected ViewDataBinding bindView(int layout) {
         return DataBindingUtil.setContentView(this, layout);
     }

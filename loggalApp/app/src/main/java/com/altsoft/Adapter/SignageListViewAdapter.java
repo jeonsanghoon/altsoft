@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.altsoft.Framework.Global;
 import com.altsoft.loggalapp.R;
 import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
 
@@ -16,6 +17,10 @@ import java.util.List;
 
 public class SignageListViewAdapter extends BaseAdapter {
     private ArrayList<MOBILE_SIGNAGE_LIST> listViewItemList = new ArrayList<MOBILE_SIGNAGE_LIST>() ;
+    public ArrayList<MOBILE_SIGNAGE_LIST> getListViewItemList()
+    {
+        return listViewItemList;
+    }
     @Override
     public int getCount() {
         return listViewItemList.size();
@@ -55,20 +60,24 @@ public class SignageListViewAdapter extends BaseAdapter {
 
         return convertView;
     }
-    public Boolean SetDataBind(List<MOBILE_SIGNAGE_LIST> list)
-    {
-        return SetDataBind(list, false);
-    }
-    public Boolean SetDataBind(List<MOBILE_SIGNAGE_LIST> list, Boolean bFirst) {
-        if (listViewItemList.size() == 0 || bFirst) {
+
+    public Boolean SetDataBind(List<MOBILE_SIGNAGE_LIST> list) {
+        if (listViewItemList.size() == 0 ) {
             listViewItemList = (ArrayList) list;
+            Global.getData().signagelist = listViewItemList;
             return false;
         }
         for(int i =0; i< list.size(); i++) {
             listViewItemList.add(list.get(i));
         }
+        Global.getData().signagelist = listViewItemList;
         this.notifyDataSetChanged();
         return true;
 
+    }
+    public void clearData() {
+        // clear the data
+        listViewItemList.clear();
+        Global.getData().signagelist = listViewItemList;
     }
 }

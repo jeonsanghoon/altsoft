@@ -25,5 +25,5 @@ public class DEVICE_LOCATION  implements Serializable {
     /// 검색기준 위치로부터 거리
     /// </summary>
     public Double DISTANCE;
-    public Integer RADIUS;
+
 }

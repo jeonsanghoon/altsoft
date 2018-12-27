@@ -44,12 +44,16 @@ public class Common {
 
     /// 프로그래스바 보여주기
     public void ProgressShow(Activity activity) {
-        ProgressBar progress=  activity.findViewById(R.id.progress);
-        this.ProgressShow(activity, progress);
+        try {
+            ProgressBar progress = activity.findViewById(R.id.progress);
+            this.ProgressShow(activity, progress);
+        }catch(Exception ex){}
     }
     /// 프로그래스바 보여주기
     public void ProgressShow(Activity activity, ProgressBar progress) {
-        progress.setVisibility((int)0);
+        try {
+            progress.setVisibility((int) 0);
+        }catch(Exception ex){}
     }
 
     /// 날짜형 포맷 여부

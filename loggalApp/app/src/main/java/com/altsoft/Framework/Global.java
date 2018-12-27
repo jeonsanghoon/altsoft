@@ -80,6 +80,15 @@ public class Global {
         }
         return _loginInfo;
     }
+
+    static Data _data;
+    public static Data getData ( ) {
+        if (_data == null) {
+            _data = new Data();
+        }
+        return _data;
+    }
+
     public static void SetLoginInfo(LOGIN_INFO login) {
         _loginInfo = login;
     }

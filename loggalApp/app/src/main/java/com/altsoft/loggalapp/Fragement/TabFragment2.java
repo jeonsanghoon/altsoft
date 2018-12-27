@@ -34,7 +34,7 @@ public class TabFragment2 extends BaseFragment {
     boolean bLastPage = false;
     Integer nPageSize = 30;
     Integer nPage = 1;
-    public static List<DEVICE_LOCATION> list;
+    public  List<DEVICE_LOCATION> list;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,26 +57,33 @@ public class TabFragment2 extends BaseFragment {
             Cond.PAGE_COUNT = nPageSize;
             Cond.PAGE  = page == null ? 1 : page;
             if(Cond.PAGE != 1 && bLastPage) {
-                Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                Toast.makeText(Global.getCurrentActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                 return;
             }
+            if(Cond.PAGE == 1 && listview != null) {
+                adapter.clearData();
+                listview.setAdapter(adapter);
+                adapter = new LocalBoxListViewAdapter();
+            }
             String sAddr = Global.getMapInfo().currentLocationAddress;
-            Global.getCommon().ProgressShow(getActivity());
+            //Global.getCommon().ProgressShow(Global.getCurrentActivity());
             Call<List<DEVICE_LOCATION>> call = Global.getAPIService().GetDeviceLocation(Cond);
             call.enqueue(new Callback<List<DEVICE_LOCATION>>() {
                 @Override
                 public void onResponse(Call<List<DEVICE_LOCATION>> call, Response<List<DEVICE_LOCATION>> response) {
-                    Global.getCommon().ProgressHide(getActivity());
+                 //  Global.getCommon().ProgressHide(Global.getCurrentActivity());
                     list = response.body();
                     if(list.size() == 0) {
                         bLastPage = true;
-                        Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Global.getCurrentActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                         return;
                     }
+                    Global.getData().devicelist = list;
                     if(list.size() < nPageSize) bLastPage = true;
+
                     if(adapter.SetDataBind(list) == true) return;
 
-                    listview = (ListView) getView().findViewById(R.id.listview2);
+                    listview = (ListView) getActivity().findViewById(R.id.listview2);
                     listview.setAdapter(adapter);
                     listview.setOnScrollListener(new ListView.OnScrollListener() {
                         @Override
@@ -103,7 +110,7 @@ public class TabFragment2 extends BaseFragment {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             DEVICE_LOCATION data = adapter.getItem(position);
-                            //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(Global.getCurrentActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getContext(), LocalboxbannerListActivity.class);
                             intent.putExtra("DEVICE_CODE", Long.parseLong(data.DEVICE_CODE) );
                             getContext().startActivity(intent);
@@ -116,7 +123,7 @@ public class TabFragment2 extends BaseFragment {
 
                 @Override
                 public void onFailure(Call<List<DEVICE_LOCATION>> call, Throwable t) {
-                    Global.getCommon().ProgressHide(getActivity());
+                    Global.getCommon().ProgressHide(Global.getCurrentActivity());
                 }
             });
 

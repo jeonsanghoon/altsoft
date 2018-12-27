@@ -35,7 +35,8 @@ public class TabFragment3 extends BaseFragment {
     boolean bLastPage = false;
     Integer nPageSize = 30;
     Integer nPage = 1;
-    public static List<MOBILE_SIGNAGE_LIST> list;
+    public  List<MOBILE_SIGNAGE_LIST> list;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,26 +59,32 @@ public class TabFragment3 extends BaseFragment {
             Cond.PAGE_COUNT = nPageSize;
             Cond.PAGE  = page == null ? 1 : page;
             if(Cond.PAGE != 1 && bLastPage) {
-                Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                Toast.makeText(Global.getCurrentActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                 return;
             }
+            if(Cond.PAGE == 1 && listview != null) {
+                adapter.clearData();
+                listview.setAdapter(adapter);
+                adapter = new SignageListViewAdapter();
+            }
             String sAddr = Global.getMapInfo().currentLocationAddress;
-            Global.getCommon().ProgressShow(getActivity());
+         //   Global.getCommon().ProgressShow(Global.getCurrentActivity());
             Call<List<MOBILE_SIGNAGE_LIST>> call = Global.getAPIService().GetMobileSignageList(Cond);
             call.enqueue(new Callback<List<MOBILE_SIGNAGE_LIST>>() {
                 @Override
                 public void onResponse(Call<List<MOBILE_SIGNAGE_LIST>> call, Response<List<MOBILE_SIGNAGE_LIST>> response) {
-                    Global.getCommon().ProgressHide(getActivity());
+                //    Global.getCommon().ProgressHide(Global.getCurrentActivity());
                     list = response.body();
                     if(list.size() == 0) {
                         bLastPage = true;
-                        Toast.makeText(getActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Global.getCurrentActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                         return;
                     }
                     if(list.size() < nPageSize) bLastPage = true;
+                    if(adapter == null) adapter = new SignageListViewAdapter();
                     if(adapter.SetDataBind(list) == true) return;
 
-                    listview = (ListView) getView().findViewById(R.id.listview3);
+                    listview = (ListView) getActivity().findViewById(R.id.listview3);
                     listview.setAdapter(adapter);
                     listview.setOnScrollListener(new ListView.OnScrollListener() {
                         @Override
@@ -106,7 +113,7 @@ public class TabFragment3 extends BaseFragment {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             MOBILE_SIGNAGE_LIST data = adapter.getItem(position);
-                            //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(Global.getCurrentActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getContext(), SignageControlActivity.class);
                             intent.putExtra("SIGN_CODE", data.SIGN_CODE);
                             getContext().startActivity(intent);
@@ -115,7 +122,7 @@ public class TabFragment3 extends BaseFragment {
                 }
                 @Override
                 public void onFailure(Call<List<MOBILE_SIGNAGE_LIST>> call, Throwable t) {
-                    Global.getCommon().ProgressHide(getActivity());
+                    Global.getCommon().ProgressHide(Global.getCurrentActivity());
                 }
             });
 
@@ -123,4 +130,5 @@ public class TabFragment3 extends BaseFragment {
             Log.d("로그", ex.getMessage());
         }
     }
+
 }

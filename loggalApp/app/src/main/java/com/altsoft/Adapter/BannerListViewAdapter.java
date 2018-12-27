@@ -86,5 +86,11 @@ public class BannerListViewAdapter extends BaseAdapter {
         this.notifyDataSetChanged();
         return true;
     }
+
+
+    public void clearData() {
+        // clear the data
+        listViewItemList.clear();
+    }
 }
 

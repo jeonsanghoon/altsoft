@@ -28,6 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/background_light"
+                app:tabTextAppearance="@style/tabLayoutStyle"
                 android:elevation="1dp"
                 app:tabGravity="fill"
                 app:tabMode="fixed"

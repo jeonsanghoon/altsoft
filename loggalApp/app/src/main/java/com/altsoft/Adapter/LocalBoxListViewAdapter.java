@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.altsoft.Framework.Global;
 import com.altsoft.loggalapp.R;
 import com.altsoft.model.DEVICE_LOCATION;
+import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -21,6 +23,10 @@ public class LocalBoxListViewAdapter extends BaseAdapter {
     // ListViewAdapter의 생성자
     public LocalBoxListViewAdapter() {
 
+    }
+    public ArrayList<DEVICE_LOCATION> getListViewItemList()
+    {
+        return listViewItemList;
     }
 
     // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
@@ -69,18 +75,23 @@ public class LocalBoxListViewAdapter extends BaseAdapter {
     }
 
 
-    public boolean SetDataBind(List<DEVICE_LOCATION> list){
-        return SetDataBind(list,false);
-    }
-    public boolean SetDataBind(List<DEVICE_LOCATION> list, Boolean bFirst) {
-        if (listViewItemList.size() == 0 || bFirst) {
+
+    public boolean SetDataBind(List<DEVICE_LOCATION> list) {
+        if (listViewItemList.size() == 0) {
             listViewItemList = (ArrayList) list;
+            Global.getData().devicelist = listViewItemList;
             return false;
         }
         for(int i =0; i< list.size(); i++) {
             listViewItemList.add(list.get(i));
         }
+        Global.getData().devicelist = listViewItemList;
         this.notifyDataSetChanged();
         return true;
+    }
+    public void clearData() {
+        // clear the data
+        listViewItemList.clear();
+        Global.getData().devicelist = listViewItemList;
     }
 }

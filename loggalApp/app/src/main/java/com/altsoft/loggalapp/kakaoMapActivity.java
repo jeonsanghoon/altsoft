@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 
@@ -28,6 +29,7 @@ import com.altsoft.Framework.control.altAutoCmpleateTextView;
 import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Framework.module.BaseActivity;
+import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
 import com.altsoft.model.DEVICE_LOCATION;
 import com.altsoft.model.T_AD;
 import com.altsoft.model.daummap.DAUM_ADDRESS;
@@ -53,7 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEventListener {
+public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEventListener, MapView.POIItemEventListener {
     MapView mapView;
     ViewGroup mapViewContainer;
     MapPoint mapPoint;
@@ -73,6 +75,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         // java code
         mapView = new MapView(this);
         mapView.setMapViewEventListener(this);
+        mapView.setPOIItemEventListener(this);
         mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
         //mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter("https://altsoft.ze.am/Files/201811/20181121092023.jpg", "테스트"));
         mapPoint = MapPoint.mapPointWithGeoCoord(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
@@ -94,7 +97,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             signagelist = (ArrayList<MOBILE_SIGNAGE_LIST>) intent.getSerializableExtra("list3");
             signageListDraw();
         }
-
+        mapView.fitMapViewAreaToShowAllPOIItems();
 
         /*
         Call<JsonObject> call = Global.getKakaoMapAPIService().GetLatiLongiToAddress(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
@@ -156,6 +159,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             marker.setItemName(localboxlist.get(i).DEVICE_NAME); /* */
             marker.setTag(0);
             marker.setMapPoint(point);
+            marker.setUserObject(localboxlist.get(i));
             marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
 
@@ -167,24 +171,18 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         {
 
             MapPoint point =   MapPoint.mapPointWithGeoCoord(signagelist.get(i).LATITUDE, signagelist.get(i).LONGITUDE);
-            MapCircle circle1 = new MapCircle(
-                    point, // center
-                    signagelist.get(i).RADIUS, // radius
-                    Color.argb(128, 152, 187, 177), // strokeColor
-                    Color.argb(128, 176, 229, 214) // fillColor
-            );
-            circle1.setTag(1234);
-            mapView.addCircle(circle1);
-
             marker = new MapPOIItem();
-
             marker.setItemName(signagelist.get(i).SIGN_NAME + "(" + (signagelist.get(i).RADIUS) + "m)"); /* */
             marker.setTag(0);
+            marker.setUserObject(signagelist.get(i));
             marker.setMapPoint(point);
             marker.setMarkerType(MapPOIItem.MarkerType.YellowPin); // 기본으로 제공하는 BluePin 마커 모양.
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
 
             mapView.addPOIItem(marker);
+            ///mapView.selectPOIItem(marker, true);
+            mapView.setMapCenterPoint(point, false);
+
         }
     }
     protected void setUpViews() {
@@ -232,10 +230,10 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
 
                     marker.setItemName("기준위치 > " + Global.getMapInfo().getKakaoAddressName(response)); /* */
                     marker.setTag(0);
+                    marker.setUserObject(response);
                     marker.setMapPoint(mapPoint);
                     marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
                     marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-
                     mapView.addPOIItem(marker);
                     bFirst = false;;
                 }else {
@@ -314,6 +312,58 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         searchAutoCompleate = null;
     }
 
+    @Override
+    public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
+        if(mapType.equals("signage")) {
+            MOBILE_SIGNAGE_LIST data = (MOBILE_SIGNAGE_LIST) mapPOIItem.getUserObject();
+
+            if (mapType.equals("signage")) {
+                mapView.removeAllCircles();
+                MapPoint point = MapPoint.mapPointWithGeoCoord(data.LATITUDE, data.LONGITUDE);
+                MapCircle circle1 = new MapCircle(
+                        point, // center
+                        data.RADIUS, // radius
+                        Color.argb(128, 152, 187, 177), // strokeColor
+                        Color.argb(128, 176, 229, 214) // fillColor
+                );
+                circle1.setTag(1234);
+                mapView.addCircle(circle1);
+            }
+        }
+        else if(mapType.equals("localbox")) {
+
+        }
+    }
+
+    @Override
+    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
+        Toast.makeText(this, "Clicked " + mapPOIItem.getItemName() + " Callout Balloon", Toast.LENGTH_SHORT).show();
+
+
+    }
+
+    @Override
+    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
+        Toast.makeText(this, "Clicked " + mapPOIItem.getItemName() + " Callout Balloon", Toast.LENGTH_SHORT).show();
+        if(mapType.equals("signage")) {
+            MOBILE_SIGNAGE_LIST data = (MOBILE_SIGNAGE_LIST) mapPOIItem.getUserObject();
+
+            //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, SignageControlActivity.class);
+            intent.putExtra("SIGN_CODE", data.SIGN_CODE);
+            this.startActivity(intent);
+        }else if(mapType.equals("localbox")) {
+            DEVICE_LOCATION data = (DEVICE_LOCATION) mapPOIItem.getUserObject();
+            Intent intent = new Intent(this, LocalboxbannerListActivity.class);
+            intent.putExtra("DEVICE_CODE", Long.parseLong(data.DEVICE_CODE) );
+            this.startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
+
+    }
 
 
     /// 자동완성
