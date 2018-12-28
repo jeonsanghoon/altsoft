@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -232,12 +234,9 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
     private void initViewPager() {
         viewPager = findViewById(R.id.viewPagerMain);
 
-        List<Fragment> listFragments = new ArrayList<>();
-        listFragments.add(new TabFragment1());
-        listFragments.add(new TabFragment2());
-        listFragments.add(new TabFragment3());
 
-        TabPagerAdapter fragmentPagerAdpter = new TabPagerAdapter(getSupportFragmentManager(),listFragments);
+
+        TabPagerAdapter fragmentPagerAdpter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(fragmentPagerAdpter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -258,4 +257,40 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
             }
         });
     }
+
+    public class TabPagerAdapter extends FragmentStatePagerAdapter {
+
+        // Count number of tabs
+        private int tabCount;
+
+        public TabPagerAdapter(FragmentManager fm, int tabCount) {
+            super(fm);
+            this.tabCount = tabCount;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            // Returning the current tabs
+            switch (position) {
+                case 0:
+                    TabFragment1 tabFragment1 = new TabFragment1();
+                    return tabFragment1;
+                case 1:
+                    TabFragment2 tabFragment2 = new TabFragment2();
+                    return tabFragment2;
+                case 2:
+                    TabFragment3 tabFragment3 = new TabFragment3();
+                    return tabFragment3;
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return tabCount;
+        }
+    }
+
 }
