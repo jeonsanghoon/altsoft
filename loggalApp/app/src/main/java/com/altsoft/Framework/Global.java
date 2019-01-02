@@ -20,6 +20,8 @@ public class Global {
 
 
 
+    /// TabFrament에 onCreateView 중복 생성 체크
+    public static Boolean bFirst = true;
 
     static ResourceInfo _resourceInfo;
 

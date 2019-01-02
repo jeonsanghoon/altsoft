@@ -101,7 +101,6 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
                 //Intent intent = new Intent(this, locationMapActivity.class);
                 Intent intent = new Intent(this, kakaoMapActivity.class);
 
-
                 switch(tabLayout.getSelectedTabPosition()) {
                     case 1:
                         intent.putExtra("list2", (ArrayList<DEVICE_LOCATION> )Global.getData().devicelist);
@@ -128,7 +127,7 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             initViewPager();
-            tab1.GetBannerList();//.GetBannerList();
+           // tab1.GetBannerList();//.GetBannerList();
 
             //tab2.GetDeviceLocation();
             //tab3.GetSignageList();

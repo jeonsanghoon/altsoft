@@ -43,20 +43,22 @@ public class TabFragment1 extends BaseFragment {
     Integer nPageSize = 30;
     Integer nPage = 1;
     int nCnt = 0;
+    private View mFragementView; //레이아웃이 담길 변수
 
     public static List<T_AD> list;
-
+    Boolean bFirst = true;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-        adapter = new BannerListViewAdapter();
-        GetBannerList();
+        if(Global.bFirst) {
+            Global.bFirst = false;
+        }
+        else {
+            adapter = new BannerListViewAdapter();
+            GetBannerList();
+        }
         return inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
-
-
-
     }
     @Override
     public void onStart()
