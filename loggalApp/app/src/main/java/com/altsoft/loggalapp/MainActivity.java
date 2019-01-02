@@ -127,8 +127,9 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-
+            initViewPager();
             tab1.GetBannerList();//.GetBannerList();
+
             //tab2.GetDeviceLocation();
             //tab3.GetSignageList();
             return;
@@ -233,8 +234,6 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
 
     private void initViewPager() {
         viewPager = findViewById(R.id.viewPagerMain);
-
-
 
         TabPagerAdapter fragmentPagerAdpter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(fragmentPagerAdpter);
