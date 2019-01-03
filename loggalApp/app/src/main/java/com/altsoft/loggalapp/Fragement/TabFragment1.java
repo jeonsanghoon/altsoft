@@ -87,8 +87,6 @@ public class TabFragment1 extends BaseFragment {
         AD_SEARCH_COND Cond = new AD_SEARCH_COND();
 
         try {
-
-
             Cond.LATITUDE = Global.getMapInfo().latitude;
             Cond.LONGITUDE = Global.getMapInfo().longitude;
             Cond.PageCount = nPageSize;

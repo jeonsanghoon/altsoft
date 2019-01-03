@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -92,6 +93,8 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
     altAutoCmpleateTextView autoCompleteTextView;
     Geocoder geocoder;
     private GoogleMap mMap;
+
+    private BottomSheetBehavior sheetBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

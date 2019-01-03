@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -48,6 +51,9 @@ import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
+import org.w3c.dom.Text;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +73,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     private ArrayList<DEVICE_LOCATION> localboxlist;
     private ArrayList<MOBILE_SIGNAGE_LIST> signagelist;
     private String mapType = "banner";
+    private BottomSheetBehavior sheetBehavior;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +96,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         if(mapType.equals("banner") ) {
             bannerlist = (ArrayList<T_AD>) intent.getSerializableExtra("list1");
             this.SetMarkerAddress(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
+            sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
         else if(mapType.equals("localbox")) {
             localboxlist = (ArrayList<DEVICE_LOCATION>) intent.getSerializableExtra("list2");
@@ -98,6 +107,40 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             signageListDraw();
         }
         mapView.fitMapViewAreaToShowAllPOIItems();
+
+        LinearLayout layoutBottomSheet = findViewById(R.id.bottom_sheet);
+
+
+        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+
+        sheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        sheetBehavior.setHideable(false);
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        sheetBehavior.setHideable(false);
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
 
         /*
         Call<JsonObject> call = Global.getKakaoMapAPIService().GetLatiLongiToAddress(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
@@ -148,7 +191,11 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+    private void setUpReferences() {
+        LinearLayout layoutBottomSheet = findViewById(R.id.bottom_sheet);
 
+        sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+    }
     private void localboxListDraw() {
 
         for(int i=0; i<localboxlist.size(); i++)
@@ -314,6 +361,14 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
 
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
+        TextView tvTitle =  findViewById(R.id.txtBottomTitle);
+        TextView tvTitle2 =  findViewById(R.id.txtBottomTitle2);
+        LinearLayout lvBottomInfo =  findViewById(R.id.layBottomInfo);
+        TextView tvSubtitle =  findViewById(R.id.txtBottomSubtitle);
+        TextView tvUser =  findViewById(R.id.txtBottomUser);
+        TextView tvAddress=  findViewById(R.id.txtBottomAddress);
+        Button btnInfo =  findViewById(R.id.btnBottonSheet);
+        DecimalFormat df = new DecimalFormat("#,##0.00");
         if(mapType.equals("signage")) {
             MOBILE_SIGNAGE_LIST data = (MOBILE_SIGNAGE_LIST) mapPOIItem.getUserObject();
 
@@ -329,9 +384,30 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                 circle1.setTag(1234);
                 mapView.addCircle(circle1);
             }
+            tvTitle.setText(data.SIGN_NAME);
+            tvTitle2.setText(df.format(data.PLACE_DISTINCE / 1000.00)+ "km");
+            tvSubtitle.setText("");
+            tvUser.setText(data.COMPANY_NAME);
+            lvBottomInfo.setVisibility(View.VISIBLE);
+            tvAddress.setText("");
         }
         else if(mapType.equals("localbox")) {
+            DEVICE_LOCATION data = (DEVICE_LOCATION) mapPOIItem.getUserObject();
+            tvTitle.setText(data.DEVICE_NAME);
 
+            tvTitle2.setText(df.format(data.DISTANCE / 1000.00)+ "km");
+            tvSubtitle.setText(data.DEVICE_DESC);
+            tvUser.setText(data.COMPANY_NAME);
+            lvBottomInfo.setVisibility(View.VISIBLE);
+            tvAddress.setText(data.ADDRESS1 + " " + data.ADDRESS2);
+        }
+        else
+        {
+            tvTitle.setText("기준위치");
+            tvTitle2.setText("");
+            tvSubtitle.setText("");
+            tvAddress.setText(Global.getMapInfo().getAddress(Global.getCurrentActivity(),mapPOIItem.getMapPoint().getMapPointGeoCoord().latitude,mapPOIItem.getMapPoint().getMapPointGeoCoord().longitude));
+            lvBottomInfo.setVisibility(View.GONE);
         }
     }
 

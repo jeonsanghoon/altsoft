@@ -88,4 +88,6 @@
         android:indeterminate="true"
         android:layout_gravity="center"
         android:indeterminateDrawable="@drawable/progress" />
+    <!-- Adding bottom sheet after main content -->
+    <include layout="@layout/bottomsheet_localbox" />
 </android.support.design.widget.CoordinatorLayout>

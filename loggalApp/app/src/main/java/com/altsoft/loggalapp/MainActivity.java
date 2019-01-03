@@ -246,7 +246,6 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
             }
 
             @Override
