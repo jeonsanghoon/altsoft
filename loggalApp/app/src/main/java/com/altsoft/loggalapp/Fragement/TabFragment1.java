@@ -64,9 +64,6 @@ public class TabFragment1 extends BaseFragment {
     public void onStart()
     {
         super.onStart();
-
-
-
     }
     /*
     public void onCreate(Bundle savedInstanceState) {

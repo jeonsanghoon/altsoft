@@ -73,6 +73,7 @@ public class TabFragment2 extends BaseFragment {
                 public void onResponse(Call<List<DEVICE_LOCATION>> call, Response<List<DEVICE_LOCATION>> response) {
                  //  Global.getCommon().ProgressHide(Global.getCurrentActivity());
                     list = response.body();
+
                     if(list.size() == 0) {
                         bLastPage = true;
                         Toast.makeText(Global.getCurrentActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();

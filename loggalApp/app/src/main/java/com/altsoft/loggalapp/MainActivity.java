@@ -103,20 +103,31 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
 
                 switch(tabLayout.getSelectedTabPosition()) {
                     case 1:
-                        intent.putExtra("list2", (ArrayList<DEVICE_LOCATION> )Global.getData().devicelist);
-                        intent.putExtra("mapType","localbox");
+                        if(!(Global.getData().devicelist == null || Global.getData().devicelist.size() == 0)) {
+                            intent.putExtra("list2", (ArrayList<DEVICE_LOCATION>) Global.getData().devicelist);
+                            intent.putExtra("mapType", "localbox");
+                            this.startActivityForResult(intent, enResult.Request.getValue());
+                        }
                         break;
                     case 2:
-                        intent.putExtra("list3", (ArrayList<MOBILE_SIGNAGE_LIST> )Global.getData().signagelist);
-                        intent.putExtra("mapType","signage");
+                        if(!(Global.getData().signagelist == null || Global.getData().signagelist.size() == 0))
+                        {
+                            intent.putExtra("list3", (ArrayList<MOBILE_SIGNAGE_LIST>) Global.getData().signagelist);
+                            intent.putExtra("mapType", "signage");
+                            this.startActivityForResult(intent, enResult.Request.getValue());
+                        }
                         break;
                     default:
-                        intent.putExtra("list1",(ArrayList<T_AD>)TabFragment1.list);
-                        intent.putExtra("mapType","banner");
+                        if(!(TabFragment1.list == null || TabFragment1.list.size() == 0))
+                        {
+                            intent.putExtra("list1", (ArrayList<T_AD>) TabFragment1.list);
+                            intent.putExtra("mapType", "banner");
+                            this.startActivityForResult(intent, enResult.Request.getValue());
+                        }
                         break;
                 }
 
-                this.startActivityForResult(intent, enResult.Request.getValue());
+
                 return true;
             }
         }

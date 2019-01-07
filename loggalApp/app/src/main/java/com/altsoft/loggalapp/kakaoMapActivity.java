@@ -75,6 +75,14 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     private String mapType = "banner";
     private BottomSheetBehavior sheetBehavior;
 
+
+    TextView tvTitle;
+    TextView tvTitle2 ;
+    LinearLayout lvBottomInfo ;
+    TextView tvSubtitle;
+    TextView tvUser;
+    TextView tvAddress;
+    Button btnInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +104,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         if(mapType.equals("banner") ) {
             bannerlist = (ArrayList<T_AD>) intent.getSerializableExtra("list1");
             this.SetMarkerAddress(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
-            sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            //sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
         else if(mapType.equals("localbox")) {
             localboxlist = (ArrayList<DEVICE_LOCATION>) intent.getSerializableExtra("list2");
@@ -138,9 +146,16 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
             }
         });
+
+        tvTitle =  findViewById(R.id.txtBottomTitle);
+        tvTitle2 =  findViewById(R.id.txtBottomTitle2);
+        lvBottomInfo =  findViewById(R.id.layBottomInfo);
+        tvSubtitle =  findViewById(R.id.txtBottomSubtitle);
+        tvUser =  findViewById(R.id.txtBottomUser);
+        tvAddress=  findViewById(R.id.txtBottomAddress);
+        btnInfo =  findViewById(R.id.btnBottonSheet);
 
         /*
         Call<JsonObject> call = Global.getKakaoMapAPIService().GetLatiLongiToAddress(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
@@ -271,11 +286,16 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
+                tvTitle.setText("기준위치");
+                tvTitle2.setText("");
+                tvSubtitle.setText("");
                 if(bFirst) {
                     marker = new MapPOIItem();
 
-                    marker.setItemName("기준위치 > " + Global.getMapInfo().getKakaoAddressName(response)); /* */
+                    String address =  Global.getMapInfo().getKakaoAddressName(response);
+                    marker.setItemName("기준위치 > " + address); /* */
+                    tvSubtitle.setText(address);
+                    lvBottomInfo.setVisibility(View.GONE);
                     marker.setTag(0);
                     marker.setUserObject(response);
                     marker.setMapPoint(mapPoint);
@@ -286,7 +306,11 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                 }else {
                     MapPOIItem[] poliItems = mapView.getPOIItems();
                     if (poliItems.length > 0) {
-                        poliItems[0].setItemName("기준위치 > " + Global.getMapInfo().getKakaoAddressName(response));
+                        String address =  Global.getMapInfo().getKakaoAddressName(response);
+                        poliItems[0].setItemName("기준위치 > " + address);
+                        tvAddress.setText("");
+                        tvSubtitle.setText(address);
+                        lvBottomInfo.setVisibility(View.GONE);
                     }
                 }
             }
@@ -358,64 +382,88 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         super.onDestroy();;
         searchAutoCompleate = null;
     }
-
+    MOBILE_SIGNAGE_LIST signagedata;
+    DEVICE_LOCATION localboxdata;
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
-        TextView tvTitle =  findViewById(R.id.txtBottomTitle);
-        TextView tvTitle2 =  findViewById(R.id.txtBottomTitle2);
-        LinearLayout lvBottomInfo =  findViewById(R.id.layBottomInfo);
-        TextView tvSubtitle =  findViewById(R.id.txtBottomSubtitle);
-        TextView tvUser =  findViewById(R.id.txtBottomUser);
-        TextView tvAddress=  findViewById(R.id.txtBottomAddress);
-        Button btnInfo =  findViewById(R.id.btnBottonSheet);
-        DecimalFormat df = new DecimalFormat("#,##0.00");
-        if(mapType.equals("signage")) {
-            MOBILE_SIGNAGE_LIST data = (MOBILE_SIGNAGE_LIST) mapPOIItem.getUserObject();
 
-            if (mapType.equals("signage")) {
-                mapView.removeAllCircles();
-                MapPoint point = MapPoint.mapPointWithGeoCoord(data.LATITUDE, data.LONGITUDE);
-                MapCircle circle1 = new MapCircle(
-                        point, // center
-                        data.RADIUS, // radius
-                        Color.argb(128, 152, 187, 177), // strokeColor
-                        Color.argb(128, 176, 229, 214) // fillColor
-                );
-                circle1.setTag(1234);
-                mapView.addCircle(circle1);
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+        tvSubtitle.setVisibility(View.VISIBLE);
+        if(mapType.equals("signage")) {
+            signagedata = (MOBILE_SIGNAGE_LIST) mapPOIItem.getUserObject();
+            mapView.removeAllCircles();
+            MapPoint point = MapPoint.mapPointWithGeoCoord(signagedata.LATITUDE, signagedata.LONGITUDE);
+            MapCircle circle1 = new MapCircle(
+                    point, // center
+                    signagedata.RADIUS, // radius
+                    Color.argb(128, 152, 187, 177), // strokeColor
+                    Color.argb(128, 176, 229, 214) // fillColor
+            );
+            circle1.setTag(1234);
+            mapView.addCircle(circle1);
+
+            tvTitle.setText(signagedata.SIGN_NAME);
+            if(signagedata.PLACE_DISTINCE  <= 0) {
+                tvTitle2.setText(df.format(signagedata.PLACE_DISTINCE / 1000.00) + "km");
             }
-            tvTitle.setText(data.SIGN_NAME);
-            tvTitle2.setText(df.format(data.PLACE_DISTINCE / 1000.00)+ "km");
+            else {
+                tvTitle2.setText(df.format(signagedata.PLACE_DISTINCE / 1000.00) + "km");
+            }
+            String address = Global.getMapInfo().getAddress(Global.getCurrentActivity(),signagedata.LATITUDE, signagedata.LONGITUDE);
             tvSubtitle.setText("");
-            tvUser.setText(data.COMPANY_NAME);
+            tvSubtitle.setVisibility(View.GONE);
+            tvUser.setText(signagedata.COMPANY_NAME);
+            tvAddress.setText(address);
+
             lvBottomInfo.setVisibility(View.VISIBLE);
-            tvAddress.setText("");
         }
         else if(mapType.equals("localbox")) {
-            DEVICE_LOCATION data = (DEVICE_LOCATION) mapPOIItem.getUserObject();
-            tvTitle.setText(data.DEVICE_NAME);
+            localboxdata = (DEVICE_LOCATION) mapPOIItem.getUserObject();
+            tvTitle.setText(localboxdata.DEVICE_NAME);
 
-            tvTitle2.setText(df.format(data.DISTANCE / 1000.00)+ "km");
-            tvSubtitle.setText(data.DEVICE_DESC);
-            tvUser.setText(data.COMPANY_NAME);
+            tvTitle2.setText(df.format(localboxdata.DISTANCE / 1000.00) + "km");
+            tvSubtitle.setText(localboxdata.DEVICE_DESC);
+            tvUser.setText(localboxdata.COMPANY_NAME);
+            tvAddress.setText(localboxdata.ADDRESS1 + " " + localboxdata.ADDRESS2);
+
             lvBottomInfo.setVisibility(View.VISIBLE);
-            tvAddress.setText(data.ADDRESS1 + " " + data.ADDRESS2);
+
         }
         else
         {
             tvTitle.setText("기준위치");
             tvTitle2.setText("");
-            tvSubtitle.setText("");
-            tvAddress.setText(Global.getMapInfo().getAddress(Global.getCurrentActivity(),mapPOIItem.getMapPoint().getMapPointGeoCoord().latitude,mapPOIItem.getMapPoint().getMapPointGeoCoord().longitude));
+            String address = Global.getMapInfo().getAddress(Global.getCurrentActivity(),mapPOIItem.getMapPoint().getMapPointGeoCoord().latitude,mapPOIItem.getMapPoint().getMapPointGeoCoord().longitude);
+            tvSubtitle.setText(address);
+            tvAddress.setText("");
+
             lvBottomInfo.setVisibility(View.GONE);
+        }
+
+        btnInfo.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BtnInfoShow();
+            }
+        });
+    }
+
+    private void BtnInfoShow() {
+        if(mapType.equals("signage")) {
+            //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Global.getCurrentActivity(), SignageControlActivity.class);
+            intent.putExtra("SIGN_CODE", signagedata.SIGN_CODE);
+            Global.getCurrentActivity().startActivity(intent);
+        }else if(mapType.equals("localbox")) {
+            Intent intent = new Intent(Global.getCurrentActivity(), LocalboxbannerListActivity.class);
+            intent.putExtra("DEVICE_CODE", Long.parseLong(localboxdata.DEVICE_CODE) );
+            Global.getCurrentActivity().startActivity(intent);
         }
     }
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
         Toast.makeText(this, "Clicked " + mapPOIItem.getItemName() + " Callout Balloon", Toast.LENGTH_SHORT).show();
-
-
     }
 
     @Override
@@ -424,15 +472,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         if(mapType.equals("signage")) {
             MOBILE_SIGNAGE_LIST data = (MOBILE_SIGNAGE_LIST) mapPOIItem.getUserObject();
 
-            //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, SignageControlActivity.class);
-            intent.putExtra("SIGN_CODE", data.SIGN_CODE);
-            this.startActivity(intent);
         }else if(mapType.equals("localbox")) {
             DEVICE_LOCATION data = (DEVICE_LOCATION) mapPOIItem.getUserObject();
-            Intent intent = new Intent(this, LocalboxbannerListActivity.class);
-            intent.putExtra("DEVICE_CODE", Long.parseLong(data.DEVICE_CODE) );
-            this.startActivity(intent);
         }
     }
 
