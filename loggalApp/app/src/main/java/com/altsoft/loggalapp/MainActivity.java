@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +42,7 @@ import br.com.liveo.searchliveo.SearchLiveo;
 /**
  *
  */
-public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchListener {
+public class MainActivity  extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
     TabFragment1 tab1;
@@ -145,15 +149,19 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
             return;
         }
     }
-    @Override
-    public void changedSearch(CharSequence text) {
 
-    }
 
     private void onInitView() {
         mBinding = (ActivityMainBinding) this.bindView(R.layout.activity_main);
         this.onInitToolbar(mBinding.toolbar, "loggal");
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, mBinding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         Global.getCommon().ProgressHide(this);
     }
 
@@ -264,6 +272,11 @@ public class MainActivity  extends BaseActivity implements SearchLiveo.OnSearchL
 
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
     }
 
     public class TabPagerAdapter extends FragmentStatePagerAdapter {

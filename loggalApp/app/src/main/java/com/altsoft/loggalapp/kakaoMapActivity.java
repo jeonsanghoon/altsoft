@@ -128,11 +128,9 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                     case BottomSheetBehavior.STATE_HIDDEN:
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED: {
-
                     }
                     break;
                     case BottomSheetBehavior.STATE_COLLAPSED: {
-
                     }
                     break;
                     case BottomSheetBehavior.STATE_DRAGGING:
