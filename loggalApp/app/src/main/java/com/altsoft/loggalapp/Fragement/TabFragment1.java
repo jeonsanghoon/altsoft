@@ -51,13 +51,15 @@ public class TabFragment1 extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        if(Global.bFirst) {
+        /*if(Global.bFirst) {
             Global.bFirst = false;
         }
         else {
             adapter = new BannerListViewAdapter();
             GetBannerList();
-        }
+        }*/
+        adapter = new BannerListViewAdapter();
+        GetBannerList();
         return inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
     }
     @Override

@@ -1,9 +1,0 @@
-<resources>
-
-    <string name="liveo_search_view_search">Search</string>
-    <string name="liveo_search_view_arrow">Exit Search</string>
-    <string name="liveo_search_view_voice">Voice search</string>
-    <string name="liveo_search_view_close">Delete query text</string>
-    <string name="liveo_not_supported">Not Supported</string>
-
-</resources>

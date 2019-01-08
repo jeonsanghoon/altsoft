@@ -12,9 +12,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,15 +33,17 @@ import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.loggalapp.Fragement.TabFragment1;
 import com.altsoft.loggalapp.Fragement.TabFragment2;
 import com.altsoft.loggalapp.Fragement.TabFragment3;
-import com.altsoft.loggalapp.databinding.ActivityMainBinding;
+
+import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
 import com.altsoft.model.DEVICE_LOCATION;
 import com.altsoft.model.T_AD;
 import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.ss.bottomnavigation.BottomNavigation;
+import com.ss.bottomnavigation.events.OnSelectedItemChangeListener;
 
-import br.com.liveo.searchliveo.SearchLiveo;
 /**
  *
  */
@@ -48,9 +53,10 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     TabFragment1 tab1;
     TabFragment2 tab2;
     TabFragment3 tab3;
-
+    private FragmentTransaction transaction;
     ViewPager viewPager;
-    TabLayout tabLayout;
+    BottomNavigation bottomNavigation;
+    //TabLayout tabLayout;
 
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
     private final int PERMISSIONS_ACCESS_COARSE_LOCATION = 1001;
@@ -58,7 +64,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     private boolean isAccessCoarseLocation = false;
     private boolean isPermission = false;
 
-    private ActivityMainBinding mBinding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +111,15 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                 //Intent intent = new Intent(this, locationMapActivity.class);
                 Intent intent = new Intent(this, kakaoMapActivity.class);
 
-                switch(tabLayout.getSelectedTabPosition()) {
+                switch(bottomNavigation.getSelectedItem()) {
+                    case 0:
+                        if(!(TabFragment1.list == null || TabFragment1.list.size() == 0))
+                        {
+                            intent.putExtra("list1", (ArrayList<T_AD>) TabFragment1.list);
+                            intent.putExtra("mapType", "banner");
+                            this.startActivityForResult(intent, enResult.Request.getValue());
+                        }
+                        break;
                     case 1:
                         if(!(Global.getData().devicelist == null || Global.getData().devicelist.size() == 0)) {
                             intent.putExtra("list2", (ArrayList<DEVICE_LOCATION>) Global.getData().devicelist);
@@ -121,15 +135,10 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                             this.startActivityForResult(intent, enResult.Request.getValue());
                         }
                         break;
-                    default:
-                        if(!(TabFragment1.list == null || TabFragment1.list.size() == 0))
-                        {
-                            intent.putExtra("list1", (ArrayList<T_AD>) TabFragment1.list);
-                            intent.putExtra("mapType", "banner");
-                            this.startActivityForResult(intent, enResult.Request.getValue());
-                        }
-                        break;
+
+
                 }
+
 
 
                 return true;
@@ -152,26 +161,52 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
 
     private void onInitView() {
-        mBinding = (ActivityMainBinding) this.bindView(R.layout.activity_main);
-        this.onInitToolbar(mBinding.toolbar, "loggal");
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, mBinding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this,android.R.color.white));
+
         Global.getCommon().ProgressHide(this);
     }
 
     private void tabInit() {
-        tab1 = new TabFragment1();
+      /*  tab1 = new TabFragment1();
 
         tab2 = new TabFragment2();
         tab3 = new TabFragment3();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, tab1).commit();
-        tabLayout= (TabLayout) findViewById(R.id.tabLayout);
+*/
+      bottomNavigation=(BottomNavigation)findViewById(R.id.bottom_navigation);
+        bottomNavigation.setDefaultItem(0);
+        bottomNavigation.setType(bottomNavigation.TYPE_FIXED);
+        bottomNavigation.setOnSelectedItemChangeListener(new OnSelectedItemChangeListener() {
+            @Override
+            public void onSelectedItemChanged(int itemId) {
+                switch (itemId){
+                    case R.id.tab_banner:
+                        transaction=getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.container ,new TabFragment1());
+                        break;
+                    case R.id.tab_localbox:
+                        transaction=getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.container,new TabFragment2());
+                        break;
+                    case R.id.tab_signage:
+                        transaction=getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.container,new TabFragment3());
+                        break;
+                    case R.id.tab_myinfo:
+                        transaction=getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.container,new TabFragment_Myinfo());
+                        break;
+                }
+                transaction.commit();
+            }
+        });
+
+     /*   tabLayout= (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("배너정보"));
         tabLayout.addTab(tabLayout.newTab().setText("로컬박스"));
         tabLayout.addTab(tabLayout.newTab().setText("로컬사인"));
@@ -200,7 +235,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) { }
-        });
+        });*/
     }
     // 위치 권한 요청
     private Boolean callPermission() {
@@ -239,7 +274,6 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
             Global.setMapInfo(new MapInfo(MainActivity.this, latitude, longitude));
 
-
             Toast.makeText(
                     getApplicationContext(),
                     "당신의 위치 - \n위도: " + latitude + "\n경도: " + longitude,
@@ -251,9 +285,9 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     }
 
     private void initViewPager() {
-        viewPager = findViewById(R.id.viewPagerMain);
+       // viewPager = findViewById(R.id.viewPagerMain);
 
-        TabPagerAdapter fragmentPagerAdpter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+       /* TabPagerAdapter fragmentPagerAdpter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(fragmentPagerAdpter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -271,14 +305,14 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-        });
+        });*/
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         return false;
     }
-
+/*
     public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
         // Count number of tabs
@@ -288,6 +322,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
             super(fm);
             this.tabCount = tabCount;
         }
+
 
         @Override
         public Fragment getItem(int position) {
@@ -312,6 +347,5 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         public int getCount() {
             return tabCount;
         }
-    }
-
+    }    */
 }

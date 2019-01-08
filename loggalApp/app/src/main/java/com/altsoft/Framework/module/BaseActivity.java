@@ -2,8 +2,7 @@ package com.altsoft.Framework.module;
 
 
 import android.annotation.SuppressLint;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
+
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -33,9 +32,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onStart();
         Global.setCurrentActivity(this);
     }
-    protected ViewDataBinding bindView(int layout) {
-        return DataBindingUtil.setContentView(this, layout);
-    }
+
 
     //region Methods Toolbar
     public void onInitToolbar(Toolbar toolBar) {
