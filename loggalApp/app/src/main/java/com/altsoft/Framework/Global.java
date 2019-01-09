@@ -6,7 +6,7 @@ import com.altsoft.Framework.map.GpsInfo;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Interface.KakaoMapService;
 import com.altsoft.Interface.MobileService;
-import com.altsoft.model.LOGIN_INFO;
+import com.altsoft.model.UserInfo.LOGIN_COND;
 
 import java.io.IOException;
 
@@ -75,10 +75,10 @@ public class Global {
         return _fileInfo;
     }
 
-    static LOGIN_INFO _loginInfo;
-    public static LOGIN_INFO getLoginInfo ( ) {
+    static LOGIN_COND _loginInfo;
+    public static LOGIN_COND getLoginInfo ( ) {
         if (_loginInfo == null) {
-            _loginInfo = new LOGIN_INFO();
+            _loginInfo = new LOGIN_COND();
         }
         return _loginInfo;
     }
@@ -91,7 +91,7 @@ public class Global {
         return _data;
     }
 
-    public static void SetLoginInfo(LOGIN_INFO login) {
+    public static void SetLoginInfo(LOGIN_COND login) {
         _loginInfo = login;
     }
 

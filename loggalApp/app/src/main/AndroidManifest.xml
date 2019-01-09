@@ -13,9 +13,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.hardware.camera.autofocus" />
-
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -66,7 +65,7 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="0abb521fbfea1e9cccf7057079e82af4" />
 
-        <activity android:name=".kakaoMapActivity"></activity>
+        <activity android:name=".kakaoMapActivity" />
     </application>
 
 </manifest>
