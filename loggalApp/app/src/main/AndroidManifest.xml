@@ -66,6 +66,7 @@
             android:value="0abb521fbfea1e9cccf7057079e82af4" />
 
         <activity android:name=".kakaoMapActivity" />
+        <activity android:name=".Login2Activity" />
     </application>
 
 </manifest>

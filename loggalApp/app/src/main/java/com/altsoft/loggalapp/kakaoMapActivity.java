@@ -69,7 +69,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     Boolean bFirst = true;
     private static final String LOG_TAG = "kakaoMapActivity";
     SearchAutoCompleate searchAutoCompleate;
-    private ArrayList<T_AD> bannerlist;
+    //private ArrayList<T_AD> bannerlist;
     private ArrayList<DEVICE_LOCATION> localboxlist;
     private ArrayList<MOBILE_SIGNAGE_LIST> signagelist;
     private String mapType = "banner";
@@ -102,7 +102,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         Intent intent = getIntent();
         mapType = intent.getStringExtra("mapType");
         if(mapType.equals("banner") ) {
-            bannerlist = (ArrayList<T_AD>) intent.getSerializableExtra("list1");
+            //bannerlist = (ArrayList<T_AD>) intent.getSerializableExtra("list1");
             this.SetMarkerAddress(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
             //sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }

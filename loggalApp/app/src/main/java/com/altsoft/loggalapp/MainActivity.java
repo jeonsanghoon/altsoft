@@ -1,6 +1,7 @@
 package com.altsoft.loggalapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -64,11 +65,12 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     private boolean isAccessCoarseLocation = false;
     private boolean isPermission = false;
 
-
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = this;
         this.onInitView();
         this.tabInit();
         this.gpsInit();
@@ -113,12 +115,8 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
                 switch(bottomNavigation.getSelectedItem()) {
                     case 0:
-                        if(!(TabFragment1.list == null || TabFragment1.list.size() == 0))
-                        {
-                            intent.putExtra("list1", (ArrayList<T_AD>) TabFragment1.list);
                             intent.putExtra("mapType", "banner");
                             this.startActivityForResult(intent, enResult.Request.getValue());
-                        }
                         break;
                     case 1:
                         if(!(Global.getData().devicelist == null || Global.getData().devicelist.size() == 0)) {
@@ -181,6 +179,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
       bottomNavigation=(BottomNavigation)findViewById(R.id.bottom_navigation);
         bottomNavigation.setDefaultItem(0);
         bottomNavigation.setType(bottomNavigation.TYPE_FIXED);
+
         bottomNavigation.setOnSelectedItemChangeListener(new OnSelectedItemChangeListener() {
             @Override
             public void onSelectedItemChanged(int itemId) {
@@ -198,8 +197,15 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                         transaction.replace(R.id.container,new TabFragment3());
                         break;
                     case R.id.tab_myinfo:
+                        if(Global.getLoginInfo().USER_ID == null) {
+                            Intent intent = new Intent(Global.getCurrentActivity(), Login2Activity.class);
+                            intent.putExtra("mapType", "banner");
+                            Global.getCurrentActivity().startActivityForResult(intent, enResult.Request.getValue());
+                        }
+
                         transaction=getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container,new TabFragment_Myinfo());
+
                         break;
                 }
                 transaction.commit();

@@ -45,7 +45,7 @@ public class TabFragment1 extends BaseFragment {
     int nCnt = 0;
     private View mFragementView; //레이아웃이 담길 변수
 
-    public static List<T_AD> list;
+    private static List<T_AD> list;
     Boolean bFirst = true;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

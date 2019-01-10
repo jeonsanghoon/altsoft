@@ -55,6 +55,7 @@
             app:tab_icon="@drawable/ic_baseline_person_primary_24px"
             app:unselected_tab_icon="@drawable/ic_baseline_person_unselected_24px"
             app:tab_text="내정보"
+
             style="@style/BottomNavigationTabStyle"
             />
     </com.ss.bottomnavigation.BottomNavigation>
