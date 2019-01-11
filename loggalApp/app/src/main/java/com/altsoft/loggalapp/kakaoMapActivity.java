@@ -444,6 +444,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                 BtnInfoShow();
             }
         });
+        /// Bottom Sheet Expand
+        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     private void BtnInfoShow() {
