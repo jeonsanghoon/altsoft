@@ -17,6 +17,8 @@ import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_COND;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_M;
+import com.altsoft.model.device.T_DEVICE_STATION;
+import com.altsoft.model.device.T_DEVICE_STATION_COND;
 import com.altsoft.model.keyword.CODE_DATA;
 import com.altsoft.model.keyword.KEYWORD_COND;
 import com.altsoft.model.search.MOBILE_AD_SEARCH_COND;
@@ -66,5 +68,9 @@ public interface MobileService {
     Call<RTN_SAVE_DATA> MemberbookmarkSave(@Body T_MEMBER_BOOKMARK Cond);
     @POST("/api/Account/GetMemberbookmarkList")
     Call<List<T_MEMBER_BOOKMARK>> GetMemberbookmarkList(@Body T_MEMBER_BOOKMARK_COND Cond);
+
+
+    @POST("/api/loggalBox/GetDeviceStationList")
+    Call<List<T_DEVICE_STATION>> GetDeviceStationList(@Body T_DEVICE_STATION_COND Cond);
 }
 

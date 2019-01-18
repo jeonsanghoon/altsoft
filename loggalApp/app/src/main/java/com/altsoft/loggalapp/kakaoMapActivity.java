@@ -222,7 +222,6 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             marker.setUserObject(localboxlist.get(i));
             marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-
             mapView.addPOIItem(marker);
         }
     }
@@ -386,6 +385,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
 
         DecimalFormat df = new DecimalFormat("#,##0.00");
+        tvSubtitle.setVisibility(View.VISIBLE);
         tvSubtitle.setVisibility(View.VISIBLE);
         if(mapType.equals("signage")) {
             signagedata = (MOBILE_SIGNAGE_LIST) mapPOIItem.getUserObject();
