@@ -46,4 +46,6 @@
     <string name="change_password">비밀번호변경</string>
     <string name="old_password">이전비밀번호</string>
     <string name="new_password">새비밀번호</string>
+
+    <string name="title_activity_localbox_list">LocalboxListActivity</string>
 </resources>

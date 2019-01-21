@@ -2,13 +2,17 @@ package com.altsoft.Framework;
 
 import android.app.Activity;
 
+import com.altsoft.Framework.DataInfo.DotNetDateConverter;
 import com.altsoft.Framework.map.GpsInfo;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Interface.KakaoMapService;
 import com.altsoft.Interface.MobileService;
 import com.altsoft.model.UserInfo.LOGIN_COND;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.Date;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -100,6 +104,8 @@ public class Global {
     {
         if(_apiservice == null)
         {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(Date.class, new DotNetDateConverter());
 
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
             httpClient.addInterceptor(new Interceptor() {
@@ -110,16 +116,24 @@ public class Global {
                     // Request customization: add request headers
                     Request.Builder requestBuilder = original.newBuilder()
                             .addHeader("Accept", "application/vnd.github.v3.full+json")
-                            .addHeader("User-Agent", "Retrofit-MobileService");
+                            .addHeader("User-Agent", "Retrofit-MobileService")
+                            ;
+
                     Request request = requestBuilder.build();
+
                     return chain.proceed(request);
                 }
             });
+
             OkHttpClient client = httpClient.build();
+            Gson gson = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                    .create();
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://api.altsoft.ze.am")
                     .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
+
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
             _apiservice = retrofit.create(MobileService.class);
         }
@@ -131,6 +145,9 @@ public class Global {
     {
         if(_kakaoService == null)
         {
+            Gson gson = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                    .create();
 
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
             httpClient.addInterceptor(new Interceptor() {
@@ -152,7 +169,7 @@ public class Global {
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://dapi.kakao.com")
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client)
                     .build();
             _kakaoService = retrofit.create(KakaoMapService.class);

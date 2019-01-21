@@ -120,19 +120,19 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                         break;
                     case 1:
                         if(!(Global.getData().devicelist == null || Global.getData().devicelist.size() == 0)) {
-                            intent.putExtra("list2", (ArrayList<DEVICE_LOCATION>) Global.getData().devicelist);
+                            //intent.putExtra("list2", (ArrayList<DEVICE_LOCATION>) Global.getData().devicelist);
                             intent.putExtra("mapType", "localbox");
                             this.startActivityForResult(intent, enResult.Request.getValue());
                         }
                         break;
-                    case 2:
+                 /*  case 2:
                         if(!(Global.getData().signagelist == null || Global.getData().signagelist.size() == 0))
                         {
                             intent.putExtra("list3", (ArrayList<MOBILE_SIGNAGE_LIST>) Global.getData().signagelist);
                             intent.putExtra("mapType", "signage");
                             this.startActivityForResult(intent, enResult.Request.getValue());
                         }
-                        break;
+                        break;*/
 
 
                 }
@@ -192,10 +192,10 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                         transaction=getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container,new TabFragment2());
                         break;
-                    case R.id.tab_signage:
+                   /* case R.id.tab_signage:
                         transaction=getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container,new TabFragment3());
-                        break;
+                        break;*/
                     case R.id.tab_myinfo:
                         if(Global.getLoginInfo().USER_ID == null) {
                             Intent intent = new Intent(Global.getCurrentActivity(), Login2Activity.class);
@@ -211,38 +211,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                 transaction.commit();
             }
         });
-
-     /*   tabLayout= (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("배너정보"));
-        tabLayout.addTab(tabLayout.newTab().setText("로컬박스"));
-        tabLayout.addTab(tabLayout.newTab().setText("로컬사인"));
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                Log.d("MainActivity", "선택된 탭 : " + position);
-
-                Fragment selected = null;
-                if (position == 0) {
-                    selected = tab1;
-
-                } else if (position == 1) {
-                    selected = tab2;
-                } else if (position == 2) {
-                    selected = tab3;
-                }
-
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, selected).commit();
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) { }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) { }
-        });*/
-    }
+     }
     // 위치 권한 요청
     private Boolean callPermission() {
         // Check the SDK version and whether the permission is already granted or not.

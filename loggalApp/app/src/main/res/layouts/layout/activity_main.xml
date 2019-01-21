@@ -25,8 +25,8 @@
             android:id="@+id/tab_banner"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:tab_icon="@drawable/ic_home_color_primary_24dp"
-            app:unselected_tab_icon="@drawable/ic_home_unselected_24dp"
+            app:tab_icon="@drawable/ic_baseline_phone_android_24px"
+            app:unselected_tab_icon="@drawable/ic_baseline_phone_android_unselected_24px"
             app:tab_text="배너"
             style="@style/BottomNavigationTabStyle"/>
 
@@ -34,11 +34,11 @@
             android:id="@+id/tab_localbox"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:tab_icon="@drawable/ic_image_color_primary_24dp"
-            app:unselected_tab_icon="@drawable/ic_image_unselected_24dp"
+            app:tab_icon="@drawable/ic_baseline_dock_24"
+            app:unselected_tab_icon="@drawable/ic_baseline_dock_unselected_24"
             app:tab_text="로컬박스"
             style="@style/BottomNavigationTabStyle"/>
-
+<!--
         <com.ss.bottomnavigation.TabItem
             android:id="@+id/tab_signage"
             android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
             app:unselected_tab_icon="@drawable/ic_camera_unselected_24dp"
             app:tab_text="사이니지"
             style="@style/BottomNavigationTabStyle"
-            />
+            />-->
         <com.ss.bottomnavigation.TabItem
             android:id="@+id/tab_myinfo"
             android:layout_width="wrap_content"

@@ -34,18 +34,18 @@ public class T_DEVICE_STATION
     /// 숨김여부 1: 숨김 0 : 보임
     public Boolean HIDE;
     /// 등록자
-    public int INSERT_CODE;
+    public Integer INSERT_CODE;
     /// 등록자
     public String INSERT_NAME;
     /// 등록일
     public Date INSERT_DATE;
     /// 수정자
-    public int UPDATE_CODE;
+    public Integer UPDATE_CODE;
     /// 수정자
     public String UPDATE_NAME;
     /// 수정일
     public Date UPDATE_DATE;
     /// 스테이션당 기기수
-    public int DEVICE_CNT;
-    public int TOTAL_ROWCOUNT;
+    public Integer DEVICE_CNT;
+    public Integer TOTAL_ROWCOUNT;
 }

@@ -70,7 +70,7 @@ public interface MobileService {
     Call<List<T_MEMBER_BOOKMARK>> GetMemberbookmarkList(@Body T_MEMBER_BOOKMARK_COND Cond);
 
 
-    @POST("/api/loggalBox/GetDeviceStationList")
-    Call<List<T_DEVICE_STATION>> GetDeviceStationList(@Body T_DEVICE_STATION_COND Cond);
+    @POST("/api/loggalBox/GetDeviceStationMapList")
+    Call<List<T_DEVICE_STATION>> GetDeviceStationMapList(@Body T_DEVICE_STATION_COND Cond);
 }
 

@@ -32,10 +32,12 @@ import com.altsoft.Framework.control.altAutoCmpleateTextView;
 import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Framework.module.BaseActivity;
+import com.altsoft.loggalapp.detail.LocalboxListActivity;
 import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
-import com.altsoft.model.DEVICE_LOCATION;
 import com.altsoft.model.T_AD;
 import com.altsoft.model.daummap.DAUM_ADDRESS;
+import com.altsoft.model.device.T_DEVICE_STATION;
+import com.altsoft.model.device.T_DEVICE_STATION_COND;
 import com.altsoft.model.keyword.CODE_DATA;
 import com.altsoft.model.keyword.KEYWORD_COND;
 import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
@@ -70,7 +72,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     private static final String LOG_TAG = "kakaoMapActivity";
     SearchAutoCompleate searchAutoCompleate;
     //private ArrayList<T_AD> bannerlist;
-    private ArrayList<DEVICE_LOCATION> localboxlist;
+    private List<T_DEVICE_STATION> stationlist;
     private ArrayList<MOBILE_SIGNAGE_LIST> signagelist;
     private String mapType = "banner";
     private BottomSheetBehavior sheetBehavior;
@@ -107,8 +109,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             //sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
         else if(mapType.equals("localbox")) {
-            localboxlist = (ArrayList<DEVICE_LOCATION>) intent.getSerializableExtra("list2");
-            localboxListDraw();
+            locaStationListDraw();
         }
         else if(mapType.equals("signage")){
             signagelist = (ArrayList<MOBILE_SIGNAGE_LIST>) intent.getSerializableExtra("list3");
@@ -144,6 +145,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
             }
         });
 
@@ -155,49 +157,6 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         tvAddress=  findViewById(R.id.txtBottomAddress);
         btnInfo =  findViewById(R.id.btnBottonSheet);
 
-        /*
-        Call<JsonObject> call = Global.getKakaoMapAPIService().GetLatiLongiToAddress(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
-
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
-                //true면 앱 실행 시 애니메이션 효과가 나오고 false면 애니메이션이 나오지않음.
-                MapPOIItem marker = new MapPOIItem();
-                marker.setItemName("기준위치"); //Global.getMapInfo().getKakaoAddressName(response)
-                marker.setTag(0);
-                marker.setMapPoint(mapPoint);
-                marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-                marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-
-                mapView.addPOIItem(marker);
-
-                //CustomCalloutBalloonAdapter obj2 = new CustomCalloutBalloonAdapter("https://altsoft.ze.am/Files/201806/20180612135029.png", "테스트2");
-
-                //mapView.setCalloutBalloonAdapter(obj2);
-                mapPoint = MapPoint.mapPointWithGeoCoord(Global.getMapInfo().latitude+ 0.1, Global.getMapInfo().longitude+ 0.1);
-                mapView.setMapCenterPoint(mapPoint, true);
-                //true면 앱 실행 시 애니메이션 효과가 나오고 false면 애니메이션이 나오지않음.
-                //mapViewContainer.addView(mapView);
-
-                marker = new MapPOIItem();
-                marker.setItemName("몰라|2번|https://altsoft.ze.am/Files/201803/20180322091519.jpg");
-
-                marker.setTag(1);
-                marker.setMapPoint(mapPoint);
-                marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-                marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-
-                mapView.addPOIItem(marker);
-
-
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });*/
         searchAutoCompleate = new SearchAutoCompleate();
         this.setUpViews();
         android.support.v7.widget.Toolbar mToolbar = (android.support.v7.widget.Toolbar)findViewById(R.id.tb_toolbarsearch);
@@ -209,27 +168,48 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
 
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
     }
-    private void localboxListDraw() {
+    private void locaStationListDraw() {
 
-        for(int i=0; i<localboxlist.size(); i++)
-        {
-            MapPoint point =   MapPoint.mapPointWithGeoCoord(localboxlist.get(i).LATITUDE, localboxlist.get(i).LONGITUDE);
-            marker = new MapPOIItem();
+        T_DEVICE_STATION_COND Cond = new T_DEVICE_STATION_COND();
+        Cond.PAGE = 1;
+        Cond.PAGE_COUNT = 100000;
+        Call<List<T_DEVICE_STATION>> call = Global.getAPIService().GetDeviceStationMapList(Cond);
+        call.enqueue(new Callback<List<T_DEVICE_STATION>>() {
 
-            marker.setItemName(localboxlist.get(i).DEVICE_NAME); /* */
-            marker.setTag(0);
-            marker.setMapPoint(point);
-            marker.setUserObject(localboxlist.get(i));
-            marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-            marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
-            mapView.addPOIItem(marker);
-        }
+            @Override
+            public void onResponse(Call<List<T_DEVICE_STATION>> call, Response<List<T_DEVICE_STATION>> response) {
+                stationlist = response.body();
+                for(int i=0; i<stationlist.size(); i++)
+                {
+                    MapPoint point =   MapPoint.mapPointWithGeoCoord(stationlist.get(i).LATITUDE, stationlist.get(i).LONGITUDE);
+                    marker = new MapPOIItem();
+
+                    marker.setItemName(stationlist.get(i).STATION_NAME); /* */
+                    marker.setTag(0);
+                    marker.setMapPoint(point);
+
+                    marker.setUserObject(stationlist.get(i));
+                    marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 기본으로 제공하는 BluePin 마커 모양.
+                    marker.setCustomImageResourceId(R.drawable.stationmarker); // 마커 이미지.
+                    marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+                    marker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+                    mapView.addPOIItem(marker);
+                }
+
+                mapView.setShowCurrentLocationMarker(true);
+            }
+
+            @Override
+            public void onFailure(Call<List<T_DEVICE_STATION>> call, Throwable t) {
+
+            }
+        });
+
     }
     private void signageListDraw() {
         for(int i=0; i<signagelist.size(); i++)
         {
-
-            MapPoint point =   MapPoint.mapPointWithGeoCoord(signagelist.get(i).LATITUDE, signagelist.get(i).LONGITUDE);
+            MapPoint point = MapPoint.mapPointWithGeoCoord(signagelist.get(i).LATITUDE, signagelist.get(i).LONGITUDE);
             marker = new MapPOIItem();
             marker.setItemName(signagelist.get(i).SIGN_NAME + "(" + (signagelist.get(i).RADIUS) + "m)"); /* */
             marker.setTag(0);
@@ -238,7 +218,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             marker.setMarkerType(MapPOIItem.MarkerType.YellowPin); // 기본으로 제공하는 BluePin 마커 모양.
             marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
 
-            mapView.addPOIItem(marker);
+            mapView.addPOIItem(
+                    marker);
             ///mapView.selectPOIItem(marker, true);
             mapView.setMapCenterPoint(point, false);
 
@@ -380,7 +361,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         searchAutoCompleate = null;
     }
     MOBILE_SIGNAGE_LIST signagedata;
-    DEVICE_LOCATION localboxdata;
+    T_DEVICE_STATION localstationdata;
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
 
@@ -416,13 +397,13 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             lvBottomInfo.setVisibility(View.VISIBLE);
         }
         else if(mapType.equals("localbox")) {
-            localboxdata = (DEVICE_LOCATION) mapPOIItem.getUserObject();
-            tvTitle.setText(localboxdata.DEVICE_NAME);
+            localstationdata = (T_DEVICE_STATION) mapPOIItem.getUserObject();
+            tvTitle.setText(localstationdata.STATION_NAME);
 
-            tvTitle2.setText(df.format(localboxdata.DISTANCE / 1000.00) + "km");
-            tvSubtitle.setText(localboxdata.DEVICE_DESC);
-            tvUser.setText(localboxdata.COMPANY_NAME);
-            tvAddress.setText(localboxdata.ADDRESS1 + " " + localboxdata.ADDRESS2);
+            tvTitle2.setText("로컬박스 : " + localstationdata.DEVICE_CNT.toString() + "개");
+            tvSubtitle.setText(localstationdata.STATION_DESC);
+            tvUser.setText("");
+            tvAddress.setText(localstationdata.ADDRESS1 + " " + localstationdata.ADDRESS2);
 
             lvBottomInfo.setVisibility(View.VISIBLE);
 
@@ -455,9 +436,10 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             intent.putExtra("SIGN_CODE", signagedata.SIGN_CODE);
             Global.getCurrentActivity().startActivity(intent);
         }else if(mapType.equals("localbox")) {
-            Intent intent = new Intent(Global.getCurrentActivity(), LocalboxbannerListActivity.class);
-            intent.putExtra("DEVICE_CODE", Long.parseLong(localboxdata.DEVICE_CODE) );
+            Intent intent = new Intent(Global.getCurrentActivity(), LocalboxListActivity.class);
+            intent.putExtra("STATION_CODE", localstationdata.STATION_CODE );
             Global.getCurrentActivity().startActivity(intent);
+
         }
     }
 
@@ -473,7 +455,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             MOBILE_SIGNAGE_LIST data = (MOBILE_SIGNAGE_LIST) mapPOIItem.getUserObject();
 
         }else if(mapType.equals("localbox")) {
-            DEVICE_LOCATION data = (DEVICE_LOCATION) mapPOIItem.getUserObject();
+            T_DEVICE_STATION data = (T_DEVICE_STATION) mapPOIItem.getUserObject();
         }
     }
 
