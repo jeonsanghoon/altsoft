@@ -9,39 +9,24 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
-import com.altsoft.Framework.map.GpsInfo;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.loggalapp.Fragement.TabFragment1;
 import com.altsoft.loggalapp.Fragement.TabFragment2;
 import com.altsoft.loggalapp.Fragement.TabFragment3;
 
 import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
-import com.altsoft.model.DEVICE_LOCATION;
-import com.altsoft.model.T_AD;
-import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.ss.bottomnavigation.BottomNavigation;
 import com.ss.bottomnavigation.events.OnSelectedItemChangeListener;
 
@@ -66,6 +51,10 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     private boolean isPermission = false;
 
     Activity activity;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,7 +187,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                         break;*/
                     case R.id.tab_myinfo:
                         if(Global.getLoginInfo().USER_ID == null) {
-                            Intent intent = new Intent(Global.getCurrentActivity(), Login2Activity.class);
+                            Intent intent = new Intent(Global.getCurrentActivity(), LoginActivity.class);
                             intent.putExtra("mapType", "banner");
                             Global.getCurrentActivity().startActivityForResult(intent, enResult.Request.getValue());
                         }
