@@ -1,14 +1,28 @@
 package com.altsoft.Framework.kakao;
 
 
+import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.altsoft.Framework.Global;
+import com.altsoft.loggalapp.MemberJoinActivity;
+import com.altsoft.loggalapp.WebViewActivity;
+import com.altsoft.model.UserInfo.LOGIN_COND;
+import com.altsoft.model.UserInfo.LOGIN_DATA;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
+
+import java.lang.reflect.Member;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SessionCallback implements ISessionCallback {
     // 로그인에 성공한 상태
@@ -40,13 +54,42 @@ public class SessionCallback implements ISessionCallback {
                 String profileImagePath = userProfile.getProfileImagePath();
                 String thumnailPath = userProfile.getThumbnailImagePath();
                 String UUID = userProfile.getUUID();
-                long id = userProfile.getId();
+                final long id = userProfile.getId();
                 Log.e("Profile : ", nickname + "");
                 Log.e("Profile : ", email + "");
                 Log.e("Profile : ", profileImagePath + "");
                 Log.e("Profile : ", thumnailPath + "");
                 Log.e("Profile : ", UUID + "");
                 Log.e("Profile : ", id + "");
+
+                LOGIN_COND Cond = new LOGIN_COND();
+                Cond.KAKAO_ID = Long.toString(id);
+                Call<LOGIN_DATA> call = Global.getAPIService().GetMemberLogin(Cond);
+                call.enqueue(new Callback<LOGIN_DATA>() {
+                    @Override
+                    public void onResponse(Call<LOGIN_DATA> call, Response<LOGIN_DATA> response) {
+                        LOGIN_DATA data = response.body();
+                        if(data.ERROR_MESSAGE=="") {
+                            /*아이디로 */
+                            Toast.makeText(
+                                    Global.getCurrentActivity(),
+                                    data.USER_NAME + "님이 로그인되었습니다.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Intent intent = new Intent(Global.getCurrentActivity(), MemberJoinActivity.class);
+                            intent.putExtra("KAKAO_ID", id);
+                            Global.getCurrentActivity().startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<LOGIN_DATA> call, Throwable t) {
+
+                    }
+                });
+
+              //  Global.getLoginInfo().
             }
 
             @Override

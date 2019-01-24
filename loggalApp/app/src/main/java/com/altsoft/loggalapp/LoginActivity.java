@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.altsoft.Framework.Global;
@@ -24,6 +25,8 @@ import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.usermgmt.LoginButton;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 
@@ -38,6 +41,7 @@ public class LoginActivity extends BaseActivity {
     private Button btn_custom_login;
     private Context mContext;
     private LoginButton btn_kakao_login;
+    private Button btn_custom_logout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +71,26 @@ public class LoginActivity extends BaseActivity {
                 Session session = Session.getCurrentSession();
                 session.addCallback(new SessionCallback());
                 session.open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
+
+
+            }
+        });
+        btn_custom_logout = (Button) findViewById(R.id.btn_custom_logout);
+        btn_custom_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                    @Override
+                    public void onCompleteLogout() {
+                        Log.d("로그아웃","로그아웃되었음");
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "로그아웃되었습니다.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
             }
         });
         btn_kakao_login = (LoginButton) findViewById(R.id.btn_kakao_login);
