@@ -6,8 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.altsoft.Framework.Global;
-import com.altsoft.loggalapp.MemberJoinActivity;
-import com.altsoft.loggalapp.WebViewActivity;
+import com.altsoft.loggalapp.MemberJoin2Activity;
 import com.altsoft.model.UserInfo.LOGIN_COND;
 import com.altsoft.model.UserInfo.LOGIN_DATA;
 import com.kakao.auth.ISessionCallback;
@@ -64,11 +63,19 @@ public class SessionCallback implements ISessionCallback {
 
                 LOGIN_COND Cond = new LOGIN_COND();
                 Cond.KAKAO_ID = Long.toString(id);
+                Cond.bSnsLogin = true;
+                this.LoginExec(Cond);
+              //  Global.getLoginInfo().
+            }
+
+            private void LoginExec(final LOGIN_COND Cond) {
+
                 Call<LOGIN_DATA> call = Global.getAPIService().GetMemberLogin(Cond);
                 call.enqueue(new Callback<LOGIN_DATA>() {
                     @Override
                     public void onResponse(Call<LOGIN_DATA> call, Response<LOGIN_DATA> response) {
                         LOGIN_DATA data = response.body();
+
                         if(data.ERROR_MESSAGE=="") {
                             /*아이디로 */
                             Toast.makeText(
@@ -77,9 +84,16 @@ public class SessionCallback implements ISessionCallback {
                                     Toast.LENGTH_LONG).show();
                         }
                         else {
-                            Intent intent = new Intent(Global.getCurrentActivity(), MemberJoinActivity.class);
-                            intent.putExtra("KAKAO_ID", id);
-                            Global.getCurrentActivity().startActivity(intent);
+                            if(Cond.bSnsLogin) {
+                                Intent intent = new Intent(Global.getCurrentActivity(), MemberJoin2Activity.class);
+                                intent.putExtra("KAKAO_ID", Cond.KAKAO_ID.toString());
+                                Global.getCurrentActivity().startActivity(intent);
+                            }else{
+                                Toast.makeText(
+                                        Global.getCurrentActivity(),
+                                        data.ERROR_MESSAGE,
+                                        Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
 
@@ -89,11 +103,10 @@ public class SessionCallback implements ISessionCallback {
                     }
                 });
 
-              //  Global.getLoginInfo().
             }
-
             @Override
             public void onSessionClosed(ErrorResult errorResult) {
+
                 Log.e("SessionCallback :: ", "onSessionClosed : " + errorResult.getErrorMessage());
             }
 

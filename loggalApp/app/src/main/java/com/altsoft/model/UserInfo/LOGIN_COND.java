@@ -10,5 +10,6 @@ public class LOGIN_COND implements Serializable {
     public String GOOGLE_ID;
     public String NAVER_ID;
     public String FACEBOOK_ID;
+    public Boolean bSnsLogin = false;
 
 }

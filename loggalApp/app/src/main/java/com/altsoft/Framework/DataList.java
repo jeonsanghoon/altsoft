@@ -6,7 +6,7 @@ import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
 
 import java.util.List;
 
-public class Data {
+public class DataList {
     public List<DEVICE_LOCATION> devicelist;
     public List<T_DEVICE_STATION> stationlist;
     public List<MOBILE_SIGNAGE_LIST> signagelist;

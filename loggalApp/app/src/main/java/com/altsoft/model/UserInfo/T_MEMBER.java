@@ -40,6 +40,10 @@ public class T_MEMBER implements Serializable {
     public String SHARE_AUTH_NUMBER ="00";
     /// 비고
     public String REMARK;
+    public String KAKAO_ID;
+    public String GOOGLE_ID;
+    public String NAVER_ID;
+    public String FACEBOOK_ID;
     /// 숨김여부(1:숨김 0:보임)
     public Boolean HIDE;
     /// 등록자(T_MEMBER의 MEMBER_CODE)

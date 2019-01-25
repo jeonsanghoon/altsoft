@@ -42,6 +42,7 @@ public class LoginActivity extends BaseActivity {
     private Context mContext;
     private LoginButton btn_kakao_login;
     private Button btn_custom_logout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +65,14 @@ public class LoginActivity extends BaseActivity {
 
     private void kakaoLoginInit()
     {
+        findViewById(R.id.btnMemberJoin).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Global.getCurrentActivity(), MemberJoin2Activity.class);
+                Global.getCurrentActivity().startActivity(intent);
+            }
+        });
+
         btn_custom_login = (Button) findViewById(R.id.btn_custom_login);
         btn_custom_login.setOnClickListener(new View.OnClickListener() {
             @Override

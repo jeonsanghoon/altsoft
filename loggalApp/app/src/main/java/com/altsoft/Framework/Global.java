@@ -3,6 +3,8 @@ package com.altsoft.Framework;
 import android.app.Activity;
 
 import com.altsoft.Framework.DataInfo.DotNetDateConverter;
+import com.altsoft.Framework.DataInfo.SecurityInfo;
+import com.altsoft.Framework.DataInfo.ValidityCheck;
 import com.altsoft.Framework.map.GpsInfo;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Interface.KakaoMapService;
@@ -21,9 +23,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Global {
-
-
-
     /// TabFrament에 onCreateView 중복 생성 체크
     public static Boolean bFirst = true;
 
@@ -87,13 +86,30 @@ public class Global {
         return _loginInfo;
     }
 
-    static Data _data;
-    public static Data getData ( ) {
-        if (_data == null) {
-            _data = new Data();
+    static DataList _dataList;
+    public static DataList getData ( ) {
+        if (_dataList == null) {
+            _dataList = new DataList();
         }
-        return _data;
+        return _dataList;
     }
+    static ValidityCheck _validityCheck;
+    //// 유효성체크
+    public static ValidityCheck getValidityCheck ( ) {
+        if (_validityCheck == null) {
+            _validityCheck = new ValidityCheck();
+        }
+        return _validityCheck;
+    }
+
+    static SecurityInfo _securityInfo;
+    public static SecurityInfo getSecurityInfo ( ) {
+        if (_securityInfo == null) {
+            _securityInfo = new SecurityInfo();
+        }
+        return _securityInfo;
+    }
+
 
     public static void SetLoginInfo(LOGIN_COND login) {
         _loginInfo = login;
