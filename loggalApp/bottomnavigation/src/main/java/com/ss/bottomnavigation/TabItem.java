@@ -176,6 +176,10 @@ public class TabItem extends FrameLayout implements View.OnClickListener {
         }
     }
 
+    public void setText(String name) {
+        textView.setText(name);
+    }
+
     public void setOnTabItemClickListener(OnTabItemClickListener onTabItemClickListener) {
         this.onTabItemClickListener = onTabItemClickListener;
     }

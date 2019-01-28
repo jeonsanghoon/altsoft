@@ -13,10 +13,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.altsoft.Framework.DataInfo.SecurityInfo;
 import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
@@ -27,8 +29,12 @@ import com.altsoft.loggalapp.Fragement.TabFragment3;
 
 import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
 
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
 import com.ss.bottomnavigation.events.OnSelectedItemChangeListener;
+
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -50,7 +56,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     private boolean isAccessCoarseLocation = false;
     private boolean isPermission = false;
 
-    Activity activity;
+    public  static Activity activity;
 
 
 
@@ -60,11 +66,24 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
+        //this.CheckOnline();
         this.onInitView();
         this.tabInit();
         this.gpsInit();
         this.initViewPager();
+    }
 
+    private void CheckOnline() {
+        if(!Global.getValidityCheck().isOnline())
+        {
+            Toast.makeText(
+                    getApplicationContext(),
+                    "인터넷 연결을 확인하시고 다시 실행하세요",
+                    Toast.LENGTH_LONG).show();
+            // finishAffinity();
+            // System.runFinalization()
+            // System.exit(0);
+        }
     }
 
     @Override
@@ -270,6 +289,14 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
             }
         });*/
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+            @Override
+            public void onCompleteLogout() {}
+        });
     }
 
     @Override

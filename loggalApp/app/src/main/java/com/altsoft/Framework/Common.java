@@ -2,6 +2,7 @@ package com.altsoft.Framework;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -16,6 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.loggalapp.R;
 import com.bumptech.glide.Glide;
 
@@ -258,5 +260,34 @@ public class Common {
             }
         }
         return null;
+    }
+
+    public String getComponentName(Activity activity)
+    {
+        PackageManager packageManager = activity.getPackageManager();
+        String rtn = "";
+        try {
+
+            ActivityInfo info = packageManager.getActivityInfo(activity.getComponentName(), 0);
+            Log.e("app", "Activity name:" + info.name);
+            rtn = info.name;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return rtn;
+    }
+    public void AllActivityClose()
+    {
+        for(int i=0; i<BaseActivity.actList.size(); i++)
+        {
+            if(getComponentName(BaseActivity.actList.get(i)) != "mainactivity")
+            {
+                BaseActivity.actList.get(i).finish();
+            }
+        }
+    }
+    public void ActivityClose(Activity activity)
+    {
+        activity.finish();
     }
 }

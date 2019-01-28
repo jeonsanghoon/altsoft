@@ -1,8 +1,11 @@
 package com.altsoft.Framework;
 
 import android.app.Activity;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.altsoft.Framework.DataInfo.DotNetDateConverter;
+import com.altsoft.Framework.DataInfo.SaveSharedPreference;
 import com.altsoft.Framework.DataInfo.SecurityInfo;
 import com.altsoft.Framework.DataInfo.ValidityCheck;
 import com.altsoft.Framework.map.GpsInfo;
@@ -10,8 +13,12 @@ import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Interface.KakaoMapService;
 import com.altsoft.Interface.MobileService;
 import com.altsoft.model.UserInfo.LOGIN_COND;
+import com.altsoft.model.UserInfo.LOGIN_DATA;
+import com.altsoft.model.UserInfo.T_MEMBER;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 import java.io.IOException;
 import java.util.Date;
@@ -78,14 +85,41 @@ public class Global {
         return _fileInfo;
     }
 
-    static LOGIN_COND _loginInfo;
-    public static LOGIN_COND getLoginInfo ( ) {
+    static LOGIN_DATA _loginInfo;
+    public static LOGIN_DATA getLoginInfo ( ) {
         if (_loginInfo == null) {
-            _loginInfo = new LOGIN_COND();
+            _loginInfo = new LOGIN_DATA();
         }
         return _loginInfo;
     }
 
+
+
+
+    public static Boolean  LogOut()
+    {
+        try {
+            UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                @Override
+                public void onCompleteLogout() {
+                    getSaveSharedPreference ().clearData(Global.getCurrentActivity());
+                }
+            });
+           Global.getLoginInfo().setData(null);
+        }catch(Exception ex) {
+            return false;
+        }
+        return true;
+    }
+
+    static SaveSharedPreference _saveSharedPreference;
+    /// 안드로이드 정보저장
+    public static SaveSharedPreference getSaveSharedPreference ( ) {
+        if (_saveSharedPreference == null) {
+            _saveSharedPreference = new SaveSharedPreference();
+        }
+        return _saveSharedPreference;
+    }
     static DataList _dataList;
     public static DataList getData ( ) {
         if (_dataList == null) {
@@ -108,11 +142,6 @@ public class Global {
             _securityInfo = new SecurityInfo();
         }
         return _securityInfo;
-    }
-
-
-    public static void SetLoginInfo(LOGIN_COND login) {
-        _loginInfo = login;
     }
 
     static MobileService _apiservice;

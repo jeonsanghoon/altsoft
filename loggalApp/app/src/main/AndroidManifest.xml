@@ -30,7 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="HardcodedDebugMode">
-        <activity android:name=".MemberJoin2Activity"></activity>
+        <activity android:name=".MemberJoinActivity"></activity>
 
         <meta-data
             android:name="com.kakao.sdk.ClientSecret"

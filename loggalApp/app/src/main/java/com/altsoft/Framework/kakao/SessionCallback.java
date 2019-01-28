@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.altsoft.Framework.Global;
-import com.altsoft.loggalapp.MemberJoin2Activity;
+import com.altsoft.loggalapp.MemberJoinActivity;
 import com.altsoft.model.UserInfo.LOGIN_COND;
 import com.altsoft.model.UserInfo.LOGIN_DATA;
 import com.kakao.auth.ISessionCallback;
@@ -15,9 +15,6 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
-
-import java.lang.reflect.Member;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,7 +25,7 @@ public class SessionCallback implements ISessionCallback {
 
     @Override
     public void onSessionOpened() {
-        requestMe();
+
     }
 
     // 로그인에 실패한 상태
@@ -85,7 +82,7 @@ public class SessionCallback implements ISessionCallback {
                         }
                         else {
                             if(Cond.bSnsLogin) {
-                                Intent intent = new Intent(Global.getCurrentActivity(), MemberJoin2Activity.class);
+                                Intent intent = new Intent(Global.getCurrentActivity(), MemberJoinActivity.class);
                                 intent.putExtra("KAKAO_ID", Cond.KAKAO_ID.toString());
                                 Global.getCurrentActivity().startActivity(intent);
                             }else{

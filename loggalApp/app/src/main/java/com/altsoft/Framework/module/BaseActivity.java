@@ -3,6 +3,8 @@ package com.altsoft.Framework.module;
 
 import android.annotation.SuppressLint;
 
+import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -13,12 +15,13 @@ import android.view.WindowManager;
 import com.altsoft.Framework.Global;
 import com.altsoft.loggalapp.R;
 
-
+import java.util.ArrayList;
 
 
 @SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity {
 
+    public static ArrayList<Activity> actList = new ArrayList<Activity>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +34,9 @@ public class BaseActivity extends AppCompatActivity {
     {
         super.onStart();
         Global.setCurrentActivity(this);
+        if(Global.getCommon().getComponentName(this).toLowerCase() != "mainactivity") {
+            actList.add(this);
+        }
     }
 
 
