@@ -399,13 +399,12 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         else if(mapType.equals("localbox")) {
             localstationdata = (T_DEVICE_STATION) mapPOIItem.getUserObject();
             tvTitle.setText(localstationdata.STATION_NAME);
-
-            tvTitle2.setText("로컬박스 : " + localstationdata.DEVICE_CNT.toString() + "개");
+            localstationdata.NEW_DEVICE_CNT = localstationdata.NEW_DEVICE_CNT ==null ? 0 : localstationdata.NEW_DEVICE_CNT;
+            tvTitle2.setText("로컬박스(총/신규) : " + localstationdata.DEVICE_CNT.toString() + "/" + localstationdata.NEW_DEVICE_CNT.toString()   + "개");
             tvSubtitle.setText(localstationdata.STATION_DESC);
             tvUser.setText("");
-            tvAddress.setText(localstationdata.ADDRESS1 + " " + localstationdata.ADDRESS2);
-
-            lvBottomInfo.setVisibility(View.VISIBLE);
+            tvAddress.setText("");
+            lvBottomInfo.setVisibility(View.GONE);
 
         }
         else

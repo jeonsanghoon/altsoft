@@ -56,7 +56,7 @@ public class Search2Activity extends BaseActivity {
     SearchCategory searchCategory;
     SearchBanner searchBanner;
     SearchLocalBox searchLocalBox;
-    SearchSignage searchSignage;
+   // SearchSignage searchSignage;
 
     /// 자동완성
     private  class SearchAutoCompleate{
@@ -444,7 +444,7 @@ public class Search2Activity extends BaseActivity {
     }
 
     /// 사이니지 조회
-    private  class SearchSignage {
+ /*   private  class SearchSignage {
         SignageListViewAdapter adapter;
         ListView listview ;
         boolean bLastPage = false;
@@ -536,7 +536,7 @@ public class Search2Activity extends BaseActivity {
         }
 
     }
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -546,7 +546,7 @@ public class Search2Activity extends BaseActivity {
         searchCategory = new SearchCategory();
         searchBanner = new SearchBanner();
         searchLocalBox = new SearchLocalBox();
-        this.searchSignage = new SearchSignage();
+      //  this.searchSignage = new SearchSignage();
         this.setUpViews();
     }
 
@@ -562,7 +562,7 @@ public class Search2Activity extends BaseActivity {
         this.searchBanner = null;
         this.searchCategory = null;
         this.searchLocalBox = null;
-        this.searchSignage = null;
+       // this.searchSignage = null;
     }
 
 
@@ -578,7 +578,7 @@ public class Search2Activity extends BaseActivity {
         searchAutoCompleate.setUpViews();
         searchBanner.setUpViews();;
         searchLocalBox.setUpViews();
-        searchSignage.setUpViews();
+      //  searchSignage.setUpViews();
         ImageButton search = (ImageButton)findViewById(R.id.btnSearch);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -595,7 +595,7 @@ public class Search2Activity extends BaseActivity {
     private void doQuery() {
         searchBanner.doQuery();
         searchLocalBox.doQuery();
-        searchSignage.doQuery();
+      //  searchSignage.doQuery();
     }
 
 

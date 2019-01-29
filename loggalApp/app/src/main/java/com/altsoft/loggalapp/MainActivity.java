@@ -184,7 +184,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         tab3 = new TabFragment3();
         getSupportFragmentManager().beginTransaction().replace(R.id.container, tab1).commit();
 */
-      bottomNavigation=(BottomNavigation)findViewById(R.id.bottom_navigation);
+        bottomNavigation=(BottomNavigation)findViewById(R.id.bottom_navigation);
         bottomNavigation.setDefaultItem(0);
         bottomNavigation.setType(bottomNavigation.TYPE_FIXED);
 

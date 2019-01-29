@@ -47,5 +47,7 @@ public class T_DEVICE_STATION
     public Date UPDATE_DATE;
     /// 스테이션당 기기수
     public Integer DEVICE_CNT;
+    /// 최근 일주일간 디바이스 등록건수
+    public Integer NEW_DEVICE_CNT;
     public Integer TOTAL_ROWCOUNT;
 }
