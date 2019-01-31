@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.altsoft.Framework.DataInfo.SecurityInfo;
@@ -29,6 +30,7 @@ import com.altsoft.loggalapp.Fragement.TabFragment3;
 
 import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
 
+import com.altsoft.model.UserInfo.LOGIN_DATA;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
@@ -124,13 +126,13 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                 switch(bottomNavigation.getSelectedItem()) {
                     case 0:
                             intent.putExtra("mapType", "banner");
-                            this.startActivityForResult(intent, enResult.Request.getValue());
+                            this.startActivityForResult(intent, enResult.BannerRequest.getValue());
                         break;
                     case 1:
                         if(!(Global.getData().devicelist == null || Global.getData().devicelist.size() == 0)) {
                             //intent.putExtra("list2", (ArrayList<DEVICE_LOCATION>) Global.getData().devicelist);
                             intent.putExtra("mapType", "localbox");
-                            this.startActivityForResult(intent, enResult.Request.getValue());
+                            this.startActivityForResult(intent, enResult.LocalboxRequest.getValue());
                         }
                         break;
                  /*  case 2:
@@ -155,12 +157,15 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == enResult.LoginRequest.getValue() )
         if (resultCode == RESULT_OK) {
-            initViewPager();
-           // tab1.GetBannerList();//.GetBannerList();
 
-            //tab2.GetDeviceLocation();
-            //tab3.GetSignageList();
+            String USER_ID = Global.getLoginInfo().getData().USER_ID;
+            String USER_NAME = Global.getLoginInfo().getData().USER_NAME;
+            String PASSWORD = Global.getLoginInfo().getData().PASSWORD;
+            LOGIN_DATA login = (LOGIN_DATA)data.getSerializableExtra("result");
+            bottomNavigation.getTabItems().get(2).setText(USER_NAME);
+            ((TextView)findViewById(R.id.tvMyInfoTitle)).setText(USER_NAME + "님이 로그인하였습니다.");
             return;
         }
     }
@@ -208,7 +213,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                         if(Global.getLoginInfo().USER_ID == null) {
                             Intent intent = new Intent(Global.getCurrentActivity(), LoginActivity.class);
                             intent.putExtra("mapType", "banner");
-                            Global.getCurrentActivity().startActivityForResult(intent, enResult.Request.getValue());
+                            Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
                         }
 
                         transaction=getSupportFragmentManager().beginTransaction();

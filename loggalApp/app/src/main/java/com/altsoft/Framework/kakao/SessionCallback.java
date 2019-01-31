@@ -67,7 +67,7 @@ public class SessionCallback implements ISessionCallback {
 
             private void LoginExec(final LOGIN_COND Cond) {
 
-                Call<LOGIN_DATA> call = Global.getAPIService().GetMemberLogin(Cond);
+                Call<LOGIN_DATA> call = Global.getAPIService().GetMobileLogin(Cond);
                 call.enqueue(new Callback<LOGIN_DATA>() {
                     @Override
                     public void onResponse(Call<LOGIN_DATA> call, Response<LOGIN_DATA> response) {

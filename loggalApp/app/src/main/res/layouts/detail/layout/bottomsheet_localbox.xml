@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/bottomsheet_padding"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:text=""
             android:textColor="#444"
             android:textSize="18dp"
@@ -60,7 +60,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
-
+        <LinearLayout
+            android:id="@+id/layBottomInfoDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
         <TextView
             android:id="@+id/txtBottomUser"
             android:layout_width="wrap_content"
@@ -80,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="" />
-
+        </LinearLayout>
         <Button
             android:id="@+id/btnBottonSheet"
             android:layout_width="match_parent"

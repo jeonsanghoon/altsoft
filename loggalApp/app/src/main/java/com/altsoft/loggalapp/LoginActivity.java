@@ -94,17 +94,28 @@ public class LoginActivity extends BaseActivity {
                 Cond.USER_ID = ((EditText)findViewById(R.id.lEditEmail)).getText().toString();
                 Cond.PASSWORD = ((EditText)findViewById(R.id.lEditPassword)).getText().toString();
                 Cond.PASSWORD = Global.getSecurityInfo().ConvertSha( Cond.PASSWORD,SecurityInfo.enSecType.SHA1 );
-                Call<LOGIN_DATA> call =  Global.getAPIService().GetMemberLogin(Cond);
+                Call<LOGIN_DATA> call =  Global.getAPIService().GetMobileLogin(Cond);
                 call.enqueue(new Callback<LOGIN_DATA>() {
                     @Override
                     public void onResponse(Call<LOGIN_DATA> call, Response<LOGIN_DATA> response) {
                         LOGIN_DATA rtn = response.body();
                         Global.getLoginInfo().setData(response.body());
-                        Toast.makeText(
-                                getApplicationContext(),
-                                rtn.USER_NAME + "님이 로그인하였습니다.",
-                                Toast.LENGTH_LONG).show();
-                        Global.getCommon().AllActivityClose();
+                        if(!rtn.ERROR_MESSAGE.equals("") ){
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    rtn.ERROR_MESSAGE,
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    rtn.USER_NAME + "님이 로그인하였습니다.",
+                                    Toast.LENGTH_LONG).show();
+                            Intent resultIntent = new Intent();
+                            resultIntent.putExtra("result",rtn);
+                            setResult(RESULT_OK,resultIntent);
+                            finish();
+                        }
                     }
                     @Override
                     public void onFailure(Call<LOGIN_DATA> call, Throwable t) {
@@ -127,8 +138,6 @@ public class LoginActivity extends BaseActivity {
                                 Toast.LENGTH_LONG).show();
                     }
                 });
-
-
             }
         });
         btn_custom_logout.setVisibility(View.GONE);

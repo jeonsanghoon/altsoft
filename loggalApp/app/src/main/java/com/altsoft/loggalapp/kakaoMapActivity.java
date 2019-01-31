@@ -81,6 +81,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     TextView tvTitle;
     TextView tvTitle2 ;
     LinearLayout lvBottomInfo ;
+    LinearLayout lvBottomInfoDetail;
     TextView tvSubtitle;
     TextView tvUser;
     TextView tvAddress;
@@ -152,6 +153,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         tvTitle =  findViewById(R.id.txtBottomTitle);
         tvTitle2 =  findViewById(R.id.txtBottomTitle2);
         lvBottomInfo =  findViewById(R.id.layBottomInfo);
+        lvBottomInfoDetail =  findViewById(R.id.layBottomInfoDetail);
         tvSubtitle =  findViewById(R.id.txtBottomSubtitle);
         tvUser =  findViewById(R.id.txtBottomUser);
         tvAddress=  findViewById(R.id.txtBottomAddress);
@@ -368,6 +370,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         DecimalFormat df = new DecimalFormat("#,##0.00");
         tvSubtitle.setVisibility(View.VISIBLE);
         tvSubtitle.setVisibility(View.VISIBLE);
+        lvBottomInfo.setVisibility(View.VISIBLE);
+        lvBottomInfoDetail.setVisibility(View.VISIBLE);
         if(mapType.equals("signage")) {
             signagedata = (MOBILE_SIGNAGE_LIST) mapPOIItem.getUserObject();
             mapView.removeAllCircles();
@@ -404,7 +408,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             tvSubtitle.setText(localstationdata.STATION_DESC);
             tvUser.setText("");
             tvAddress.setText("");
-            lvBottomInfo.setVisibility(View.GONE);
+            lvBottomInfo.setVisibility(View.VISIBLE);
+            lvBottomInfoDetail.setVisibility(View.GONE);
 
         }
         else

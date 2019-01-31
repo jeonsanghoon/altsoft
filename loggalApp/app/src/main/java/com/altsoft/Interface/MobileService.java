@@ -57,7 +57,7 @@ public interface MobileService {
     @POST("/api/Account/SaveMember")
     Call<RTN_SAVE_DATA> SaveMember(@Body T_MEMBER Cond);
     @POST("/api/Account/GetMobileLogin")
-    Call<LOGIN_DATA> GetMemberLogin(@Body LOGIN_COND Cond);
+    Call<LOGIN_DATA> GetMobileLogin(@Body LOGIN_COND Cond);
     @POST("/api/Account/MobilePasswordChange")
     Call<LOGIN_DATA> PasswordChange(@Body LOGIN_COND Cond);
     @POST("/api/Account/GetMobileLoginMemberList")
