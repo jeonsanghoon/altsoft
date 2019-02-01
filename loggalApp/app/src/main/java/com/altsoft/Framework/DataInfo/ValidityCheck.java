@@ -50,7 +50,7 @@ public class ValidityCheck {
 
         if(pw.length()>0 && pw.equals(pw2))
         {
-            Toast.makeText(Global.getCurrentActivity(),"비밀번호번호가 정상적으로 입력되었습니다.",Toast.LENGTH_SHORT).show();
+           // Toast.makeText(Global.getCurrentActivity(),"비밀번호번호가 정상적으로 입력되었습니다.",Toast.LENGTH_SHORT).show();
             return true;
         }
         return true;

@@ -13,6 +13,7 @@ import com.altsoft.model.UserInfo.T_MEMBER;
 import com.altsoft.model.UserInfo.T_MEMBER_BOOKMARK;
 import com.altsoft.model.UserInfo.T_MEMBER_BOOKMARK_COND;
 import com.altsoft.model.UserInfo.T_MEMBER_COND;
+import com.altsoft.model.UserInfo.T_MEMBER_SNS_UPDATE;
 import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_COND;
@@ -62,6 +63,9 @@ public interface MobileService {
     Call<LOGIN_DATA> PasswordChange(@Body LOGIN_COND Cond);
     @POST("/api/Account/GetMobileLoginMemberList")
     Call<List<T_MEMBER>> GetMemberList(@Body T_MEMBER_COND Cond);
+
+    @POST("/api/Account/MemberSnsIDUpdate")
+    Call<RTN_SAVE_DATA> MemberSnsIDUpdate(@Body T_MEMBER_SNS_UPDATE Cond);
 
     /*북마크관련*/
     @POST("/api/Account/MemberbookmarkSave")

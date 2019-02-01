@@ -41,6 +41,11 @@ public class LOGIN_DATA implements Serializable {
             Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_ID", data.USER_ID);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "PASSWORD", data.PASSWORD);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_NAME", data.USER_NAME);
+
+            Toast.makeText(
+                   Global.getCurrentActivity(),
+                    data.USER_NAME + "님이 로그인하였습니다.",
+                    Toast.LENGTH_LONG).show();
         }
         return data;
     }

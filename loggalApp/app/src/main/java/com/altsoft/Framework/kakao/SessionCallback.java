@@ -1,6 +1,8 @@
 package com.altsoft.Framework.kakao;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
@@ -12,9 +14,16 @@ import com.altsoft.model.UserInfo.LOGIN_DATA;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
+import com.kakao.usermgmt.callback.MeV2ResponseCallback;
+import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
+import com.kakao.util.helper.log.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,7 +34,7 @@ public class SessionCallback implements ISessionCallback {
 
     @Override
     public void onSessionOpened() {
-
+        requestMe();
     }
 
     // 로그인에 실패한 상태
@@ -82,9 +91,38 @@ public class SessionCallback implements ISessionCallback {
                         }
                         else {
                             if(Cond.bSnsLogin) {
-                                Intent intent = new Intent(Global.getCurrentActivity(), MemberJoinActivity.class);
-                                intent.putExtra("KAKAO_ID", Cond.KAKAO_ID.toString());
-                                Global.getCurrentActivity().startActivity(intent);
+                                new AlertDialog.Builder(Global.getCurrentActivity())
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .setTitle("회원가입")
+                                        .setMessage("로그인정보가 없습니다. 회원가입 하시겠습니까?")
+                                        .setPositiveButton("예", new DialogInterface.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent intent = new Intent(Global.getCurrentActivity(), MemberJoinActivity.class);
+                                                intent.putExtra("KAKAO_ID", Cond.KAKAO_ID.toString());
+                                                Global.getCurrentActivity().startActivity(intent);
+                                                dialog.dismiss();
+                                            }
+
+                                        })
+                                        .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // 카카오 로그아웃
+                                                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                                                    @Override
+                                                    public void onCompleteLogout() {    }
+                                                });
+                                                // Do nothing
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .show();
+
+
+
                             }else{
                                 Toast.makeText(
                                         Global.getCurrentActivity(),

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.altsoft.Framework.DataInfo.SecurityInfo;
 import com.altsoft.Framework.Global;
+import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.kakao.SessionCallback;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.model.RTN_SAVE_DATA;
@@ -70,7 +71,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Global.getCurrentActivity(), MemberJoinActivity.class);
-                Global.getCurrentActivity().startActivity(intent);
+                Global.getCurrentActivity().startActivityForResult(intent, enResult.MemberJoin.getValue());
             }
         });
 
@@ -80,7 +81,7 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View view) {
                 Session session = Session.getCurrentSession();
                 session.addCallback(new SessionCallback());
-                session.open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
+                session.open(AuthType.KAKAO_TALK_ONLY, LoginActivity.this);
 
 
             }
@@ -99,7 +100,7 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<LOGIN_DATA> call, Response<LOGIN_DATA> response) {
                         LOGIN_DATA rtn = response.body();
-                        Global.getLoginInfo().setData(response.body());
+
                         if(!rtn.ERROR_MESSAGE.equals("") ){
                             Toast.makeText(
                                     getApplicationContext(),
@@ -107,10 +108,8 @@ public class LoginActivity extends BaseActivity {
                                     Toast.LENGTH_LONG).show();
                         }
                         else {
-                            Toast.makeText(
-                                    getApplicationContext(),
-                                    rtn.USER_NAME + "님이 로그인하였습니다.",
-                                    Toast.LENGTH_LONG).show();
+                            Global.getLoginInfo().setData(response.body());
+
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("result",rtn);
                             setResult(RESULT_OK,resultIntent);
@@ -142,6 +141,23 @@ public class LoginActivity extends BaseActivity {
         });
         btn_custom_logout.setVisibility(View.GONE);
         btn_kakao_login = (LoginButton) findViewById(R.id.btn_kakao_login);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == enResult.MemberJoin.getValue()){
+            if (resultCode == RESULT_OK) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("result", (LOGIN_DATA)data.getSerializableExtra("result"));
+                setResult(RESULT_OK,resultIntent);
+                finish();
+            }
+        }
+        //간편로그인시 호출 ,없으면 간편로그인시 로그인 성공화면으로 넘어가지 않음
+        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
+            //이부분의 사용용도가 궁금합니다.
+            return;
+        }
     }
 
     @Override

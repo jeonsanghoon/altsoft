@@ -1,6 +1,8 @@
 package com.altsoft.loggalapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +20,9 @@ import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.model.RTN_SAVE_DATA;
 import com.altsoft.model.UserInfo.LOGIN_DATA;
 import com.altsoft.model.UserInfo.T_MEMBER;
+import com.altsoft.model.UserInfo.T_MEMBER_SNS_UPDATE;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.TabItem;
 
 import java.security.NoSuchAlgorithmException;
@@ -152,6 +157,7 @@ public class MemberJoinActivity extends BaseActivity {
     private void MemberSave() {
         final T_MEMBER param = SetMemberSaveParam();
 
+
         if(param == null) return;
         Call<RTN_SAVE_DATA> call =  Global.getAPIService().SaveMember(param);
         call.enqueue(new Callback<RTN_SAVE_DATA>() {
@@ -159,7 +165,65 @@ public class MemberJoinActivity extends BaseActivity {
             public void onResponse(Call<RTN_SAVE_DATA> call, Response<RTN_SAVE_DATA> response) {
                 RTN_SAVE_DATA rtn = response.body();
                 if(rtn.ERROR_MESSAGE != "") {
-                    Toast.makeText(Global.getCurrentActivity(),rtn.ERROR_MESSAGE, Toast.LENGTH_LONG).show();
+                    if(rtn.DATA2 != null && rtn.DATA2.equals("ID_DUPLICATION") && param.KAKAO_ID.length() > 0 && !rtn.MESSAGE.equals(""))
+                    {
+
+                            new AlertDialog.Builder(Global.getCurrentActivity()).setIcon(android.R.drawable.ic_dialog_alert);
+                            new AlertDialog.Builder(Global.getCurrentActivity()).setTitle("카카오로그인등록");
+                            new AlertDialog.Builder(Global.getCurrentActivity()).setMessage(rtn.ERROR_MESSAGE + System.getProperty("line.separator") + "카카오로그인정보를 업데이트하시겠습니까?");
+                            new AlertDialog.Builder(Global.getCurrentActivity()).setPositiveButton("예", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    T_MEMBER_SNS_UPDATE Cond = new T_MEMBER_SNS_UPDATE();
+                                    Cond.USER_ID = param.USER_ID;
+                                    Cond.PASSWORD = param.PASSWORD;
+                                    Cond.SNS_TYPE = 1;
+                                    Cond.KAKAO_ID = param.KAKAO_ID;
+                                    Call<RTN_SAVE_DATA> call = Global.getAPIService().MemberSnsIDUpdate(Cond);
+                                    call.enqueue(new Callback<RTN_SAVE_DATA>() {
+                                        @Override
+                                        public void onResponse(Call<RTN_SAVE_DATA> call, Response<RTN_SAVE_DATA> response) {
+                                            LOGIN_DATA data = new LOGIN_DATA();
+                                            data.USER_ID = param.USER_ID;
+                                            data.PASSWORD = param.PASSWORD;
+                                            data.USER_NAME = param.USER_NAME;
+                                            Global.getLoginInfo().setData(data);
+                                            Intent resultIntent = new Intent();
+                                            resultIntent.putExtra("result",data);
+                                            setResult(RESULT_OK,resultIntent);
+                                        }
+                                        @Override
+                                        public void onFailure(Call<RTN_SAVE_DATA> call, Throwable t) {}
+                                    });
+                                    dialog.dismiss();
+                                }
+                            });
+                            new AlertDialog.Builder(Global.getCurrentActivity()).setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // 카카오 로그아웃
+                                    UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                                        @Override
+                                        public void onCompleteLogout() {
+
+                                        }
+                                    });
+                                    // Do nothing
+                                    dialog.dismiss();
+                                }
+                            });
+                            new AlertDialog.Builder(Global.getCurrentActivity()).show();
+                    }
+                    else {
+                        if(rtn.DATA2.equals("ID_DUPLICATION"))
+                        {
+                            Toast.makeText(Global.getCurrentActivity(), "패스워드를 초기화 하시겠습니까?", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(Global.getCurrentActivity(), rtn.ERROR_MESSAGE, Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
                 else {
                     LOGIN_DATA param2 = new LOGIN_DATA();
