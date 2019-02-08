@@ -157,13 +157,14 @@ public class MemberJoinActivity extends BaseActivity {
     private void MemberSave() {
         final T_MEMBER param = SetMemberSaveParam();
 
-
+        Global.getCommon().ProgressShow();
         if(param == null) return;
         Call<RTN_SAVE_DATA> call =  Global.getAPIService().SaveMember(param);
         call.enqueue(new Callback<RTN_SAVE_DATA>() {
             @Override
             public void onResponse(Call<RTN_SAVE_DATA> call, Response<RTN_SAVE_DATA> response) {
                 RTN_SAVE_DATA rtn = response.body();
+                Global.getCommon().ProgressHide();
                 if(rtn.ERROR_MESSAGE != "") {
                     if(rtn.DATA2 != null && rtn.DATA2.equals("ID_DUPLICATION") && param.KAKAO_ID.length() > 0 && !rtn.MESSAGE.equals(""))
                     {
@@ -179,6 +180,7 @@ public class MemberJoinActivity extends BaseActivity {
                                     Cond.PASSWORD = param.PASSWORD;
                                     Cond.SNS_TYPE = 1;
                                     Cond.KAKAO_ID = param.KAKAO_ID;
+                                    Global.getCommon().ProgressShow();
                                     Call<RTN_SAVE_DATA> call = Global.getAPIService().MemberSnsIDUpdate(Cond);
                                     call.enqueue(new Callback<RTN_SAVE_DATA>() {
                                         @Override
@@ -191,9 +193,13 @@ public class MemberJoinActivity extends BaseActivity {
                                             Intent resultIntent = new Intent();
                                             resultIntent.putExtra("result",data);
                                             setResult(RESULT_OK,resultIntent);
+                                            Global.getCommon().ProgressHide();
                                         }
                                         @Override
-                                        public void onFailure(Call<RTN_SAVE_DATA> call, Throwable t) {}
+                                        public void onFailure(Call<RTN_SAVE_DATA> call, Throwable t) {
+
+                                            Global.getCommon().ProgressHide();
+                                        }
                                     });
                                     dialog.dismiss();
                                 }
@@ -224,6 +230,7 @@ public class MemberJoinActivity extends BaseActivity {
                             Toast.makeText(Global.getCurrentActivity(), rtn.ERROR_MESSAGE, Toast.LENGTH_LONG).show();
                         }
                     }
+
                 }
                 else {
                     LOGIN_DATA param2 = new LOGIN_DATA();
@@ -236,10 +243,12 @@ public class MemberJoinActivity extends BaseActivity {
                     Toast.makeText(Global.getCurrentActivity(),"로그인이 되었습니다.", Toast.LENGTH_LONG).show();
                     Global.getCommon().AllActivityClose();
                 }
+
+
             }
             @Override
             public void onFailure(Call<RTN_SAVE_DATA> call, Throwable t) {
-
+                Global.getCommon().ProgressHide();
             }
         });
     }

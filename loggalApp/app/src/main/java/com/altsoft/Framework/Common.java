@@ -43,6 +43,15 @@ import static com.kakao.util.helper.Utility.getPackageInfo;
 public class Common {
 
     /// 프로그래스바 숨기기
+    /// 프로그래스바 보여주기
+    public void ProgressHide()
+    {
+        try {
+            Activity activity = Global.getCurrentActivity();
+            ProgressBar progress = activity.findViewById(R.id.progress);
+            this.ProgressHide(activity,progress);
+        }catch(Exception ex){}
+    }
     public void ProgressHide(Activity activity) {
         ProgressBar progress = activity.findViewById(R.id.progress);
         this.ProgressHide(activity,progress);
@@ -53,6 +62,14 @@ public class Common {
     }
 
     /// 프로그래스바 보여주기
+    public void ProgressShow()
+    {
+        try {
+            Activity activity = Global.getCurrentActivity();
+            ProgressBar progress = activity.findViewById(R.id.progress);
+            this.ProgressShow(activity, progress);
+        }catch(Exception ex){}
+    }
     public void ProgressShow(Activity activity) {
         try {
             ProgressBar progress = activity.findViewById(R.id.progress);

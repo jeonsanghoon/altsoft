@@ -16,31 +16,52 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 public class LOGIN_DATA implements Serializable {
     public String ERROR_MESSAGE;
-    public int    ERROR_TYPE;
     public String USER_ID;
     public String PASSWORD;
     public String USER_NAME;
 
-
-     public LOGIN_DATA getData()
+     public boolean isLogin()
      {
-         LOGIN_DATA rtn = new LOGIN_DATA();
-         if(rtn== null) return rtn;
-         rtn.USER_ID = Global.getSaveSharedPreference().getData(MainActivity.activity, "USER_ID");
-         rtn.PASSWORD = Global.getSaveSharedPreference().getData(MainActivity.activity,"PASSWORD");
-         rtn.USER_NAME = Global.getSaveSharedPreference().getData(MainActivity.activity,"USER_NAME");
-         return rtn;
+
+         String USER_ID = Global.getSaveSharedPreference().getData(MainActivity.activity, "USER_ID");
+         if(getData() == null ||  Global.getValidityCheck().isEmpty(getData().USER_ID)){
+             return false;
+         }else return true;
+
      }
+     public LOGIN_DATA getData() {
+         LOGIN_DATA rtn = new LOGIN_DATA();
+         try {
+             rtn.USER_ID = Global.getSaveSharedPreference().getData(MainActivity.activity, "USER_ID");
+             if (Global.getValidityCheck().isEmpty(rtn.USER_ID)) {
+                 throw new Exception("");
+             }
+             rtn.PASSWORD = Global.getSaveSharedPreference().getData(MainActivity.activity, "PASSWORD");
+             rtn.USER_NAME = Global.getSaveSharedPreference().getData(MainActivity.activity, "USER_NAME");
+             return rtn;
+         } catch (Exception ex) {
+             return null;
+         }
+    }
 
     public LOGIN_DATA setData(LOGIN_DATA data)
     {
         if(data == null){Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_ID", null);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "PASSWORD", null);
-            Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_NAME", null);}
+            Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_NAME", null);
+            ERROR_MESSAGE = "";
+            USER_ID = null;
+            PASSWORD = null;
+            USER_NAME = null;
+        }
         else {
             Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_ID", data.USER_ID);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "PASSWORD", data.PASSWORD);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_NAME", data.USER_NAME);
+            ERROR_MESSAGE = "";
+            USER_ID = data.USER_ID;
+            PASSWORD = data.PASSWORD;
+            USER_NAME = data.USER_NAME;
 
             Toast.makeText(
                    Global.getCurrentActivity(),

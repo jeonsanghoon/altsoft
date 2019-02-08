@@ -16,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,9 +46,7 @@ import java.security.NoSuchAlgorithmException;
 public class MainActivity  extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    TabFragment1 tab1;
-    TabFragment2 tab2;
-    TabFragment3 tab3;
+
     private FragmentTransaction transaction;
     ViewPager viewPager;
     BottomNavigation bottomNavigation;
@@ -73,8 +73,13 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         this.tabInit();
         this.gpsInit();
         this.initViewPager();
-    }
 
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.LoginInfoSet();
+    }
     private void CheckOnline() {
         if(!Global.getValidityCheck().isOnline())
         {
@@ -159,14 +164,25 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == enResult.LoginRequest.getValue() )
         if (resultCode == RESULT_OK) {
-
-            String USER_ID = Global.getLoginInfo().getData().USER_ID;
-            String USER_NAME = Global.getLoginInfo().getData().USER_NAME;
-            String PASSWORD = Global.getLoginInfo().getData().PASSWORD;
-            LOGIN_DATA login = (LOGIN_DATA)data.getSerializableExtra("result");
-            bottomNavigation.getTabItems().get(2).setText(USER_NAME);
-            ((TextView)findViewById(R.id.tvMyInfoTitle)).setText(USER_NAME + "님이 로그인하였습니다.");
+            LoginInfoSet();
             return;
+        }
+    }
+
+    // 로그인정보 셋팅
+    private void LoginInfoSet()
+    {
+        if(Global.getLoginInfo().isLogin()) {
+            try {
+                bottomNavigation.getTabItems().get(2).setText(Global.getLoginInfo().getData().USER_NAME);
+
+
+                if(bottomNavigation.getSelectedItem() == 2) {
+                    ((TextView) findViewById(R.id.tvMyInfoTitle)).setText(Global.getLoginInfo().getData().USER_NAME + "님이 로그인하였습니다.");
+                    ((Button)findViewById(R.id.btnLogin)).setVisibility(View.GONE);
+                    ((Button)findViewById(R.id.btnLogout)).setVisibility(View.VISIBLE);
+                }
+            }catch(Exception ex){}
         }
     }
 
@@ -200,28 +216,34 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                     case R.id.tab_banner:
                         transaction=getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container ,new TabFragment1());
+                        transaction.commit();
                         break;
                     case R.id.tab_localbox:
                         transaction=getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container,new TabFragment2());
+                        transaction.commit();
                         break;
                    /* case R.id.tab_signage:
                         transaction=getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container,new TabFragment3());
                         break;*/
                     case R.id.tab_myinfo:
-                        if(Global.getLoginInfo().USER_ID == null) {
+                        transaction=getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.container,new TabFragment_Myinfo());
+                        if(!Global.getLoginInfo().isLogin()) {
                             Intent intent = new Intent(Global.getCurrentActivity(), LoginActivity.class);
-                            intent.putExtra("mapType", "banner");
+                            //intent.putExtra("mapType", "banner");
                             Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
                         }
 
-                        transaction=getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container,new TabFragment_Myinfo());
+                        transaction.commit();
+                        if(Global.getLoginInfo().isLogin()) {
+                            LoginInfoSet();
+                        }
 
                         break;
                 }
-                transaction.commit();
+
             }
         });
      }

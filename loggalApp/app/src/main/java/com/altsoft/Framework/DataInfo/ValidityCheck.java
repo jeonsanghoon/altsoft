@@ -69,5 +69,10 @@ public class ValidityCheck {
         return false;
     }
 
-
+    public boolean isEmpty(String Val){
+        if(Val == null || Val.trim().equals("") ) {
+            return true;
+        }
+        else return false;
+    }
 }
