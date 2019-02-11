@@ -19,6 +19,8 @@ public class LOGIN_DATA implements Serializable {
     public String USER_ID;
     public String PASSWORD;
     public String USER_NAME;
+    public String profileImagePath;
+    public String thumnailPath;
 
      public boolean isLogin()
      {
@@ -38,6 +40,8 @@ public class LOGIN_DATA implements Serializable {
              }
              rtn.PASSWORD = Global.getSaveSharedPreference().getData(MainActivity.activity, "PASSWORD");
              rtn.USER_NAME = Global.getSaveSharedPreference().getData(MainActivity.activity, "USER_NAME");
+             rtn.profileImagePath = Global.getSaveSharedPreference().getData(MainActivity.activity, "profileImagePath");
+             rtn.thumnailPath = Global.getSaveSharedPreference().getData(MainActivity.activity, "thumnailPath");
              return rtn;
          } catch (Exception ex) {
              return null;
@@ -49,19 +53,27 @@ public class LOGIN_DATA implements Serializable {
         if(data == null){Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_ID", null);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "PASSWORD", null);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_NAME", null);
+            Global.getSaveSharedPreference().setData(MainActivity.activity, "profileImagePath", null);
+            Global.getSaveSharedPreference().setData(MainActivity.activity, "thumnailPath", null);
             ERROR_MESSAGE = "";
             USER_ID = null;
             PASSWORD = null;
             USER_NAME = null;
+            profileImagePath = null;
+            thumnailPath = null;
         }
         else {
             Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_ID", data.USER_ID);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "PASSWORD", data.PASSWORD);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_NAME", data.USER_NAME);
+            Global.getSaveSharedPreference().setData(MainActivity.activity, "profileImagePath", data.profileImagePath);
+            Global.getSaveSharedPreference().setData(MainActivity.activity, "thumnailPath", data.thumnailPath);
             ERROR_MESSAGE = "";
             USER_ID = data.USER_ID;
             PASSWORD = data.PASSWORD;
             USER_NAME = data.USER_NAME;
+            profileImagePath = data.profileImagePath;
+            thumnailPath = data.thumnailPath;
 
             Toast.makeText(
                    Global.getCurrentActivity(),

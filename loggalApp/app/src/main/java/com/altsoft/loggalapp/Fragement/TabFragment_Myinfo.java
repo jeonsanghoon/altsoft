@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,12 +19,15 @@ import com.altsoft.Framework.module.BaseFragment;
 import com.altsoft.loggalapp.LoginActivity;
 import com.altsoft.loggalapp.MainActivity;
 import com.altsoft.loggalapp.R;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
 
 public class TabFragment_Myinfo extends BaseFragment {
-    TextView txtMyinfo;
+    TextView tvUserId;
+    TextView tvUserName;
     public View view;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,8 +38,9 @@ public class TabFragment_Myinfo extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tab_myinfo,container,false);
-        txtMyinfo  = ((TextView) view.findViewById(R.id.tvMyInfoTitle));;
+        final View view = inflater.inflate(R.layout.fragment_tab_myinfo,container,false);
+        tvUserId  = ((TextView) view.findViewById(R.id.tvUserId));;
+        tvUserName  = ((TextView) view.findViewById(R.id.tvUserName));;
 
         final Button btnLogin = view.findViewById(R.id.btnLogin);
         final Button btnLogout = view.findViewById(R.id.btnLogout);
@@ -43,7 +48,18 @@ public class TabFragment_Myinfo extends BaseFragment {
        if(Global.getLoginInfo().isLogin()) {
             btnLogin.setVisibility(View.GONE);
             btnLogout.setVisibility(View.VISIBLE);
-            txtMyinfo.setText(Global.getLoginInfo().getData().USER_NAME + "님이 로그인하였습니다.");
+           tvUserId.setText(Global.getLoginInfo().getData().USER_ID);
+           tvUserName.setText(Global.getLoginInfo().getData().USER_NAME);
+
+           ImageView img_profile = view.findViewById(R.id.img_profile);
+           if(!Global.getValidityCheck().isEmpty(Global.getLoginInfo().getData().thumnailPath)) {
+               Glide.with(Global.getCurrentActivity())
+                       .load(Global.getLoginInfo().getData().thumnailPath)
+                       .apply(new RequestOptions().override(100, 100))
+                       .apply(RequestOptions.circleCropTransform())
+                       .into(img_profile)
+               ;
+           }
         }
         else {
            btnLogin.setVisibility(View.VISIBLE);
@@ -69,8 +85,15 @@ public class TabFragment_Myinfo extends BaseFragment {
                     }
                 });
                 BottomNavigation bottomNavigation = (BottomNavigation) MainActivity.activity.findViewById(R.id.bottom_navigation);
-                txtMyinfo.setText(Global.getLoginInfo().getData().USER_NAME + "님이 로그아웃하였습니다.");
+                tvUserId.setText("");
+                tvUserName.setText("");
                 bottomNavigation.getTabItems().get(2).setText("내정보");
+                ImageView img_profile = view.findViewById(R.id.img_profile);
+                Glide.with(Global.getCurrentActivity())
+                        .load("")
+                        .apply(new RequestOptions().override(100, 100))
+                        .into(img_profile)
+                ;
                 Global.getLoginInfo().setData(null);
                 Toast.makeText(
                         Global.getCurrentActivity(),
@@ -83,5 +106,13 @@ public class TabFragment_Myinfo extends BaseFragment {
 
 
         return view;
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == enResult.LoginRequest.getValue() )
+            if (resultCode == -1) {
+
+                return;
+            }
     }
 }

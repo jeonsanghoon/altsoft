@@ -223,6 +223,8 @@ public class LoginActivity extends BaseActivity {
 
                     LOGIN_COND Cond = new LOGIN_COND();
                     Cond.KAKAO_ID = Long.toString(id);
+                    Cond.profileImagePath = profileImagePath;
+                    Cond.thumnailPath = thumnailPath;
                     Cond.bSnsLogin = true;
                     this.LoginExec(Cond);
                     //  Global.getLoginInfo().
@@ -243,6 +245,8 @@ public class LoginActivity extends BaseActivity {
                                         data.USER_NAME + "님이 로그인되었습니다.",
                                         Toast.LENGTH_LONG).show();
                                 Intent resultIntent = new Intent();
+                                data.profileImagePath = Cond.profileImagePath;
+                                data.thumnailPath = Cond.thumnailPath;
                                 Global.getLoginInfo().setData(data);
                                 resultIntent.putExtra("result",response.body());
                                 Global.getCurrentActivity().setResult(RESULT_OK,resultIntent);

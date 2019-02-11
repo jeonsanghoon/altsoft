@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,8 @@ import com.altsoft.loggalapp.Fragement.TabFragment2;
 
 import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
@@ -158,7 +161,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == enResult.LoginRequest.getValue() )
         if (resultCode == RESULT_OK) {
-            LoginInfoSet();
+            //LoginInfoSet();
             return;
         }
     }
@@ -172,7 +175,15 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
 
                 if(bottomNavigation.getSelectedItem() == 2) {
-                    ((TextView) findViewById(R.id.tvMyInfoTitle)).setText(Global.getLoginInfo().getData().USER_NAME + "님이 로그인하였습니다.");
+                    ((TextView) findViewById(R.id.tvUserName)).setText(Global.getLoginInfo().getData().USER_NAME );
+                    ((TextView) findViewById(R.id.tvUserId)).setText(Global.getLoginInfo().getData().USER_ID );
+                    ImageView img_profile = findViewById(R.id.img_profile);
+                    Glide.with(Global.getCurrentActivity())
+                            .load(Global.getLoginInfo().getData().thumnailPath)
+                            .apply(new RequestOptions().override(100, 100))
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(img_profile)
+                    ;
                     ((Button)findViewById(R.id.btnLogin)).setVisibility(View.GONE);
                     ((Button)findViewById(R.id.btnLogout)).setVisibility(View.VISIBLE);
                 }

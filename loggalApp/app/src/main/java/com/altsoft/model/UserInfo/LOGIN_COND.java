@@ -12,4 +12,7 @@ public class LOGIN_COND implements Serializable {
     public String FACEBOOK_ID;
     public Boolean bSnsLogin = false;
 
+    public String profileImagePath;
+    public String thumnailPath;
+
 }
