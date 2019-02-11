@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.altsoft.Framework.Global;
 import com.altsoft.loggalapp.R;
 import com.altsoft.model.DEVICE_LOCATION;
+import com.altsoft.model.search.MOBILE_AD_SEARCH_DATA;
 import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
 
 import java.text.DecimalFormat;
@@ -74,18 +75,20 @@ public class LocalBoxListViewAdapter extends BaseAdapter {
         return listViewItemList.get(position) ;
     }
 
+    public Boolean SetDataBind(List<DEVICE_LOCATION> list) {
+        return this.SetDataBind(list, false);
+    }
 
-
-    public boolean SetDataBind(List<DEVICE_LOCATION> list) {
-        if (listViewItemList.size() == 0) {
+    public boolean SetDataBind(List<DEVICE_LOCATION> list, Boolean bFirst) {
+        if (listViewItemList.size() == 0  || bFirst) {
             listViewItemList = (ArrayList) list;
-            Global.getData().devicelist = listViewItemList;
             return false;
         }
-        for(int i =0; i< list.size(); i++) {
-            listViewItemList.add(list.get(i));
+        else {
+            for (int i = 0; i < list.size(); i++) {
+                listViewItemList.add(list.get(i));
+            }
         }
-        Global.getData().devicelist = listViewItemList;
         this.notifyDataSetChanged();
         return true;
     }

@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,24 +20,19 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.altsoft.Framework.DataInfo.SecurityInfo;
 import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.loggalapp.Fragement.TabFragment1;
 import com.altsoft.loggalapp.Fragement.TabFragment2;
-import com.altsoft.loggalapp.Fragement.TabFragment3;
 
 import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
 
-import com.altsoft.model.UserInfo.LOGIN_DATA;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
 import com.ss.bottomnavigation.events.OnSelectedItemChangeListener;
-
-import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -120,7 +114,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                 return true;
             }
             case R.id.action_search: {
-                Intent intent = new Intent(this, Search2Activity.class);
+                Intent intent = new Intent(this, SearchActivity.class);
                 this.startActivity(intent);
                 return true;
             }

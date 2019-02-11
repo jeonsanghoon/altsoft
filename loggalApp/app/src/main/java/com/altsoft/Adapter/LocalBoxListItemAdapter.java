@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.altsoft.Framework.Global;
 import com.altsoft.loggalapp.R;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_LIST;
 import com.bumptech.glide.Glide;
@@ -62,7 +63,7 @@ public class LocalBoxListItemAdapter extends BaseAdapter {
                 .into(iconImageView)
         ;
 
-        titleTextView.setText(listViewItem.TITLE);
+        titleTextView.setText(Global.getValidityCheck().isEmpty(listViewItem.TITLE)? listViewItem.DEVICE_NAME : listViewItem.TITLE);
         descTextView.setText(listViewItem.SUB_TITLE);
         userNameView.setText(listViewItem.COMPANY_NAME);
 

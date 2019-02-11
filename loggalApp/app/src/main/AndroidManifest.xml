@@ -56,9 +56,8 @@
             android:label="@string/title_activity_web_view"
             android:theme="@style/AppTheme" />
         <activity android:name=".SignageControlActivity" />
-        <activity android:name=".SearchActivity" />
         <activity android:name=".detail.LocalboxbannerListActivity" />
-        <activity android:name=".Search2Activity" />
+        <activity android:name=".SearchActivity" />
         <activity android:name=".locationMapActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
