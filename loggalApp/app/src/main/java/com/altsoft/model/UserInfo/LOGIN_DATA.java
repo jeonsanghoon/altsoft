@@ -21,7 +21,16 @@ public class LOGIN_DATA implements Serializable {
     public String USER_NAME;
     public String profileImagePath;
     public String thumnailPath;
-
+    public LOGIN_DATA()
+    {
+        try {
+            USER_ID = Global.getSaveSharedPreference().getData(MainActivity.activity, "USER_ID");
+            PASSWORD = Global.getSaveSharedPreference().getData(MainActivity.activity, "PASSWORD");
+            USER_NAME = Global.getSaveSharedPreference().getData(MainActivity.activity, "USER_NAME");
+            profileImagePath = Global.getSaveSharedPreference().getData(MainActivity.activity, "profileImagePath");
+            thumnailPath = Global.getSaveSharedPreference().getData(MainActivity.activity, "thumnailPath");
+        }catch(Exception ex){}
+    }
      public boolean isLogin()
      {
 

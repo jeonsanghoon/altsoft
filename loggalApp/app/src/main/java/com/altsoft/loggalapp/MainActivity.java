@@ -245,7 +245,6 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                         if(Global.getLoginInfo().isLogin()) {
                             LoginInfoSet();
                         }
-
                         break;
                 }
 

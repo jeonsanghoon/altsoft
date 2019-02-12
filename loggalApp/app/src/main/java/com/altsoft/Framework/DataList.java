@@ -10,4 +10,5 @@ public class DataList {
     public List<DEVICE_LOCATION> devicelist;
     public List<T_DEVICE_STATION> stationlist;
     public List<MOBILE_SIGNAGE_LIST> signagelist;
+    public Boolean BOOKMARK_YN;
 }

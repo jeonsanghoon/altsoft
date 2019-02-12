@@ -69,7 +69,7 @@ public interface MobileService {
 
     /*북마크관련*/
     @POST("/api/Account/MemberbookmarkSave")
-    Call<RTN_SAVE_DATA> MemberbookmarkSave(@Body T_MEMBER_BOOKMARK Cond);
+    Call<RTN_SAVE_DATA> MemberbookmarkSave(@Body T_MEMBER_BOOKMARK Param);
     @POST("/api/Account/GetMemberbookmarkList")
     Call<List<T_MEMBER_BOOKMARK>> GetMemberbookmarkList(@Body T_MEMBER_BOOKMARK_COND Cond);
 

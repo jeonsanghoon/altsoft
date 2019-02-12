@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,6 +61,13 @@ public class BannerListViewAdapter extends BaseAdapter {
         titleTextView.setText(listViewItem.TITLE);
         descTextView.setText(listViewItem.SUB_TITLE);
         userNameView.setText(listViewItem.COMPANY_NAME);
+        if(listViewItem.BOOKMARK_YN) {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.VISIBLE);
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setImageResource(R.drawable.ic_baseline_bookmark_24px);
+        }
+        else {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.GONE);
+        }
         return convertView;
     }
 
@@ -73,6 +81,17 @@ public class BannerListViewAdapter extends BaseAdapter {
     @Override
     public T_AD getItem(int position) {
         return listViewItemList.get(position) ;
+    }
+
+    public void setItem(View convertView, T_AD data)
+    {
+        if(data.BOOKMARK_YN) {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.VISIBLE);
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setImageResource(R.drawable.ic_baseline_bookmark_24px);
+        }
+        else {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.GONE);
+        }
     }
 
     public Boolean SetDataBind(List<T_AD> list) {

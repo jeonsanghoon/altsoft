@@ -48,5 +48,6 @@ public class T_AD implements Serializable  {
     public String BEACON_DEVICE_NUMBER ;
     /// 비콘명
     public String BEACON_NAME ;
+    public Boolean BOOKMARK_YN;
 }
 

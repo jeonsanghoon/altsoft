@@ -18,6 +18,7 @@ import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
 import com.altsoft.model.DEVICE_LOCATION;
 import com.altsoft.model.DEVICE_LOCATION_COND;
+import com.altsoft.model.T_AD;
 
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class TabFragment2 extends BaseFragment {
     Integer nPageSize = 30;
     Integer nPage = 1;
     public  List<DEVICE_LOCATION> list;
+    View selectedview;
+    DEVICE_LOCATION selectedData;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,6 +46,22 @@ public class TabFragment2 extends BaseFragment {
 
         GetDeviceLocation();
         return inflater.inflate(R.layout.fragment_tab_fragment2, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(selectedview != null)
+        {
+            if(Global.getData().BOOKMARK_YN !=null) {
+                selectedData.BOOKMARK_YN = Global.getData().BOOKMARK_YN;
+                adapter.setItem(selectedview, selectedData);
+            }
+
+        }
+        selectedview = null;
+        selectedData = null;
+        Global.getData().BOOKMARK_YN = null;
     }
     public void GetDeviceLocation()
     {
@@ -56,6 +75,8 @@ public class TabFragment2 extends BaseFragment {
             Cond.LONGITUDE = Global.getMapInfo().longitude;
             Cond.PAGE_COUNT = nPageSize;
             Cond.PAGE  = page == null ? 1 : page;
+            Cond.USER_ID = Global.getLoginInfo().USER_ID;
+
             if(Cond.PAGE != 1 && bLastPage) {
                 Toast.makeText(Global.getCurrentActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                 return;
@@ -111,6 +132,8 @@ public class TabFragment2 extends BaseFragment {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             DEVICE_LOCATION data = adapter.getItem(position);
+                            selectedview = view;
+                            selectedData = data;
                             //Toast.makeText(Global.getCurrentActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getContext(), LocalboxbannerListActivity.class);
                             intent.putExtra("DEVICE_CODE", Long.parseLong(data.DEVICE_CODE) );

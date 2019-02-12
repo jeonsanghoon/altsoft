@@ -47,6 +47,8 @@ public class TabFragment1 extends BaseFragment {
 
     private static List<T_AD> list;
     Boolean bFirst = true;
+    View selectedview;
+    T_AD selectedData;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,7 +74,21 @@ public class TabFragment1 extends BaseFragment {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }*/
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(selectedview != null)
+        {
+            if(Global.getData().BOOKMARK_YN !=null) {
+                selectedData.BOOKMARK_YN = Global.getData().BOOKMARK_YN;
+                adapter.setItem(selectedview, selectedData);
+            }
 
+        }
+        selectedview = null;
+        selectedData = null;
+        Global.getData().BOOKMARK_YN = null;
+    }
     private void setContentView(int activity_main) {
     }
 
@@ -86,6 +102,7 @@ public class TabFragment1 extends BaseFragment {
         AD_SEARCH_COND Cond = new AD_SEARCH_COND();
 
         try {
+            Cond.USER_ID = Global.getLoginInfo().USER_ID;
             Cond.LATITUDE = Global.getMapInfo().latitude;
             Cond.LONGITUDE = Global.getMapInfo().longitude;
             Cond.PageCount = nPageSize;
@@ -124,48 +141,7 @@ public class TabFragment1 extends BaseFragment {
 
                     listview.setAdapter(adapter);
 
-                    listview.setOnScrollListener(new ListView.OnScrollListener() {
-                        @Override
-                        public void onScrollStateChanged(AbsListView view, int scrollState) {
-                            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag && mLockListView == false) {
-
-                                // 데이터 로드
-                                if (lastitemVisibleFlag == true) {
-                                    //Integer page = (listview.getCount() / nPageSize) + 1;
-                                    nPage = nPage + 1;
-                                    GetBannerList(nPage);
-
-                                }
-                                mLockListView = false;
-                                lastitemVisibleFlag = false;
-                            }
-                        }
-
-                        @Override
-                        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                            lastitemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
-                        }
-                    });
-
-                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            T_AD adItem = adapter.getItem(position);
-                            //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-                            if (adItem.SIGN_CODE == null) {
-                                Intent intent = new Intent(getContext(), WebViewActivity.class);
-                                intent.putExtra("T_AD", adItem);
-                                getContext().startActivity(intent);
-                            } else {
-                                /// 사이니지제어
-                                Toast.makeText(getActivity(), adItem.TITLE + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(getContext(), SignageControlActivity.class);
-                                intent.putExtra("SIGN_CODE", adItem.SIGN_CODE);
-                                getContext().startActivity(intent);
-                            }
-
-                        }
-                    });
+                    listViewEventInit();
                 }
 
                 @Override
@@ -177,5 +153,52 @@ public class TabFragment1 extends BaseFragment {
         } catch (Exception ex) {
             Log.d("로그", ex.getMessage());
         }
+    }
+    private void listViewEventInit()
+    {
+        listview.setOnScrollListener(new ListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag && mLockListView == false) {
+
+                    // 데이터 로드
+                    if (lastitemVisibleFlag == true) {
+                        //Integer page = (listview.getCount() / nPageSize) + 1;
+                        nPage = nPage + 1;
+                        GetBannerList(nPage);
+
+                    }
+                    mLockListView = false;
+                    lastitemVisibleFlag = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                lastitemVisibleFlag = (totalItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount);
+            }
+        });
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedview = view;
+                T_AD adItem = adapter.getItem(position);
+                selectedData = adItem;
+                //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                if (adItem.SIGN_CODE == null) {
+                    Intent intent = new Intent(getContext(), WebViewActivity.class);
+                    intent.putExtra("T_AD", adItem);
+                    getContext().startActivity(intent);
+                } else {
+                    /// 사이니지제어
+                    Toast.makeText(getActivity(), adItem.TITLE + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getContext(), SignageControlActivity.class);
+                    intent.putExtra("SIGN_CODE", adItem.SIGN_CODE);
+                    getContext().startActivity(intent);
+                }
+
+            }
+        });
     }
 }

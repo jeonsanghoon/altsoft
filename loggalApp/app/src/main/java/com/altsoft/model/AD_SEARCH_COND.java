@@ -29,6 +29,7 @@ public  class AD_SEARCH_COND implements Serializable
     public Integer COMPANY_CODE;
     public Integer STORE_CODE;
     public Integer MEMBER_CODE;
+    public String USER_ID;
     /// 광고숨김여부 (0:보이기:default, 1:숨김)
     public Boolean HIDE;
     /// 페이지당 건수 (기본 20건)

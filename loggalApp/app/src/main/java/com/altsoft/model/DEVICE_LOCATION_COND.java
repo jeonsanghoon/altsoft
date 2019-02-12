@@ -21,4 +21,5 @@ public class DEVICE_LOCATION_COND implements Serializable
     public String SEARCH_TEXT;
     public Integer PAGE;
     public Integer PAGE_COUNT;
+    public String USER_ID;
 }

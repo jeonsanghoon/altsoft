@@ -1,6 +1,8 @@
 package com.altsoft.loggalapp.detail;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -17,7 +20,9 @@ import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Adapter.LocalBoxListItemAdapter;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.WebViewActivity;
+import com.altsoft.model.RTN_SAVE_DATA;
 import com.altsoft.model.T_AD;
+import com.altsoft.model.UserInfo.T_MEMBER_BOOKMARK;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_COND;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_LIST;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_M;
@@ -40,6 +45,8 @@ public class LocalboxbannerListActivity extends BaseActivity {
     Integer nPageSize = 30;
     LocalBoxListItemAdapter adapter;
     private Long deviceCode;
+    ImageView btnBookmark ;
+    AD_DEVICE_MOBILE_M detailData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,10 +58,124 @@ public class LocalboxbannerListActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
         deviceCode =  (Long)intent.getLongExtra("DEVICE_CODE",0);
+        ComponentInit();
         this.GetLocalBoxBannerList();
 
     }
+    private void ComponentInit()
+    {
+        detailData = new AD_DEVICE_MOBILE_M();
+        btnBookmark = (ImageView)findViewById(R.id.btnBookmark);
 
+        if(Global.getLoginInfo().isLogin())
+        {
+            btnBookmark.setVisibility(View.VISIBLE);
+            btnBookmark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(detailData != null) {
+                        if(detailData.BOOKMARK_YN)
+                        {
+                            new AlertDialog.Builder(Global.getCurrentActivity())
+                                    //.setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setTitle("북마크")
+                                    .setMessage("북마크 취소를 하시겠습니까?")
+                                    .setPositiveButton("예", new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            T_MEMBER_BOOKMARK Param = new T_MEMBER_BOOKMARK();
+                                            Param.USER_ID = Global.getLoginInfo().USER_ID;
+                                            Param.DEVICE_CODE = detailData.DEVICE_CODE;
+                                            Param.SAVE_MODE = "D";
+                                            Global.getCommon().ProgressShow();
+                                            Call<RTN_SAVE_DATA> call = Global.getAPIService().MemberbookmarkSave(Param);
+                                            call.enqueue(new Callback<RTN_SAVE_DATA>() {
+                                                @Override
+                                                public void onResponse(Call<RTN_SAVE_DATA> call, Response<RTN_SAVE_DATA> response) {
+                                                    Global.getCommon().ProgressHide();
+                                                    btnBookmark.setImageResource(R.drawable.ic_baseline_bookmark_border_24px);
+                                                    detailData.BOOKMARK_YN = false;
+                                                    Global.getData().BOOKMARK_YN = false;
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<RTN_SAVE_DATA> call, Throwable t) {
+                                                    Global.getCommon().ProgressHide();
+                                                }
+                                            });
+                                            dialog.dismiss();
+                                        }
+
+                                    })
+                                    .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            // Do nothing
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .show();
+
+                        }
+                        else{
+                            new AlertDialog.Builder(Global.getCurrentActivity())
+                                    // .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setTitle("북마크")
+                                    .setMessage("북마크 등록을 하시겠습니까?")
+                                    .setPositiveButton("예", new DialogInterface.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            T_MEMBER_BOOKMARK Param = new T_MEMBER_BOOKMARK();
+                                            Param.USER_ID = Global.getLoginInfo().USER_ID;
+                                            Param.DEVICE_CODE = detailData.DEVICE_CODE;
+                                            Param.TITLE = detailData.DEVICE_NAME;
+
+                                            Param.SAVE_MODE = "U";
+                                            Global.getCommon().ProgressShow();
+                                            Call<RTN_SAVE_DATA> call = Global.getAPIService().MemberbookmarkSave(Param);
+                                            call.enqueue(new Callback<RTN_SAVE_DATA>() {
+                                                @Override
+                                                public void onResponse(Call<RTN_SAVE_DATA> call, Response<RTN_SAVE_DATA> response) {
+                                                    btnBookmark.setImageResource(R.drawable.ic_baseline_bookmark_24px);
+                                                    detailData.BOOKMARK_YN = true;
+                                                    Global.getData().BOOKMARK_YN = true;
+                                                    Global.getCommon().ProgressHide();
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<RTN_SAVE_DATA> call, Throwable t) {
+                                                    Global.getCommon().ProgressHide();
+                                                }
+                                            });
+
+                                            dialog.dismiss();
+                                        }
+
+                                    })
+                                    .setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            // Do nothing
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+                }
+            });
+        }
+        else{
+            btnBookmark.setVisibility(View.GONE);
+        }
+    }
     private void GetLocalBoxBannerList() {
 
         AD_DEVICE_MOBILE_COND Cond = new AD_DEVICE_MOBILE_COND();
@@ -71,11 +192,13 @@ public class LocalboxbannerListActivity extends BaseActivity {
             public void onResponse(Call<AD_DEVICE_MOBILE_M> call, Response<AD_DEVICE_MOBILE_M> response) {
 
                 Global.getCommon().ProgressHide(activity);
-                AD_DEVICE_MOBILE_M rtn = response.body();
-                if(rtn == null) return;
+                detailData = response.body();
+                if(detailData == null) return;
+                if(detailData.BOOKMARK_YN)  btnBookmark.setImageResource(R.drawable.ic_baseline_bookmark_24px);
+                else btnBookmark.setImageResource(R.drawable.ic_baseline_bookmark_border_24px);
+                activity.setTitle(detailData.DEVICE_NAME);
+                List<AD_DEVICE_MOBILE_LIST> list = detailData.AD_LIST;
 
-                activity.setTitle(rtn.DEVICE_NAME);
-                List<AD_DEVICE_MOBILE_LIST> list = rtn.AD_LIST;
                 if(bLastPage) {
                     Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                     return;

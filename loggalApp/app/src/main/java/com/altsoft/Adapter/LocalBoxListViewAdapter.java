@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.altsoft.Framework.Global;
@@ -55,6 +57,13 @@ public class LocalBoxListViewAdapter extends BaseAdapter {
         ((TextView) convertView.findViewById(R.id.txtTitle)).setText(listViewItem.DEVICE_NAME);
         ((TextView) convertView.findViewById(R.id.txtDesc)).setText(listViewItem.DEVICE_DESC);
         ((TextView) convertView.findViewById(R.id.txtUserName)).setText(listViewItem.COMPANY_NAME);
+        if(listViewItem.BOOKMARK_YN) {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.VISIBLE);
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setImageResource(R.drawable.ic_baseline_bookmark_24px);
+        }
+        else {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.GONE);
+        }
         if(listViewItem.DISTANCE != null) {
             Double dTmp = listViewItem.DISTANCE / 1000.00;
             ((TextView) convertView.findViewById(R.id.txtDistance)).setText((new DecimalFormat("###,##0.000")).format(dTmp) + "km");
@@ -74,7 +83,15 @@ public class LocalBoxListViewAdapter extends BaseAdapter {
     public DEVICE_LOCATION getItem(int position) {
         return listViewItemList.get(position) ;
     }
-
+    public void setItem(View convertView, DEVICE_LOCATION data) {
+        if(data.BOOKMARK_YN) {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.VISIBLE);
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setImageResource(R.drawable.ic_baseline_bookmark_24px);
+        }
+        else {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.GONE);
+        }
+    }
     public Boolean SetDataBind(List<DEVICE_LOCATION> list) {
         return this.SetDataBind(list, false);
     }
