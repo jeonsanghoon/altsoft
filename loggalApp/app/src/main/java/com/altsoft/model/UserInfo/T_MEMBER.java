@@ -56,4 +56,6 @@ public class T_MEMBER implements Serializable {
     public String UPDATE_NAME;
     /// 수정일
     public Date UPDATE_DATE;
+    public String profileImagePath;
+    public String thumnailPath;
 }

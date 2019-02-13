@@ -83,11 +83,11 @@ public class LOGIN_DATA implements Serializable {
             USER_NAME = data.USER_NAME;
             profileImagePath = data.profileImagePath;
             thumnailPath = data.thumnailPath;
-
+/*
             Toast.makeText(
                    Global.getCurrentActivity(),
                     data.USER_NAME + "님이 로그인하였습니다.",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_LONG).show();*/
         }
         return data;
     }

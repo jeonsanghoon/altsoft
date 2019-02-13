@@ -83,7 +83,7 @@ public class WebViewActivity extends BaseActivity {
                                                     Global.getCommon().ProgressHide();
                                                     btnBookmark.setImageResource(R.drawable.ic_baseline_bookmark_border_24px);
                                                     detailData.BOOKMARK_YN = false;
-                                                    Global.getData().BOOKMARK_YN = false;
+                                                    Global.getData().BANNER_BOOKMARK_YN = false;
                                                 }
 
                                                 @Override
@@ -129,7 +129,7 @@ public class WebViewActivity extends BaseActivity {
                                                 public void onResponse(Call<RTN_SAVE_DATA> call, Response<RTN_SAVE_DATA> response) {
                                                     btnBookmark.setImageResource(R.drawable.ic_baseline_bookmark_24px);
                                                     detailData.BOOKMARK_YN = true;
-                                                    Global.getData().BOOKMARK_YN = true;
+                                                    Global.getData().BANNER_BOOKMARK_YN = true;
                                                     Global.getCommon().ProgressHide();
                                                 }
 

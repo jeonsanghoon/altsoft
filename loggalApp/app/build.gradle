@@ -1,6 +1,23 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        loggalApp {
+            keyAlias 'loggalApp'
+            keyPassword '111111'
+            storeFile file('C:/Source/loggalpublish/loggalApp2.jks')
+            storePassword '111111'
+        }
+    }
+    signingConfigs {
+        release {
+            storeFile file('C:\\Source\\loggalpublish\\loggalApp2.jks') // 기준은 App 폴더 기준이다.
+            storePassword "111111"
+            keyAlias "loggalApp"
+            keyPassword "111111"
+        }
+    }
+
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.altsoft.loggalapp"
@@ -13,6 +30,8 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            debuggable true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

@@ -79,15 +79,15 @@ public class TabFragment1 extends BaseFragment {
         super.onResume();
         if(selectedview != null)
         {
-            if(Global.getData().BOOKMARK_YN !=null) {
-                selectedData.BOOKMARK_YN = Global.getData().BOOKMARK_YN;
+            if(Global.getData().BANNER_BOOKMARK_YN!=null) {
+                selectedData.BOOKMARK_YN = Global.getData().BANNER_BOOKMARK_YN;
                 adapter.setItem(selectedview, selectedData);
             }
 
         }
         selectedview = null;
         selectedData = null;
-        Global.getData().BOOKMARK_YN = null;
+        Global.getData().BANNER_BOOKMARK_YN = null;
     }
     private void setContentView(int activity_main) {
     }

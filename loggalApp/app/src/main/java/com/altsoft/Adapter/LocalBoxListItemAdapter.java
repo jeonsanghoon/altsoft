@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.altsoft.Framework.Global;
 import com.altsoft.loggalapp.R;
+import com.altsoft.model.T_AD;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_LIST;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -36,7 +37,16 @@ public class LocalBoxListItemAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
-
+    public void setItem(View convertView, AD_DEVICE_MOBILE_LIST data)
+    {
+        if(data.BANNER_BOOKMARK_YN) {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.VISIBLE);
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setImageResource(R.drawable.ic_baseline_bookmark_24px);
+        }
+        else {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.GONE);
+        }
+    }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -66,7 +76,13 @@ public class LocalBoxListItemAdapter extends BaseAdapter {
         titleTextView.setText(Global.getValidityCheck().isEmpty(listViewItem.TITLE)? listViewItem.DEVICE_NAME : listViewItem.TITLE);
         descTextView.setText(listViewItem.SUB_TITLE);
         userNameView.setText(listViewItem.COMPANY_NAME);
-
+        if(listViewItem.BANNER_BOOKMARK_YN) {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.VISIBLE);
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setImageResource(R.drawable.ic_baseline_bookmark_24px);
+        }
+        else {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.GONE);
+        }
         return convertView;
     }
 

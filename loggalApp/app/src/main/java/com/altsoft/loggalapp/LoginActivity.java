@@ -264,7 +264,9 @@ public class LoginActivity extends BaseActivity {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     Intent intent = new Intent(Global.getCurrentActivity(), MemberJoinActivity.class);
                                                     intent.putExtra("KAKAO_ID", Cond.KAKAO_ID.toString());
-                                                    Global.getCurrentActivity().startActivity(intent);
+                                                    intent.putExtra("thumnailPath", Cond.thumnailPath.toString());
+                                                    intent.putExtra("profileImagePath", Cond.profileImagePath.toString());
+                                                    Global.getCurrentActivity().startActivityForResult(intent, enResult.MemberJoin.getValue());
                                                     dialog.dismiss();
                                                 }
 
@@ -283,9 +285,6 @@ public class LoginActivity extends BaseActivity {
                                                 }
                                             })
                                             .show();
-
-
-
                                 }else{
                                     Toast.makeText(
                                             Global.getCurrentActivity(),

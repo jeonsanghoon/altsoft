@@ -47,6 +47,8 @@ public class LocalboxbannerListActivity extends BaseActivity {
     private Long deviceCode;
     ImageView btnBookmark ;
     AD_DEVICE_MOBILE_M detailData;
+    View selectedview;
+    AD_DEVICE_MOBILE_LIST selectedData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,21 @@ public class LocalboxbannerListActivity extends BaseActivity {
         ComponentInit();
         this.GetLocalBoxBannerList();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(selectedview != null)
+        {
+            if(Global.getData().BANNER_BOOKMARK_YN !=null) {
+                selectedData.BANNER_BOOKMARK_YN = Global.getData().BANNER_BOOKMARK_YN;
+                adapter.setItem(selectedview, selectedData);
+            }
+        }
+        selectedview = null;
+        selectedData = null;
+        Global.getData().BANNER_BOOKMARK_YN = null;
     }
     private void ComponentInit()
     {
@@ -97,7 +114,7 @@ public class LocalboxbannerListActivity extends BaseActivity {
                                                     Global.getCommon().ProgressHide();
                                                     btnBookmark.setImageResource(R.drawable.ic_baseline_bookmark_border_24px);
                                                     detailData.BOOKMARK_YN = false;
-                                                    Global.getData().BOOKMARK_YN = false;
+                                                    Global.getData().LOCALBOX_BOOKMARK_YN = false;
                                                 }
 
                                                 @Override
@@ -143,7 +160,7 @@ public class LocalboxbannerListActivity extends BaseActivity {
                                                 public void onResponse(Call<RTN_SAVE_DATA> call, Response<RTN_SAVE_DATA> response) {
                                                     btnBookmark.setImageResource(R.drawable.ic_baseline_bookmark_24px);
                                                     detailData.BOOKMARK_YN = true;
-                                                    Global.getData().BOOKMARK_YN = true;
+                                                    Global.getData().LOCALBOX_BOOKMARK_YN = true;
                                                     Global.getCommon().ProgressHide();
                                                 }
 
@@ -233,10 +250,12 @@ public class LocalboxbannerListActivity extends BaseActivity {
                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        AD_DEVICE_MOBILE_LIST adItem = adapter.getItem(position);
+                        selectedData= adapter.getItem(position);
                         T_AD data = new T_AD();
+                        selectedview = view;
+
                         try {
-                            data = (T_AD) new GsonInfo(AD_DEVICE_MOBILE_LIST.class, T_AD.class).ToCopy(adItem);
+                            data = (T_AD) new GsonInfo(AD_DEVICE_MOBILE_LIST.class, T_AD.class).ToCopy(selectedData);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
