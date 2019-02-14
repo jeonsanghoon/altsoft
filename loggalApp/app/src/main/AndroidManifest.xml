@@ -70,7 +70,7 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".kakaoMapActivity" />
+        <activity android:name="com.altsoft.map.kakaoMapActivity" />
         <activity android:name=".LoginActivity" />
     </application>
 

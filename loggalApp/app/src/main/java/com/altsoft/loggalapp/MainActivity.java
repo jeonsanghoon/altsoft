@@ -31,6 +31,7 @@ import com.altsoft.loggalapp.Fragement.TabFragment2;
 
 import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
 
+import com.altsoft.map.kakaoMapActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.kakao.usermgmt.UserManagement;
@@ -105,6 +106,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main2, menu);
+        mOptionsMenu = menu;
         return true;
     }
 
@@ -138,14 +140,15 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                             this.startActivityForResult(intent, enResult.LocalboxRequest.getValue());
                         }
                         break;
-                 /*  case 2:
-                        if(!(Global.getData().signagelist == null || Global.getData().signagelist.size() == 0))
+                   case 2:
+
+                        /*if(!(Global.getData().signagelist == null || Global.getData().signagelist.size() == 0))
                         {
                             intent.putExtra("list3", (ArrayList<MOBILE_SIGNAGE_LIST>) Global.getData().signagelist);
                             intent.putExtra("mapType", "signage");
                             this.startActivityForResult(intent, enResult.Request.getValue());
-                        }
-                        break;*/
+                        }*/
+                        break;
 
 
                 }
@@ -203,6 +206,16 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
         Global.getCommon().ProgressHide(this);
     }
+    private Menu mOptionsMenu;
+    private  void setVisibleMapButton(Boolean isVisible)
+    {
+        try {
+            if(mOptionsMenu != null) {
+                MenuItem item = mOptionsMenu.findItem(R.id.action_map_search);
+                item.setVisible(isVisible);
+            }
+        }catch(Exception ex){}
+    }
 
     private void tabInit() {
       /*  tab1 = new TabFragment1();
@@ -218,11 +231,14 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         bottomNavigation.setOnSelectedItemChangeListener(new OnSelectedItemChangeListener() {
             @Override
             public void onSelectedItemChanged(int itemId) {
+                setVisibleMapButton(true);
+
                 switch (itemId){
                     case R.id.tab_banner:
                         transaction=getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container ,new TabFragment1());
                         transaction.commit();
+
                         break;
                     case R.id.tab_localbox:
                         transaction=getSupportFragmentManager().beginTransaction();
@@ -242,6 +258,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                             Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
                         }
 
+                        setVisibleMapButton(false);
                         transaction.commit();
                         if(Global.getLoginInfo().isLogin()) {
                             LoginInfoSet();

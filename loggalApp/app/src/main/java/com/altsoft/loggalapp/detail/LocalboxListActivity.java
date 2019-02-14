@@ -66,6 +66,8 @@ public class LocalboxListActivity extends BaseActivity  {
             Cond.LONGITUDE = Global.getMapInfo().longitude;
             Cond.PAGE_COUNT = nPageSize;
             Cond.STATION_CODE = stationCode;
+            Cond.USER_ID = Global.getLoginInfo().USER_ID;
+
             Cond.PAGE  = page == null ? 1 : page;
             if(Cond.PAGE != 1 && bLastPage) {
                 Toast.makeText(Global.getCurrentActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();

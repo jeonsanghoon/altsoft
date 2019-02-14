@@ -64,11 +64,12 @@ public class LocalBoxListViewAdapter extends BaseAdapter {
         else {
             ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.GONE);
         }
-        if(listViewItem.DISTANCE != null) {
-            Double dTmp = listViewItem.DISTANCE / 1000.00;
-            ((TextView) convertView.findViewById(R.id.txtDistance)).setText((new DecimalFormat("###,##0.000")).format(dTmp) + "km");
+        if(listViewItem.STATION_CODE ==null) {
+            if (listViewItem.DISTANCE != null) {
+                Double dTmp = listViewItem.DISTANCE / 1000.00;
+                ((TextView) convertView.findViewById(R.id.txtDistance)).setText((new DecimalFormat("###,##0.000")).format(dTmp) + "km");
+            }
         }
-
         return convertView;
     }
 

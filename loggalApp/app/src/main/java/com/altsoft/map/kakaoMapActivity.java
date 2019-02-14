@@ -1,4 +1,4 @@
-package com.altsoft.loggalapp;
+package com.altsoft.map;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,6 +32,8 @@ import com.altsoft.Framework.control.altAutoCmpleateTextView;
 import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Framework.module.BaseActivity;
+import com.altsoft.loggalapp.R;
+import com.altsoft.loggalapp.SignageControlActivity;
 import com.altsoft.loggalapp.detail.LocalboxListActivity;
 import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
 import com.altsoft.model.T_AD;
@@ -199,6 +201,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                 }
 
                 mapView.setShowCurrentLocationMarker(true);
+             //   mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(37.53737528, 127.00557633), true);
+                mapView.setZoomLevel(7, true);
             }
 
             @Override
@@ -224,8 +228,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                     marker);
             ///mapView.selectPOIItem(marker, true);
             mapView.setMapCenterPoint(point, false);
-
         }
+        mapView.setZoomLevel(10, true);
     }
     protected void setUpViews() {
         searchAutoCompleate.setUpViews();
