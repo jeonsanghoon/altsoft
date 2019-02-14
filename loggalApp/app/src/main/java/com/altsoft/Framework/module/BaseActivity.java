@@ -19,9 +19,12 @@ import java.util.ArrayList;
 
 
 @SuppressLint("Registered")
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     public static ArrayList<Activity> actList = new ArrayList<Activity>();
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +41,6 @@ public class BaseActivity extends AppCompatActivity {
             actList.add(this);
         }
     }
-
 
     //region Methods Toolbar
     public void onInitToolbar(Toolbar toolBar) {

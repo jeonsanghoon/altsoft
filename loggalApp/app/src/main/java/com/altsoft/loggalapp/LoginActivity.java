@@ -51,6 +51,7 @@ public class LoginActivity extends BaseActivity {
     private Button btnLogin;
     private Button btn_custom_logout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
