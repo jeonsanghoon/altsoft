@@ -1,6 +1,5 @@
 package com.altsoft.loggalapp.Fragement;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,14 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.altsoft.Framework.module.BaseFragment;
 import com.altsoft.Framework.Global;
 import com.altsoft.Adapter.BannerListViewAdapter;
+import com.altsoft.Interface.ServiceInfo;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.SignageControlActivity;
 import com.altsoft.loggalapp.WebViewActivity;
@@ -27,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -49,26 +45,25 @@ public class TabFragment1 extends BaseFragment {
     Boolean bFirst = true;
     View selectedview;
     T_AD selectedData;
+    boolean bLoad = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        /*if(Global.bFirst) {
-            Global.bFirst = false;
-        }
-        else {
-            adapter = new BannerListViewAdapter();
-            GetBannerList();
-        }*/
+
         adapter = new BannerListViewAdapter();
+
         GetBannerList();
+
+        bLoad = true;
         return inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
     }
+
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
     }
+
     /*
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,9 +72,8 @@ public class TabFragment1 extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(selectedview != null)
-        {
-            if(Global.getData().BANNER_BOOKMARK_YN!=null) {
+        if (selectedview != null) {
+            if (Global.getData().BANNER_BOOKMARK_YN != null) {
                 selectedData.BOOKMARK_YN = Global.getData().BANNER_BOOKMARK_YN;
                 adapter.setItem(selectedview, selectedData);
             }
@@ -89,6 +83,7 @@ public class TabFragment1 extends BaseFragment {
         selectedData = null;
         Global.getData().BANNER_BOOKMARK_YN = null;
     }
+
     private void setContentView(int activity_main) {
     }
 
@@ -106,7 +101,7 @@ public class TabFragment1 extends BaseFragment {
             Cond.LATITUDE = Global.getMapInfo().latitude;
             Cond.LONGITUDE = Global.getMapInfo().longitude;
             Cond.PageCount = nPageSize;
-            Cond.Page = page;// page == null ? 1 : page;
+            Cond.Page = page;
             if (Cond.Page != 1 && bLastPage) {
                 Toast.makeText(getActivity(), "데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                 return;
@@ -114,48 +109,46 @@ public class TabFragment1 extends BaseFragment {
             nPage = Cond.Page;
             Cond.nCnt = nCnt++;
 
-            if(Cond.Page == 1 && listview != null) {
+            if (Cond.Page == 1 && listview != null) {
                 adapter.clearData();
                 listview.setAdapter(adapter);
                 listview.setAdapter(null);
             }
             String sAddr = Global.getMapInfo().currentLocationAddress;
-            Global.getCommon().ProgressShow(getActivity());
             Call<List<T_AD>> call = Global.getAPIService().GetBannerList(Cond);
-            call.enqueue(new Callback<List<T_AD>>() {
-                @Override
-                public void onResponse(Call<List<T_AD>> call, Response<List<T_AD>> response) {
-                    list = response.body();
-                    Global.getCommon().ProgressHide(getActivity());
-                    if (list.size() == 0) {
-                        Toast.makeText(getActivity(), "데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                    if (list.size() < nPageSize) bLastPage = true;
+            Global.getCallService().callService(call
+                    , new ServiceInfo.Act<ArrayList<T_AD>>() {
+                        @Override
+                        public void execute(ArrayList<T_AD> list) {
+                            if (list.size() == 0) {
+                                Toast.makeText(getActivity(), "데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            if (list.size() < nPageSize) bLastPage = true;
 
-                    if(adapter == null ) adapter = new BannerListViewAdapter();
-                    if (adapter.SetDataBind(list) == true) return;
-
-                    listview = (ListView) getView().findViewById(R.id.listview1);
-
-
-                    listview.setAdapter(adapter);
-
-                    listViewEventInit();
-                }
-
-                @Override
-                public void onFailure(Call<List<T_AD>> call, Throwable t) {
-
-                }
-            });
+                            if (adapter == null) adapter = new BannerListViewAdapter();
+                            if (adapter.SetDataBind(list) == true) {
+                                return;
+                            }
+                            listview = (ListView) getView().findViewById(R.id.listview1);
+                            listview.setAdapter(adapter);
+                            listViewEventInit();
+                        }
+                    },
+                    new ServiceInfo.Act<Throwable>() {
+                        @Override
+                        public void execute(Throwable data) {
+                            //TODO: Do something!
+                        }
+                    });
 
         } catch (Exception ex) {
             Log.d("로그", ex.getMessage());
+            Global.getCommon().ProgressHide();
         }
     }
-    private void listViewEventInit()
-    {
+
+    private void listViewEventInit() {
         listview.setOnScrollListener(new ListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {

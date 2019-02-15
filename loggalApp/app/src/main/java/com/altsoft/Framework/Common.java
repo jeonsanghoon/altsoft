@@ -12,6 +12,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -36,6 +37,9 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 import static com.kakao.util.helper.Utility.getPackageInfo;
@@ -49,16 +53,21 @@ public class Common {
         try {
             Activity activity = Global.getCurrentActivity();
             ProgressBar progress = activity.findViewById(R.id.progress);
-            this.ProgressHide(activity,progress);
+            this.ProgressHide(progress);
         }catch(Exception ex){}
     }
     public void ProgressHide(Activity activity) {
         ProgressBar progress = activity.findViewById(R.id.progress);
-        this.ProgressHide(activity,progress);
+        this.ProgressHide(progress);
     }
     /// 프로그래스바 숨기기
-    public void ProgressHide(Activity activity, ProgressBar progress) {
-        progress.setVisibility((int) 4);
+    public void ProgressHide(ProgressBar progress) {
+        try {
+            progress.setVisibility((int) 4);
+            Global.getCurrentActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }catch(Exception ex){
+            Log.d("error",ex.getMessage());
+        }
     }
 
     /// 프로그래스바 보여주기
@@ -67,20 +76,24 @@ public class Common {
         try {
             Activity activity = Global.getCurrentActivity();
             ProgressBar progress = activity.findViewById(R.id.progress);
-            this.ProgressShow(activity, progress);
+            this.ProgressShow(progress);
         }catch(Exception ex){}
     }
     public void ProgressShow(Activity activity) {
         try {
             ProgressBar progress = activity.findViewById(R.id.progress);
-            this.ProgressShow(activity, progress);
+            this.ProgressShow(progress);
         }catch(Exception ex){}
     }
     /// 프로그래스바 보여주기
-    public void ProgressShow(Activity activity, ProgressBar progress) {
+    public void ProgressShow(ProgressBar progress) {
         try {
             progress.setVisibility((int) 0);
-        }catch(Exception ex){}
+            Global.getCurrentActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        }catch(Exception ex){Log.d("error",ex.getMessage());}
+        finally {}
     }
 
     /// 날짜형 포맷 여부
@@ -306,5 +319,31 @@ public class Common {
     public void ActivityClose(Activity activity)
     {
         activity.finish();
+    }
+    public String getRandomPassword()
+    {
+        return getRandomPassword(5);
+    }
+    public  String getRandomPassword(int length) {
+        StringBuffer temp = new StringBuffer();
+        Random rnd = new Random();
+        for (int i = 0; i < length; i++) {
+            int rIndex = rnd.nextInt(3);
+            switch (rIndex) {
+                case 0:
+                    // a-z
+                    temp.append((char) ((int) (rnd.nextInt(26)) + 97));
+                    break;
+                case 1:
+                    // A-Z
+                    temp.append((char) ((int) (rnd.nextInt(26)) + 65));
+                    break;
+                case 2:
+                    // 0-9
+                    temp.append((rnd.nextInt(10)));
+                    break;
+            }
+        }
+        return temp.toString();
     }
 }

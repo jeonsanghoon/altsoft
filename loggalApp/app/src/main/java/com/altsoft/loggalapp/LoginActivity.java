@@ -65,14 +65,14 @@ public class LoginActivity extends BaseActivity {
         callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);
         Session.getCurrentSession().checkAndImplicitOpen();
-        kakaoLoginInit();
+        ComponentInit();
         String keyHash = Global.getCommon().getKeyHash(this);
     }
 
 
 
 
-    private void kakaoLoginInit()
+    private void ComponentInit()
     {
         findViewById(R.id.btnMemberJoin).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +150,13 @@ public class LoginActivity extends BaseActivity {
         });
         btn_custom_logout.setVisibility(View.GONE);
         btn_kakao_login = (LoginButton) findViewById(R.id.btn_kakao_login);
+
+        findViewById(R.id.btnForgotPassword).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

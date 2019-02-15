@@ -2,6 +2,7 @@ package com.altsoft.loggalapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -43,35 +46,25 @@ import com.ss.bottomnavigation.events.OnSelectedItemChangeListener;
  *
  */
 public class MainActivity  extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-
-
-    private FragmentTransaction transaction;
-    ViewPager viewPager;
     BottomNavigation bottomNavigation;
-    //TabLayout tabLayout;
-
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
     private final int PERMISSIONS_ACCESS_COARSE_LOCATION = 1001;
-    private boolean isAccessFineLocation = false;
-    private boolean isAccessCoarseLocation = false;
     private boolean isPermission = false;
 
     public  static Activity activity;
-
-
-
-
-
+    private ViewPager mViewPager;
+    private PagerAdapter mPagerAdapter;
+    private int nTotalPage =3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
         //this.CheckOnline();
         this.onInitView();
+        this.initViewPager();
         this.tabInit();
         this.gpsInit();
-        this.initViewPager();
+
         Log.d("hashKey",Global.getCommon().getKeyHash(this));
     }
     @Override
@@ -86,21 +79,12 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                     getApplicationContext(),
                     "인터넷 연결을 확인하시고 다시 실행하세요",
                     Toast.LENGTH_LONG).show();
-            // finishAffinity();
-            // System.runFinalization()
-            // System.exit(0);
         }
     }
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        this.fetchCompanies();
-    }
-
-    private void fetchCompanies() {
-     /*   mAdapter = new MainAdapter(Company.getCompanies());
-        mBinding.includeMain.recycler~iew.setAdapter(mAdapter);*/
     }
 
     @Override
@@ -109,7 +93,6 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         mOptionsMenu = menu;
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -125,7 +108,6 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                 return true;
             }
             case R.id.action_map_search: {
-                //Intent intent = new Intent(this, locationMapActivity.class);
                 Intent intent = new Intent(this, kakaoMapActivity.class);
 
                 switch(bottomNavigation.getSelectedItem()) {
@@ -149,12 +131,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                             this.startActivityForResult(intent, enResult.Request.getValue());
                         }*/
                         break;
-
-
                 }
-
-
-
                 return true;
             }
         }
@@ -176,8 +153,6 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         if(Global.getLoginInfo().isLogin()) {
             try {
                 bottomNavigation.getTabItems().get(2).setText(Global.getLoginInfo().getData().USER_NAME);
-
-
                 if(bottomNavigation.getSelectedItem() == 2) {
                     ((TextView) findViewById(R.id.tvUserName)).setText(Global.getLoginInfo().getData().USER_NAME );
                     ((TextView) findViewById(R.id.tvUserId)).setText(Global.getLoginInfo().getData().USER_ID );
@@ -217,13 +192,9 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         }catch(Exception ex){}
     }
 
-    private void tabInit() {
-      /*  tab1 = new TabFragment1();
 
-        tab2 = new TabFragment2();
-        tab3 = new TabFragment3();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, tab1).commit();
-*/
+    private void tabInit() {
+
         bottomNavigation=(BottomNavigation)findViewById(R.id.bottom_navigation);
         bottomNavigation.setDefaultItem(0);
         bottomNavigation.setType(bottomNavigation.TYPE_FIXED);
@@ -235,31 +206,18 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
                 switch (itemId){
                     case R.id.tab_banner:
-                        transaction=getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container ,new TabFragment1());
-                        transaction.commit();
-
+                        mViewPager.setCurrentItem(0,true);
                         break;
                     case R.id.tab_localbox:
-                        transaction=getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container,new TabFragment2());
-                        transaction.commit();
+                        mViewPager.setCurrentItem(1,true);
                         break;
-                   /* case R.id.tab_signage:
-                        transaction=getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container,new TabFragment3());
-                        break;*/
                     case R.id.tab_myinfo:
-                        transaction=getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container,new TabFragment_Myinfo());
+                        mViewPager.setCurrentItem(2,true);
                         if(!Global.getLoginInfo().isLogin()) {
                             Intent intent = new Intent(Global.getCurrentActivity(), LoginActivity.class);
-                            //intent.putExtra("mapType", "banner");
                             Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
                         }
-
                         setVisibleMapButton(false);
-                        transaction.commit();
                         if(Global.getLoginInfo().isLogin()) {
                             LoginInfoSet();
                         }
@@ -269,6 +227,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
             }
         });
      }
+
     // 위치 권한 요청
     private Boolean callPermission() {
         // Check the SDK version and whether the permission is already granted or not.
@@ -317,27 +276,21 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     }
 
     private void initViewPager() {
-       // viewPager = findViewById(R.id.viewPagerMain);
-
-       /* TabPagerAdapter fragmentPagerAdpter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(fragmentPagerAdpter);
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mViewPager = findViewById(R.id.pager);
+        mPagerAdapter = new PagerAdapter(getSupportFragmentManager(),nTotalPage);
+        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
-
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            public void onPageSelected(int position) {
+                bottomNavigation.setSelectedItem(position);
             }
-
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
+            public void onPageScrollStateChanged(int state) {
             }
-        });*/
+        });
     }
     @Override
     public void onDestroy(){
@@ -352,21 +305,17 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         return false;
     }
-/*
-    public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
-        // Count number of tabs
-        private int tabCount;
+    public class PagerAdapter extends FragmentStatePagerAdapter {
+        private int _nTotal =0;
 
-        public TabPagerAdapter(FragmentManager fm, int tabCount) {
+        public PagerAdapter(FragmentManager fm, int nTotal) {
             super(fm);
-            this.tabCount = tabCount;
+            _nTotal = nTotal;
         }
 
-
         @Override
-        public Fragment getItem(int position) {
-
+        public android.support.v4.app.Fragment getItem(int position) {
             // Returning the current tabs
             switch (position) {
                 case 0:
@@ -376,7 +325,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                     TabFragment2 tabFragment2 = new TabFragment2();
                     return tabFragment2;
                 case 2:
-                    TabFragment3 tabFragment3 = new TabFragment3();
+                    TabFragment_Myinfo tabFragment3 = new TabFragment_Myinfo();
                     return tabFragment3;
                 default:
                     return null;
@@ -385,7 +334,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
         @Override
         public int getCount() {
-            return tabCount;
+            return _nTotal;
         }
-    }    */
+    }
 }

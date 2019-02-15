@@ -59,13 +59,21 @@
             style="@style/BottomNavigationTabStyle"
             />
     </com.ss.bottomnavigation.BottomNavigation>
-
+<!--
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_marginTop="50dp"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navigation"></FrameLayout>
+-->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_above="@id/bottom_navigation"
+        />
     <!--Tab View Pager
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPagerMain"

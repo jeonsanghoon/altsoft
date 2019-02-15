@@ -18,7 +18,6 @@
             android:text="Title"
             android:textColor="#000000"
             android:textSize="18sp" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,7 +45,6 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:scaleType="centerInside"
-
                 android:src="@drawable/ic_baseline_bookmark_border_24px" />
         </LinearLayout>
     </LinearLayout>

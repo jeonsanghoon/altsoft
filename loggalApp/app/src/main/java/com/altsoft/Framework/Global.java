@@ -1,8 +1,6 @@
 package com.altsoft.Framework;
 
 import android.app.Activity;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.altsoft.Framework.DataInfo.DotNetDateConverter;
 import com.altsoft.Framework.DataInfo.SaveSharedPreference;
@@ -10,11 +8,10 @@ import com.altsoft.Framework.DataInfo.SecurityInfo;
 import com.altsoft.Framework.DataInfo.ValidityCheck;
 import com.altsoft.Framework.map.GpsInfo;
 import com.altsoft.Framework.map.MapInfo;
+import com.altsoft.Interface.ServiceInfo;
 import com.altsoft.Interface.KakaoMapService;
 import com.altsoft.Interface.MobileService;
-import com.altsoft.model.UserInfo.LOGIN_COND;
 import com.altsoft.model.UserInfo.LOGIN_DATA;
-import com.altsoft.model.UserInfo.T_MEMBER;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kakao.usermgmt.UserManagement;
@@ -91,6 +88,14 @@ public class Global {
             _loginInfo = new LOGIN_DATA();
         }
         return _loginInfo;
+    }
+
+    static ServiceInfo _CallService;
+    public static ServiceInfo getCallService ( ) {
+        if (_CallService == null) {
+            _CallService = new ServiceInfo();
+        }
+        return _CallService;
     }
 
 
