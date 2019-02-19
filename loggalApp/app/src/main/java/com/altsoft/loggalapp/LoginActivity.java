@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
+import com.altsoft.Framework.DataInfo.EMail;
 import com.altsoft.Framework.DataInfo.SecurityInfo;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.enResult;
@@ -35,6 +37,10 @@ import com.kakao.util.exception.KakaoException;
 import com.ss.bottomnavigation.TabItem;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
+import javax.mail.AuthenticationFailedException;
+import javax.mail.MessagingException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -154,9 +160,12 @@ public class LoginActivity extends BaseActivity {
         findViewById(R.id.btnForgotPassword).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(Global.getCurrentActivity(), FindPasswordActivity.class);
 
+                Global.getCurrentActivity().startActivityForResult(intent, enResult.FindPassword.getValue());
             }
         });
+
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -331,3 +340,5 @@ public class LoginActivity extends BaseActivity {
     }
 
 }
+
+

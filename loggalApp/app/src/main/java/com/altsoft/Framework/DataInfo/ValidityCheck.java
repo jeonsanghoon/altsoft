@@ -75,4 +75,11 @@ public class ValidityCheck {
         }
         else return false;
     }
+
+    public boolean isEmptyStringArray(String[] array) {
+        if (array == null || array.length == 0) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -25,6 +25,7 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true //Add this
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -93,11 +94,17 @@ dependencies {
     //implementation group: project.KAKAO_SDK_GROUP, name: 'kakaostory', version: '1.16.0'
     // push sdk를 사용하기 위해 필요.
     //implementation group: project.KAKAO_SDK_GROUP, name: 'push', version: '1.16.0'
+
+    implementation 'com.sun.mail:android-mail:1.6.3'
+    implementation 'com.sun.mail:android-activation:1.6.3'
+    implementation 'com.android.support:multidex:1.0.3'
     implementation project(':togglegroupbutton')
     implementation files('libs/libDaumMapAndroid.jar')
     implementation project(':bottomnavigation')
     implementation project(':altframework')
-    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+
+
+
 }
 
 
@@ -112,3 +119,4 @@ configurations.all {
 
     }
 }
+

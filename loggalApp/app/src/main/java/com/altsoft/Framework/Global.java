@@ -2,7 +2,10 @@ package com.altsoft.Framework;
 
 import android.app.Activity;
 
+import com.altsoft.Framework.DataInfo.EMail;
+import com.altsoft.model.UserInfo.DataList;
 import com.altsoft.Framework.DataInfo.DotNetDateConverter;
+import com.altsoft.Framework.DataInfo.FileInfo;
 import com.altsoft.Framework.DataInfo.SaveSharedPreference;
 import com.altsoft.Framework.DataInfo.SecurityInfo;
 import com.altsoft.Framework.DataInfo.ValidityCheck;
@@ -147,6 +150,14 @@ public class Global {
             _securityInfo = new SecurityInfo();
         }
         return _securityInfo;
+    }
+
+    static EMail _EMail;
+    public static EMail getEMail ( ) {
+        if (_EMail == null) {
+            _EMail = new EMail();
+        }
+        return _EMail;
     }
 
     static MobileService _apiservice;
