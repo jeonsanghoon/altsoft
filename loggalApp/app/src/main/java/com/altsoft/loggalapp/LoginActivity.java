@@ -170,12 +170,17 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == enResult.MemberJoin.getValue()){
-            if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == enResult.MemberJoin.getValue()) {
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("result", (LOGIN_DATA)data.getSerializableExtra("result"));
-                setResult(RESULT_OK,resultIntent);
+                resultIntent.putExtra("result", (LOGIN_DATA) data.getSerializableExtra("result"));
+                setResult(RESULT_OK, resultIntent);
+
                 finish();
+                return;
+            }
+            else if (requestCode == enResult.FindPassword.getValue()) {
+
             }
         }
         //간편로그인시 호출 ,없으면 간편로그인시 로그인 성공화면으로 넘어가지 않음

@@ -13,6 +13,7 @@ import com.altsoft.model.UserInfo.T_MEMBER;
 import com.altsoft.model.UserInfo.T_MEMBER_BOOKMARK;
 import com.altsoft.model.UserInfo.T_MEMBER_BOOKMARK_COND;
 import com.altsoft.model.UserInfo.T_MEMBER_COND;
+import com.altsoft.model.UserInfo.T_MEMBER_PASSWROD_CHANGE;
 import com.altsoft.model.UserInfo.T_MEMBER_SNS_UPDATE;
 import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
@@ -59,8 +60,8 @@ public interface MobileService {
     Call<RTN_SAVE_DATA> SaveMember(@Body T_MEMBER Cond);
     @POST("/api/Account/GetMobileLogin")
     Call<LOGIN_DATA> GetMobileLogin(@Body LOGIN_COND Cond);
-    @POST("/api/Account/MobilePasswordChange")
-    Call<LOGIN_DATA> PasswordChange(@Body LOGIN_COND Cond);
+    @POST("/api/Account/MemberPasswordChange")
+    Call<RTN_SAVE_DATA> MemberPasswordChange(@Body T_MEMBER_PASSWROD_CHANGE Cond);
     @POST("/api/Account/GetMobileLoginMemberList")
     Call<List<T_MEMBER>> GetMemberList(@Body T_MEMBER_COND Cond);
 

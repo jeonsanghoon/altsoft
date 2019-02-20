@@ -12,6 +12,7 @@ public class T_MEMBER implements Serializable {
     public Integer USER_TYPE;
     /// 사용자아이디(E-Mail)
     public String USER_ID;
+
     /// 암호(SHA1으로 암호화)
     public String PASSWORD;
     /// 사용자명

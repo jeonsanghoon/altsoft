@@ -35,9 +35,13 @@
 
     <!--로그인 -->
     <string name="hint_email">이메일</string>
+    <string name="hint_passwordOri">기존암호</string>
     <string name="hint_password">암호</string>
     <string name="hint_password2">암호확인</string>
+    <string name="hint_passwordnew">새암호</string>
+    <string name="hint_passwordnew2">새암호확인</string>
     <string name="hint_name">사용자</string>
+    <string name="hint_passwordchange">암호변경</string>
     <string name="login">로그인</string>
     <string name="register">회원가입</string>
     <string name="tmptomail">임시패스워드 메일발송</string>
