@@ -14,6 +14,8 @@ import com.altsoft.loggalapp.R;
 import com.altsoft.model.DEVICE_LOCATION;
 import com.altsoft.model.search.MOBILE_AD_SEARCH_DATA;
 import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -53,10 +55,15 @@ public class LocalBoxListViewAdapter extends BaseAdapter {
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         DEVICE_LOCATION listViewItem = listViewItemList.get(position);
 
-
+        ImageView iconImageView = (ImageView) convertView.findViewById(R.id.imageView1) ;
         ((TextView) convertView.findViewById(R.id.txtTitle)).setText(listViewItem.DEVICE_NAME);
         ((TextView) convertView.findViewById(R.id.txtDesc)).setText(listViewItem.DEVICE_DESC);
         ((TextView) convertView.findViewById(R.id.txtUserName)).setText(listViewItem.COMPANY_NAME);
+        Glide.with(context)
+                .load(listViewItem.LOGO_URL)
+                .apply(new RequestOptions().override(100, 100))
+                .into(iconImageView)
+        ;
         if(listViewItem.BOOKMARK_YN) {
             ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.VISIBLE);
             ((ImageView) convertView.findViewById(R.id.btnBookmark)).setImageResource(R.drawable.ic_baseline_bookmark_24px);

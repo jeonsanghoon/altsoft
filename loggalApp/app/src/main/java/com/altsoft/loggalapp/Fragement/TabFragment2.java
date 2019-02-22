@@ -19,14 +19,11 @@ import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
 import com.altsoft.model.DEVICE_LOCATION;
 import com.altsoft.model.DEVICE_LOCATION_COND;
-import com.altsoft.model.T_AD;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class TabFragment2 extends BaseFragment {

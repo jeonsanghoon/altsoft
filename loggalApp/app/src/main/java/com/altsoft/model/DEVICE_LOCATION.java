@@ -26,5 +26,6 @@ public class DEVICE_LOCATION  implements Serializable {
     /// </summary>
     public Double DISTANCE;
     public Boolean BOOKMARK_YN;
+    public String LOGO_URL;
 
 }

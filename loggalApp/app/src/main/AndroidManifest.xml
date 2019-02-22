@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="HardcodedDebugMode">
-        <activity android:name=".FindPasswordActivity"></activity>
+        <activity android:name=".UserInfo.MyBannerBookMarkList"></activity>
+        <activity android:name=".FindPasswordActivity" />
 
         <meta-data
             android:name="com.kakao.sdk.ClientSecret"
@@ -59,6 +60,8 @@
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".WebViewActivity"
+
+
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_web_view"
             android:theme="@style/AppTheme" />
@@ -72,6 +75,7 @@
             android:name=".SearchActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
+
             android:name=".locationMapActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <!--

@@ -50,5 +50,9 @@ public class T_MEMBER_BOOKMARK implements Serializable {
     public Long AUTH_NUMBER;
     /// 기기설명
     public String DEVICE_DESC;
+
+    public String SUB_TITLE;
+    /// 로고이미지
+    public String LOGO_URL;
     public int TOTAL_ROWCOUNT;
 }
