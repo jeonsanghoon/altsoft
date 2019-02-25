@@ -75,7 +75,14 @@ public class LocalBoxListItemAdapter extends BaseAdapter {
 
         titleTextView.setText(Global.getValidityCheck().isEmpty(listViewItem.TITLE)? listViewItem.DEVICE_NAME : listViewItem.TITLE);
         descTextView.setText(listViewItem.SUB_TITLE);
-        userNameView.setText(listViewItem.COMPANY_NAME);
+        String companyName = "";
+        if(!Global.getValidityCheck().isEmpty(listViewItem.COMPANY_NAME))
+        {
+            String[] arrTmp = listViewItem.COMPANY_NAME.split(">");
+            companyName = arrTmp[arrTmp.length-1];
+        }
+
+        userNameView.setText(companyName);
         if(listViewItem.BANNER_BOOKMARK_YN) {
             ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.VISIBLE);
             ((ImageView) convertView.findViewById(R.id.btnBookmark)).setImageResource(R.drawable.ic_baseline_bookmark_24px);

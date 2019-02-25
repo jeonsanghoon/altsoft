@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.altsoft.Framework.module.BaseFragment;
 import com.altsoft.loggalapp.LoginActivity;
 import com.altsoft.loggalapp.MainActivity;
 import com.altsoft.loggalapp.R;
+import com.altsoft.loggalapp.UserInfo.MyBannerBookMarkList;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.kakao.usermgmt.UserManagement;
@@ -28,6 +30,8 @@ import com.ss.bottomnavigation.BottomNavigation;
 public class TabFragment_Myinfo extends BaseFragment {
     TextView tvUserId;
     TextView tvUserName;
+    LinearLayout layLogined;
+    Button btnLogin;
     public View view;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,12 +46,14 @@ public class TabFragment_Myinfo extends BaseFragment {
         tvUserId  = ((TextView) view.findViewById(R.id.tvUserId));;
         tvUserName  = ((TextView) view.findViewById(R.id.tvUserName));;
 
-        final Button btnLogin = view.findViewById(R.id.btnLogin);
+        btnLogin = view.findViewById(R.id.btnLogin);
         final Button btnLogout = view.findViewById(R.id.btnLogout);
+        layLogined = view.findViewById(R.id.layLogined);
 
        if(Global.getLoginInfo().isLogin()) {
             btnLogin.setVisibility(View.GONE);
-            btnLogout.setVisibility(View.VISIBLE);
+          //  btnLogout.setVisibility(View.VISIBLE);
+           layLogined.setVisibility(View.VISIBLE);
            tvUserId.setText(Global.getLoginInfo().getData().USER_ID);
            tvUserName.setText(Global.getLoginInfo().getData().USER_NAME);
 
@@ -63,7 +69,7 @@ public class TabFragment_Myinfo extends BaseFragment {
         }
         else {
            btnLogin.setVisibility(View.VISIBLE);
-           btnLogout.setVisibility(View.GONE);
+           layLogined.setVisibility(View.GONE);
        }
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -100,19 +106,45 @@ public class TabFragment_Myinfo extends BaseFragment {
                         "로그아웃되었습니다.",
                         Toast.LENGTH_LONG).show();
                 btnLogin.setVisibility(View.VISIBLE);
-                btnLogout.setVisibility(View.GONE);
+                view.findViewById(R.id.layLogined).setVisibility(View.GONE);
+                //view.findViewById(R.id.layLogined).setVisibility(View.GONE);
             }
         });
 
+        view.findViewById(R.id.btnMyBookmarkList).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Global.getCurrentActivity(), MyBannerBookMarkList.class);
+                Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
+            }
+        });
 
         return view;
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == enResult.LoginRequest.getValue() )
+
+        if(requestCode == enResult.LoginRequest.getValue() ) {
             if (resultCode == -1) {
 
                 return;
             }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(btnLogin !=null) {
+            if (Global.getLoginInfo().isLogin()) {
+                btnLogin.setVisibility(View.GONE);
+                //  btnLogout.setVisibility(View.VISIBLE);
+                layLogined.setVisibility(View.VISIBLE);
+
+            } else {
+                btnLogin.setVisibility(View.VISIBLE);
+                layLogined.setVisibility(View.GONE);
+            }
+        }
     }
 }

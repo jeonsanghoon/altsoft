@@ -58,10 +58,17 @@ public class BookMarkListViewAdapter extends BaseAdapter {
                 .into(iconImageView)
         ;
 
-        titleTextView.setText(listViewItem.TITLE);
+        titleTextView.setText(listViewItem.BOOKMARK_NAME);
         descTextView.setText(listViewItem.SUB_TITLE);
         userNameView.setText(listViewItem.COMPANY_NAME);
+        ((ImageView) convertView.findViewById(R.id.btnBookmark)).setVisibility(View.VISIBLE);
+        if(listViewItem.AD_CODE != null) {
 
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setImageResource(R.drawable.ic_baseline_phone_android_24px);
+        }
+        else {
+            ((ImageView) convertView.findViewById(R.id.btnBookmark)).setImageResource(R.drawable.ic_baseline_dock_24);
+        }
         return convertView;
     }
 

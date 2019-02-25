@@ -19,8 +19,11 @@ import com.altsoft.Adapter.BookMarkListViewAdapter;
 import com.altsoft.Adapter.LocalBoxListItemAdapter;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.GsonInfo;
+import com.altsoft.Framework.enResult;
+import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.WebViewActivity;
+import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
 import com.altsoft.model.RTN_SAVE_DATA;
 import com.altsoft.model.T_AD;
 import com.altsoft.model.UserInfo.T_MEMBER_BOOKMARK;
@@ -36,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyBannerBookMarkList extends AppCompatActivity {
+public class MyBannerBookMarkList extends BaseActivity {
     Activity activity;
     ListView listview ;
     boolean bLastPage = false;
@@ -44,23 +47,22 @@ public class MyBannerBookMarkList extends AppCompatActivity {
     private boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
     Integer nPageSize = 30;
     BookMarkListViewAdapter adapter;
-    private Long deviceCode;
-
-
+    int selectedIndex = -1;
     View selectedview;
     List<T_MEMBER_BOOKMARK> datalist;
     T_MEMBER_BOOKMARK selectedData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_localboxbanner_list);
+        setContentView(R.layout.activity_my_banner_book_mark_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         adapter = new BookMarkListViewAdapter();
         activity = this;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
-        deviceCode =  (Long)intent.getLongExtra("DEVICE_CODE",0);
+
+
         ComponentInit();
         this.GetBookMarkList();
 
@@ -69,10 +71,21 @@ public class MyBannerBookMarkList extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if (selectedview != null) {
+            if (Global.getData().BANNER_BOOKMARK_YN == null || Global.getData().BANNER_BOOKMARK_YN == false) {
 
+                datalist.remove(datalist.get(selectedIndex));
+                adapter.notifyDataSetChanged();
+            }
+
+        }
+        selectedview = null;
+        selectedData = null;
+        Global.getData().BANNER_BOOKMARK_YN = null;
     }
     private void ComponentInit()
     {
+
     }
     private void GetBookMarkList() {
 
@@ -80,7 +93,7 @@ public class MyBannerBookMarkList extends AppCompatActivity {
         Cond.PAGE_COUNT = 10000;
         Cond.PAGE = 1;
         Cond.USER_ID = Global.getLoginInfo().USER_ID;
-
+        //Cond.BOOKMARK_TYPE = 2;
         Global.getCommon().ProgressShow(this);
 
         Call<List<T_MEMBER_BOOKMARK>> call = Global.getAPIService().GetMemberbookmarkList(Cond);
@@ -128,15 +141,24 @@ public class MyBannerBookMarkList extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         selectedData= adapter.getItem(position);
-                        T_MEMBER_BOOKMARK data = new T_MEMBER_BOOKMARK();
+                        selectedIndex = position;
+                        //T_MEMBER_BOOKMARK data = new T_MEMBER_BOOKMARK();
                         selectedview = view;
 
 
-
-
-                        Intent intent = new Intent(activity, WebViewActivity.class);
-                        intent.putExtra("T_AD", data);
-                        activity.startActivity(intent);
+                        if(selectedData.AD_CODE != null) {
+                            T_AD data = new T_AD();
+                            data.TITLE = selectedData.TITLE;
+                            data.AD_CODE = selectedData.AD_CODE;
+                            Intent intent = new Intent(activity, WebViewActivity.class);
+                            intent.putExtra("T_AD", data);
+                            activity.startActivity(intent);
+                        }
+                        else{
+                            Intent intent = new Intent(activity, LocalboxbannerListActivity.class);
+                            intent.putExtra("DEVICE_CODE", selectedData.DEVICE_CODE );
+                            activity.startActivity(intent);
+                        }
 
                     }
                 });
@@ -158,4 +180,9 @@ public class MyBannerBookMarkList extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
+
 }

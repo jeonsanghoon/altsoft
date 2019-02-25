@@ -58,7 +58,15 @@ public class LocalBoxListViewAdapter extends BaseAdapter {
         ImageView iconImageView = (ImageView) convertView.findViewById(R.id.imageView1) ;
         ((TextView) convertView.findViewById(R.id.txtTitle)).setText(listViewItem.DEVICE_NAME);
         ((TextView) convertView.findViewById(R.id.txtDesc)).setText(listViewItem.DEVICE_DESC);
-        ((TextView) convertView.findViewById(R.id.txtUserName)).setText(listViewItem.COMPANY_NAME);
+        String companyName = "";
+        if(!Global.getValidityCheck().isEmpty(listViewItem.COMPANY_NAME))
+        {
+            String[] arrTmp = listViewItem.COMPANY_NAME.split(">");
+            companyName = arrTmp[arrTmp.length-1];
+        }
+
+
+        ((TextView) convertView.findViewById(R.id.txtUserName)).setText(companyName);
         Glide.with(context)
                 .load(listViewItem.LOGO_URL)
                 .apply(new RequestOptions().override(100, 100))
@@ -74,7 +82,7 @@ public class LocalBoxListViewAdapter extends BaseAdapter {
         if(listViewItem.STATION_CODE ==null) {
             if (listViewItem.DISTANCE != null) {
                 Double dTmp = listViewItem.DISTANCE / 1000.00;
-                ((TextView) convertView.findViewById(R.id.txtDistance)).setText((new DecimalFormat("###,##0.000")).format(dTmp) + "km");
+                ((TextView) convertView.findViewById(R.id.txtDistance)).setText((new DecimalFormat("###,##0.00")).format(dTmp) + "km");
             }
         }
         return convertView;
