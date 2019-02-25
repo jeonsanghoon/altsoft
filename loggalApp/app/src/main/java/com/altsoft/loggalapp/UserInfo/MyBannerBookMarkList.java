@@ -72,15 +72,15 @@ public class MyBannerBookMarkList extends BaseActivity {
     public void onResume() {
         super.onResume();
         if (selectedview != null) {
-            if (Global.getData().BANNER_BOOKMARK_YN == null || Global.getData().BANNER_BOOKMARK_YN == false) {
+            if (Global.getData().BANNER_BOOKMARK_YN  != null && Global.getData().BANNER_BOOKMARK_YN == false && selectedIndex >= 0) {
 
                 datalist.remove(datalist.get(selectedIndex));
                 adapter.notifyDataSetChanged();
             }
-
         }
         selectedview = null;
         selectedData = null;
+        selectedIndex = -1;
         Global.getData().BANNER_BOOKMARK_YN = null;
     }
     private void ComponentInit()
