@@ -2,6 +2,7 @@ package com.altsoft.loggalapp;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -27,11 +28,12 @@ import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.map.MapInfo;
-import com.altsoft.loggalapp.Fragement.TabFragment1;
-import com.altsoft.loggalapp.Fragement.TabFragment2;
+import com.altsoft.loggalapp.Fragement.TabFragment_Banner;
+import com.altsoft.loggalapp.Fragement.TabFragment_localbox;
 
 import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
 
+import com.altsoft.loggalapp.Fragement.TabFragment_localStation;
 import com.altsoft.map.kakaoMapActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -39,6 +41,9 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
 import com.ss.bottomnavigation.events.OnSelectedItemChangeListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -52,7 +57,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     public  static Activity activity;
     private ViewPager mViewPager;
     private PagerAdapter mPagerAdapter;
-    private int nTotalPage =3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +125,22 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                             this.startActivityForResult(intent, enResult.LocalboxRequest.getValue());
                         }
                         break;
-                   case 2:
+                    case 2:
+                        if(!(Global.getData().devicelist == null || Global.getData().devicelist.size() == 0)) {
+                            //intent.putExtra("list2", (ArrayList<DEVICE_LOCATION>) Global.getData().devicelist);
+                            intent.putExtra("mapType", "localstation");
+                            this.startActivityForResult(intent, enResult.LoglstationRequest.getValue());
+                        }
+                        break;
+
+                   /*  case 2:
+                        if(!(Global.getData().stationlist == null || Global.getData().stationlist.size() == 0)) {
+                            //intent.putExtra("list2", (ArrayList<DEVICE_LOCATION>) Global.getData().devicelist);
+                            intent.putExtra("mapType", "locationstation");
+                            this.startActivityForResult(intent, enResult.LoglstationRequest.getValue());
+                        }
+                        break;*/
+                   case 3:
 
                         /*if(!(Global.getData().signagelist == null || Global.getData().signagelist.size() == 0))
                         {
@@ -150,8 +170,8 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     {
         if(Global.getLoginInfo().isLogin()) {
             try {
-                bottomNavigation.getTabItems().get(2).setText(Global.getLoginInfo().getData().USER_NAME);
-                if(bottomNavigation.getSelectedItem() == 2) {
+                bottomNavigation.getTabItems().get(3).setText(Global.getLoginInfo().getData().USER_NAME);
+                if(bottomNavigation.getSelectedItem() == 3) {
                     ((TextView) findViewById(R.id.tvUserName)).setText(Global.getLoginInfo().getData().USER_NAME );
                     ((TextView) findViewById(R.id.tvUserId)).setText(Global.getLoginInfo().getData().USER_ID );
                     ImageView img_profile = findViewById(R.id.img_profile);
@@ -194,7 +214,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     private void tabInit() {
 
         bottomNavigation=(BottomNavigation)findViewById(R.id.bottom_navigation);
-        bottomNavigation.setDefaultItem(0);
+    //    bottomNavigation.setDefaultItem(0);
         bottomNavigation.setType(bottomNavigation.TYPE_FIXED);
 
         bottomNavigation.setOnSelectedItemChangeListener(new OnSelectedItemChangeListener() {
@@ -204,13 +224,16 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
                 switch (itemId){
                     case R.id.tab_banner:
-                        mViewPager.setCurrentItem(0,true);
+                        mViewPager.setCurrentItem(0,false);
                         break;
                     case R.id.tab_localbox:
-                        mViewPager.setCurrentItem(1,true);
+                        mViewPager.setCurrentItem(1,false);
+                        break;
+                    case R.id.tab_localstation:
+                        mViewPager.setCurrentItem(2,false);
                         break;
                     case R.id.tab_myinfo:
-                        mViewPager.setCurrentItem(2,true);
+                        mViewPager.setCurrentItem(3,false);
                         if(!Global.getLoginInfo().isLogin()) {
                             Intent intent = new Intent(Global.getCurrentActivity(), LoginActivity.class);
                             Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
@@ -275,7 +298,12 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
     private void initViewPager() {
         mViewPager = findViewById(R.id.pager);
-        mPagerAdapter = new PagerAdapter(getSupportFragmentManager(),nTotalPage);
+        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+
+        mPagerAdapter.addFragment( new TabFragment_Banner());
+        mPagerAdapter.addFragment( new TabFragment_localbox());
+        mPagerAdapter.addFragment( new TabFragment_localStation());
+        mPagerAdapter.addFragment( new TabFragment_Myinfo());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override
@@ -305,34 +333,27 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
-        private int _nTotal =0;
 
-        public PagerAdapter(FragmentManager fm, int nTotal) {
+        ArrayList<android.support.v4.app.Fragment> adapterList = new ArrayList<>();
+        public PagerAdapter(FragmentManager fm) {
             super(fm);
-            _nTotal = nTotal;
+
+        }
+
+        public void addFragment(android.support.v4.app.Fragment frag)
+        {
+            adapterList.add(frag);
         }
 
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
             // Returning the current tabs
-            switch (position) {
-                case 0:
-                    TabFragment1 tabFragment1 = new TabFragment1();
-                    return tabFragment1;
-                case 1:
-                    TabFragment2 tabFragment2 = new TabFragment2();
-                    return tabFragment2;
-                case 2:
-                    TabFragment_Myinfo tabFragment3 = new TabFragment_Myinfo();
-                    return tabFragment3;
-                default:
-                    return null;
-            }
+            return adapterList.get(position);
         }
 
         @Override
         public int getCount() {
-            return _nTotal;
+            return adapterList.size();
         }
     }
 }

@@ -48,6 +48,7 @@ android {
         main {
             res.srcDirs = [
                     'src/main/res/layouts',
+                    'src/main/res/layouts/fragment',
                     'src/main/res/layouts/detail',
                     'src/main/res/layouts/item',
                     'src/main/res/layouts/map',

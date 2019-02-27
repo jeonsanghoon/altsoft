@@ -15,16 +15,16 @@ import com.altsoft.model.daummap.DAUM_ADDRESS;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KakayAddressAdapter extends ArrayAdapter {
+public class KakaoAddressAdapter extends ArrayAdapter {
     private ArrayList<DAUM_ADDRESS> listViewItemList = new ArrayList<DAUM_ADDRESS>() ;
     private int itemLayout;
 
-
-    public KakayAddressAdapter(Context context, int resource, List<DAUM_ADDRESS> list) {
+    public KakaoAddressAdapter(Context context, int resource, List<DAUM_ADDRESS> list) {
         super(context, resource, list);
         itemLayout = resource;
         listViewItemList = (ArrayList<DAUM_ADDRESS>) list;
     }
+
     @Override
     public int getCount() {
         return listViewItemList.size();
@@ -40,7 +40,6 @@ public class KakayAddressAdapter extends ArrayAdapter {
     private DAUM_ADDRESS selectedItem;
     public DAUM_ADDRESS getSelectedItem() {
         selectedItem = selectedItem == null ? new DAUM_ADDRESS() : selectedItem;
-
         return selectedItem;
     }
 

@@ -1,12 +1,9 @@
 package com.altsoft.map;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,45 +14,33 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 
-import com.altsoft.Adapter.CustomCalloutBalloonAdapter;
-import com.altsoft.Adapter.KakayAddressAdapter;
-import com.altsoft.Adapter.SearchAdapter;
+import com.altsoft.Adapter.KakaoAddressAdapter;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.control.altAutoCmpleateTextView;
-import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.SignageControlActivity;
 import com.altsoft.loggalapp.detail.LocalboxListActivity;
-import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
-import com.altsoft.model.T_AD;
+import com.altsoft.model.DEVICE_LOCATION;
+import com.altsoft.model.DEVICE_LOCATION_COND;
 import com.altsoft.model.daummap.DAUM_ADDRESS;
 import com.altsoft.model.device.T_DEVICE_STATION;
 import com.altsoft.model.device.T_DEVICE_STATION_COND;
-import com.altsoft.model.keyword.CODE_DATA;
-import com.altsoft.model.keyword.KEYWORD_COND;
 import com.altsoft.model.signage.MOBILE_SIGNAGE_LIST;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.CameraUpdateFactory;
 import net.daum.mf.map.api.MapCircle;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
-
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -75,6 +60,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     SearchAutoCompleate searchAutoCompleate;
     //private ArrayList<T_AD> bannerlist;
     private List<T_DEVICE_STATION> stationlist;
+    private List<DEVICE_LOCATION> devicelist;
     private ArrayList<MOBILE_SIGNAGE_LIST> signagelist;
     private String mapType = "banner";
     private BottomSheetBehavior sheetBehavior;
@@ -112,6 +98,9 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             //sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
         else if(mapType.equals("localbox")) {
+            locaBoxListDraw();
+        }
+        else if(mapType.equals("localstation")) {
             locaStationListDraw();
         }
         else if(mapType.equals("signage")){
@@ -171,6 +160,47 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         LinearLayout layoutBottomSheet = findViewById(R.id.bottom_sheet);
 
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
+    }
+
+    private void locaBoxListDraw() {
+
+        DEVICE_LOCATION_COND Cond = new DEVICE_LOCATION_COND();
+        Cond.PAGE = 1;
+        Cond.PAGE_COUNT = 100000;
+        Call<List<DEVICE_LOCATION>> call = Global.getAPIService().GetDeviceLocation(Cond);
+        call.enqueue(new Callback<List<DEVICE_LOCATION>>() {
+
+            @Override
+            public void onResponse(Call<List<DEVICE_LOCATION>> call, Response<List<DEVICE_LOCATION>> response) {
+                devicelist = response.body();
+                for(int i=0; i<devicelist.size(); i++)
+                {
+                    MapPoint point =   MapPoint.mapPointWithGeoCoord(devicelist.get(i).LATITUDE, devicelist.get(i).LONGITUDE);
+                    marker = new MapPOIItem();
+
+                    marker.setItemName(devicelist.get(i).DEVICE_NAME); /* */
+                    marker.setTag(0);
+                    marker.setMapPoint(point);
+
+                    marker.setUserObject(stationlist.get(i));
+                    marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 기본으로 제공하는 BluePin 마커 모양.
+                    marker.setCustomImageResourceId(R.drawable.map_pin_blue); // 마커 이미지.
+                    marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+                    marker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+                    mapView.addPOIItem(marker);
+                }
+
+                mapView.setShowCurrentLocationMarker(true);
+                //   mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(37.53737528, 127.00557633), true);
+                mapView.setZoomLevel(7, true);
+            }
+
+            @Override
+            public void onFailure(Call<List<DEVICE_LOCATION>> call, Throwable t) {
+
+            }
+        });
+
     }
     private void locaStationListDraw() {
 
@@ -368,6 +398,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     }
     MOBILE_SIGNAGE_LIST signagedata;
     T_DEVICE_STATION localstationdata;
+
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
 
@@ -415,6 +446,8 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             lvBottomInfo.setVisibility(View.VISIBLE);
             lvBottomInfoDetail.setVisibility(View.GONE);
 
+        }else if(mapType.equals("localstation")) {
+
         }
         else
         {
@@ -447,13 +480,13 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             Intent intent = new Intent(Global.getCurrentActivity(), LocalboxListActivity.class);
             intent.putExtra("STATION_CODE", localstationdata.STATION_CODE );
             Global.getCurrentActivity().startActivity(intent);
-
         }
     }
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
-        Toast.makeText(this, "Clicked " + mapPOIItem.getItemName() + " Callout Balloon", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Clicked " + mapPOIItem.getItemName() + " Callout Balloon", Toast.LENGTH_SHORT).show();
+        BtnInfoShow();
     }
 
     @Override
@@ -475,7 +508,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
 
     /// 자동완성
     private  class SearchAutoCompleate{
-        KakayAddressAdapter adapter;
+        KakaoAddressAdapter adapter;
         List<DAUM_ADDRESS> list;          // 데이터를 넣은 리스트변수
         altAutoCmpleateTextView autoCompleteTextView ;
         Boolean bAutoDrop = false;
@@ -581,7 +614,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                                 //list.add(data.NAME);
                             }
                         }
-                        adapter = new KakayAddressAdapter(Global.getCurrentActivity(), R.layout.autocomplate_list_item, list);
+                        adapter = new KakaoAddressAdapter(Global.getCurrentActivity(), R.layout.autocomplate_list_item, list);
                         autoCompleteTextView.setAdapter(adapter);
                         if (bAutoDrop && list.size() >0) {
                             autoCompleteTextView.showDropDown();
@@ -609,4 +642,5 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

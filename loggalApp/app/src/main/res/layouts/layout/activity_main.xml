@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             app:tab_icon="@drawable/ic_baseline_phone_android_24px"
             app:unselected_tab_icon="@drawable/ic_baseline_phone_android_unselected_24px"
-            app:tab_text="배너"
+            app:tab_text="@string/tab_banner"
             style="@style/BottomNavigationTabStyle"/>
 
         <com.ss.bottomnavigation.TabItem
@@ -36,25 +36,25 @@
             android:layout_height="match_parent"
             app:tab_icon="@drawable/ic_baseline_dock_24"
             app:unselected_tab_icon="@drawable/ic_baseline_dock_unselected_24"
-            app:tab_text="로컬박스"
+            app:tab_text="@string/tab_localbox"
             style="@style/BottomNavigationTabStyle"/>
-<!--
+
         <com.ss.bottomnavigation.TabItem
-            android:id="@+id/tab_signage"
+            android:id="@+id/tab_localstation"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:tab_icon="@drawable/ic_camera_color_primary_24dp"
-            app:unselected_tab_icon="@drawable/ic_camera_unselected_24dp"
-            app:tab_text="사이니지"
-            style="@style/BottomNavigationTabStyle"
-            />-->
+            app:tab_icon="@drawable/ic_baseline_device_hub_24px"
+            app:unselected_tab_icon="@drawable/ic_baseline_device_hub_unselected_24px"
+            app:tab_text="@string/tab_localstation"
+            style="@style/BottomNavigationTabStyle"/>
+
         <com.ss.bottomnavigation.TabItem
             android:id="@+id/tab_myinfo"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:tab_icon="@drawable/ic_baseline_person_primary_24px"
             app:unselected_tab_icon="@drawable/ic_baseline_person_unselected_24px"
-            app:tab_text="내정보"
+            app:tab_text="@string/tab_myinfo"
 
             style="@style/BottomNavigationTabStyle"
             />

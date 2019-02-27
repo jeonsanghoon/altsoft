@@ -44,7 +44,7 @@ public class BottomNavigation extends LinearLayout implements OnTabItemClickList
      * @see BottomNavigation#TYPE_FIXED
      * @see BottomNavigation#TYPE_DYNAMIC
      */
-    private int type;
+    private int type = 1;
 
     /**
      * If bottom navigation has only three items, then this constant used for {@link BottomNavigation#type}
@@ -175,11 +175,11 @@ public class BottomNavigation extends LinearLayout implements OnTabItemClickList
         if (getChildCount() > 0) {
             if (getChildCount() >= 3 && getChildCount() <= 5) {
 
-                if (getChildCount() > 3) {
+              /*  if (getChildCount() > 3) {
                     type = TYPE_DYNAMIC;
                 } else {
                     type = TYPE_FIXED;
-                }
+                }*/
 
                 for (int i = 0; i < getChildCount(); i++) {
                     if (!(getChildAt(i) instanceof TabItem)) {

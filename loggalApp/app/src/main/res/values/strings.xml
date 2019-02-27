@@ -12,7 +12,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_signage_control">사이니지제어</string>
-
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps2">Map</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -52,6 +53,10 @@
     <string name="change_password">비밀번호변경</string>
     <string name="old_password">이전비밀번호</string>
     <string name="new_password">새비밀번호</string>
+    <string name="tab_banner">배너</string>
+    <string name="tab_localbox">로컬박스</string>
+    <string name="tab_localstation">로컬스테이션</string>
+    <string name="tab_myinfo">내정보</string>
 
     <string name="title_activity_localbox_list">LocalboxListActivity</string>
 </resources>

@@ -93,7 +93,7 @@ public class TabFragment_Myinfo extends BaseFragment {
                 BottomNavigation bottomNavigation = (BottomNavigation) MainActivity.activity.findViewById(R.id.bottom_navigation);
                 tvUserId.setText("");
                 tvUserName.setText("");
-                bottomNavigation.getTabItems().get(2).setText("내정보");
+                bottomNavigation.getTabItems().get(3).setText("내정보");
                 ImageView img_profile = view.findViewById(R.id.img_profile);
                 Glide.with(Global.getCurrentActivity())
                         .load("")

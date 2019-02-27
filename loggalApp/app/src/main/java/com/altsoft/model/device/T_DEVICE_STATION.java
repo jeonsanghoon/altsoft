@@ -50,4 +50,8 @@ public class T_DEVICE_STATION
     /// 최근 일주일간 디바이스 등록건수
     public Integer NEW_DEVICE_CNT;
     public Integer TOTAL_ROWCOUNT;
+
+    public Boolean BOOKMARK_YN = false;
+
+    public String LOGO_URL;
 }

@@ -30,7 +30,7 @@ import retrofit2.Call;
 /**
 
  */
-public class TabFragment1 extends BaseFragment {
+public class TabFragment_Banner extends BaseFragment {
     BannerListViewAdapter adapter;
     boolean lastitemVisibleFlag = false;
     private boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
@@ -56,7 +56,8 @@ public class TabFragment1 extends BaseFragment {
         GetBannerList();
 
         bLoad = true;
-        return inflater.inflate(R.layout.fragment_tab_fragment1, container, false);
+        return inflater.inflate(R.layout.fragment_tab_banner, container, false);
+
     }
 
     @Override

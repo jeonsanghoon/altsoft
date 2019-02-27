@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.altsoft.loggalapp.Fragement.TabFragment1;
-import com.altsoft.loggalapp.Fragement.TabFragment2;
+import com.altsoft.loggalapp.Fragement.TabFragment_Banner;
+import com.altsoft.loggalapp.Fragement.TabFragment_localbox;
 import com.altsoft.loggalapp.Fragement.TabFragment3;
 
 
@@ -24,10 +24,10 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         // Returning the current tabs
         switch (position) {
             case 0:
-                TabFragment1 tabFragment1 = new TabFragment1();
+                TabFragment_Banner tabFragment1 = new TabFragment_Banner();
                 return tabFragment1;
             case 1:
-                TabFragment2 tabFragment2 = new TabFragment2();
+                TabFragment_localbox tabFragment2 = new TabFragment_localbox();
                 return tabFragment2;
             case 2:
                 TabFragment3 tabFragment3 = new TabFragment3();

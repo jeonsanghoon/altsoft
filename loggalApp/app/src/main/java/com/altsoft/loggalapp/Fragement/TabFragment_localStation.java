@@ -11,112 +11,108 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.altsoft.Adapter.LocalBoxListViewAdapter;
+import com.altsoft.Adapter.LocalStationListAdapter;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.module.BaseFragment;
-import com.altsoft.Adapter.LocalBoxListViewAdapter;
 import com.altsoft.Interface.ServiceInfo;
 import com.altsoft.loggalapp.R;
+import com.altsoft.loggalapp.detail.LocalboxListActivity;
 import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
-import com.altsoft.model.DEVICE_LOCATION;
-import com.altsoft.model.DEVICE_LOCATION_COND;
+
+import com.altsoft.model.device.T_DEVICE_STATION;
+import com.altsoft.model.device.T_DEVICE_STATION_COND;
+
+import net.daum.mf.map.api.MapPOIItem;
+import net.daum.mf.map.api.MapPoint;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-
-public class TabFragment2 extends BaseFragment {
-    LocalBoxListViewAdapter adapter;
+public class TabFragment_localStation extends BaseFragment {
+    LocalStationListAdapter adapter;
     boolean lastitemVisibleFlag = false;
     private boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
     ListView listview;
     boolean bLastPage = false;
     Integer nPageSize = 30;
     Integer nPage = 1;
-    public  List<DEVICE_LOCATION> list;
+    public List<T_DEVICE_STATION> list;
     View selectedview;
-    DEVICE_LOCATION selectedData;
+    T_DEVICE_STATION selectedData;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        adapter = new LocalBoxListViewAdapter();
+        adapter = new LocalStationListAdapter();
 
-        GetDeviceLocation();
+        GetLocalStation();
 
-        return inflater.inflate(R.layout.fragment_tab_fragment2, container, false);
+        return inflater.inflate(R.layout.fragment_tab_localstation, container, false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(selectedview != null)
-        {
-            if(Global.getData().LOCALBOX_BOOKMARK_YN !=null) {
+        if (selectedview != null) {
+            if (Global.getData().LOCALBOX_BOOKMARK_YN != null) {
                 selectedData.BOOKMARK_YN = Global.getData().LOCALBOX_BOOKMARK_YN;
                 adapter.setItem(selectedview, selectedData);
             }
-
         }
         selectedview = null;
         selectedData = null;
         Global.getData().LOCALBOX_BOOKMARK_YN = null;
     }
-    public void GetDeviceLocation()
-    {
-        this.GetDeviceLocation(null);
+
+    public void GetLocalStation() {
+        this.GetLocalStation(null);
     }
-    private void GetDeviceLocation(Integer page) {
 
-        DEVICE_LOCATION_COND Cond = new DEVICE_LOCATION_COND();
+    private void GetLocalStation(Integer page) {
+
+
         try {
-            Cond.LATITUDE = Global.getMapInfo().latitude;
-            Cond.LONGITUDE = Global.getMapInfo().longitude;
-            Cond.PAGE_COUNT = nPageSize;
-            Cond.PAGE  = page == null ? 1 : page;
-            Cond.USER_ID = Global.getLoginInfo().USER_ID;
 
-            if(Cond.PAGE != 1 && bLastPage) {
-                Toast.makeText(Global.getCurrentActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
-                return;
-            }
-            if(Cond.PAGE == 1 && listview != null) {
-                adapter.clearData();
-                listview.setAdapter(adapter);
-                adapter = new LocalBoxListViewAdapter();
-            }
-            String sAddr = Global.getMapInfo().currentLocationAddress;
+            T_DEVICE_STATION_COND Cond = new T_DEVICE_STATION_COND();
+            Cond.PAGE = 1;
+            Cond.PAGE_COUNT = 100000;
+            Call<List<T_DEVICE_STATION>> call = Global.getAPIService().GetDeviceStationMapList(Cond);
 
-            Call<List<DEVICE_LOCATION>> call = Global.getAPIService().GetDeviceLocation(Cond);
             Global.getCallService().callService(call
-                    , new ServiceInfo.Act<ArrayList<DEVICE_LOCATION>>() {
+                    , new ServiceInfo.Act<ArrayList<T_DEVICE_STATION>>() {
                         @Override
-                        public void execute(ArrayList<DEVICE_LOCATION> list) {
-                            if(list.size() == 0) {
+                        public void execute(ArrayList<T_DEVICE_STATION> list) {
+                            if (list.size() == 0) {
                                 bLastPage = true;
-                                Toast.makeText(Global.getCurrentActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(Global.getCurrentActivity(), "데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                                 return;
                             }
-                            Global.getData().devicelist = list;
-                            if(list.size() < nPageSize) bLastPage = true;
+                            Global.getData().stationlist = list;
+                            if (list.size() < nPageSize) bLastPage = true;
 
-                            if(adapter.SetDataBind(list) == true) {
+                            if (adapter.SetDataBind(list) == true) {
                                 return;
                             }
 
-                            listview = (ListView) getActivity().findViewById(R.id.listview2);
+                            listview = (ListView) getActivity().findViewById(R.id.listview3);
                             listview.setAdapter(adapter);
                             listview.setOnScrollListener(new ListView.OnScrollListener() {
                                 @Override
                                 public void onScrollStateChanged(AbsListView view, int scrollState) {
                                     if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastitemVisibleFlag && mLockListView == false) {
                                         // 데이터 로드
-                                        if(lastitemVisibleFlag == true) {
+                                        if (lastitemVisibleFlag == true) {
                                             // Integer page = (listview.getCount() / nPageSize) + 1;
                                             nPage = nPage + 1;
-                                            GetDeviceLocation(nPage);
+                                            GetLocalStation(nPage);
                                         }
                                         mLockListView = false;
                                         lastitemVisibleFlag = false;
@@ -132,17 +128,17 @@ public class TabFragment2 extends BaseFragment {
                             listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    DEVICE_LOCATION data = adapter.getItem(position);
+                                    T_DEVICE_STATION data = adapter.getItem(position);
                                     selectedview = view;
                                     selectedData = data;
                                     //Toast.makeText(Global.getCurrentActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(getContext(), LocalboxbannerListActivity.class);
-                                    intent.putExtra("DEVICE_CODE", Long.parseLong(data.DEVICE_CODE) );
+                                    Intent intent = new Intent(getContext(), LocalboxListActivity.class);
+                                    intent.putExtra("STATION_CODE", data.STATION_CODE);
                                     getContext().startActivity(intent);
 
                                 }
                             });
- }
+                        }
                     },
                     new ServiceInfo.Act<Throwable>() {
                         @Override
@@ -151,7 +147,7 @@ public class TabFragment2 extends BaseFragment {
                         }
                     }
             );
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             Log.d("로그", ex.getMessage());
             Global.getCommon().ProgressHide();
         }
