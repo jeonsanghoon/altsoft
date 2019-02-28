@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.altsoft.Adapter.LocalBoxListViewAdapter;
@@ -50,7 +51,7 @@ public class LocalboxListActivity extends BaseActivity  {
         Intent intent = getIntent();
         stationCode = intent.getIntExtra("STATION_CODE",0);
         adapter = new LocalBoxListViewAdapter();
-
+        ((TextView)findViewById(R.id.tvTitle)).setText(intent.getStringExtra("STATION_NAME"));
         GetDeviceLocation();
     }
 
@@ -79,12 +80,12 @@ public class LocalboxListActivity extends BaseActivity  {
                 adapter = new LocalBoxListViewAdapter();
             }
             String sAddr = Global.getMapInfo().currentLocationAddress;
-            //Global.getCommon().ProgressShow(Global.getCurrentActivity());
+            Global.getCommon().ProgressShow(Global.getCurrentActivity());
             Call<List<DEVICE_LOCATION>> call = Global.getAPIService().GetDeviceLocation(Cond);
             call.enqueue(new Callback<List<DEVICE_LOCATION>>() {
                 @Override
                 public void onResponse(Call<List<DEVICE_LOCATION>> call, Response<List<DEVICE_LOCATION>> response) {
-                    //  Global.getCommon().ProgressHide(Global.getCurrentActivity());
+                    Global.getCommon().ProgressHide(Global.getCurrentActivity());
                     list = response.body();
 
                     if(list.size() == 0) {
@@ -92,6 +93,7 @@ public class LocalboxListActivity extends BaseActivity  {
                         Toast.makeText(Global.getCurrentActivity(),"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                         return;
                     }
+
                     Global.getData().devicelist = list;
                     if(list.size() < nPageSize) bLastPage = true;
 
@@ -126,7 +128,7 @@ public class LocalboxListActivity extends BaseActivity  {
                             DEVICE_LOCATION data = adapter.getItem(position);
                             //Toast.makeText(Global.getCurrentActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(activity, LocalboxbannerListActivity.class);
-                            intent.putExtra("DEVICE_CODE", Long.parseLong(data.DEVICE_CODE) );
+                            intent.putExtra("DEVICE_CODE", data.DEVICE_CODE );
                             activity.startActivity(intent);
 
                         }

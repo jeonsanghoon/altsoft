@@ -57,6 +57,7 @@ public class MemberJoinActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼
         ComponentInit();
+        getSupportActionBar().setTitle("회원가입");
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

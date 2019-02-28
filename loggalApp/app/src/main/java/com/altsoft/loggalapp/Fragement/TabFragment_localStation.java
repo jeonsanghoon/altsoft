@@ -82,7 +82,7 @@ public class TabFragment_localStation extends BaseFragment {
         try {
 
             T_DEVICE_STATION_COND Cond = new T_DEVICE_STATION_COND();
-            Cond.PAGE = 1;
+            Cond.PAGE = page;
             Cond.PAGE_COUNT = 100000;
             Call<List<T_DEVICE_STATION>> call = Global.getAPIService().GetDeviceStationMapList(Cond);
 
@@ -134,6 +134,7 @@ public class TabFragment_localStation extends BaseFragment {
                                     //Toast.makeText(Global.getCurrentActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(getContext(), LocalboxListActivity.class);
                                     intent.putExtra("STATION_CODE", data.STATION_CODE);
+                                    intent.putExtra("STATION_NAME", data.STATION_NAME);
                                     getContext().startActivity(intent);
 
                                 }

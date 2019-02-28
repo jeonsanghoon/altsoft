@@ -73,6 +73,7 @@ public class LoginActivity extends BaseActivity {
         Session.getCurrentSession().checkAndImplicitOpen();
         ComponentInit();
         String keyHash = Global.getCommon().getKeyHash(this);
+        getSupportActionBar().setTitle("로그인");
     }
 
 

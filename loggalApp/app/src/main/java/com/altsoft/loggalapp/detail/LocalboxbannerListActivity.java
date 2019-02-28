@@ -12,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.altsoft.Framework.Global;
@@ -59,8 +60,9 @@ public class LocalboxbannerListActivity extends BaseActivity {
         activity = this;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
-        deviceCode =  (Long)intent.getLongExtra("DEVICE_CODE",0);
         ComponentInit();
+        deviceCode =  (Long)intent.getLongExtra("DEVICE_CODE",0);
+        ((TextView)findViewById(R.id.tvTitle)).setText(intent.getStringExtra("DEVICE_NAME"));
         this.GetLocalBoxBannerList();
 
     }

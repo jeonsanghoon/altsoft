@@ -6,7 +6,7 @@ import java.math.BigInteger;
 public class DEVICE_LOCATION  implements Serializable {
     public String SEARCH_CODE;
     public String LOCATION_NAME;
-    public String DEVICE_CODE;
+    public Long DEVICE_CODE;
     public String DEVICE_NAME;
     public Integer STATION_CODE;
     public BigInteger SIGN_CODE;

@@ -69,6 +69,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         this.gpsInit();
 
         Log.d("hashKey",Global.getCommon().getKeyHash(this));
+        getSupportActionBar().setTitle("loggal");
     }
     @Override
     public void onResume() {

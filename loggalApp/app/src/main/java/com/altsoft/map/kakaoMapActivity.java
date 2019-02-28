@@ -27,6 +27,7 @@ import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.SignageControlActivity;
 import com.altsoft.loggalapp.detail.LocalboxListActivity;
+import com.altsoft.loggalapp.detail.LocalboxbannerListActivity;
 import com.altsoft.model.DEVICE_LOCATION;
 import com.altsoft.model.DEVICE_LOCATION_COND;
 import com.altsoft.model.daummap.DAUM_ADDRESS;
@@ -64,7 +65,9 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
     private ArrayList<MOBILE_SIGNAGE_LIST> signagelist;
     private String mapType = "banner";
     private BottomSheetBehavior sheetBehavior;
-
+    MOBILE_SIGNAGE_LIST signagedata;
+    T_DEVICE_STATION localstationdata;
+    DEVICE_LOCATION devicedata;
 
     TextView tvTitle;
     TextView tvTitle2 ;
@@ -182,7 +185,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                     marker.setTag(0);
                     marker.setMapPoint(point);
 
-                    marker.setUserObject(stationlist.get(i));
+                    marker.setUserObject(devicelist.get(i));
                     marker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 기본으로 제공하는 BluePin 마커 모양.
                     marker.setCustomImageResourceId(R.drawable.map_pin_blue); // 마커 이미지.
                     marker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
@@ -396,8 +399,7 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
         super.onDestroy();;
         searchAutoCompleate = null;
     }
-    MOBILE_SIGNAGE_LIST signagedata;
-    T_DEVICE_STATION localstationdata;
+
 
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
@@ -436,6 +438,17 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             lvBottomInfo.setVisibility(View.VISIBLE);
         }
         else if(mapType.equals("localbox")) {
+            devicedata = (DEVICE_LOCATION) mapPOIItem.getUserObject();
+            tvTitle.setText(devicedata.DEVICE_NAME);
+
+            tvTitle2.setText(df.format(devicedata.DISTANCE / 1000.00) + "km");
+            tvSubtitle.setText(devicedata.DEVICE_DESC);
+            tvUser.setText(devicedata.COMPANY_NAME);
+            tvAddress.setText(devicedata.ADDRESS1 + " " + devicedata.ADDRESS2);
+            lvBottomInfo.setVisibility(View.VISIBLE);
+            lvBottomInfoDetail.setVisibility(View.VISIBLE);
+
+        }else if(mapType.equals("localstation")) {
             localstationdata = (T_DEVICE_STATION) mapPOIItem.getUserObject();
             tvTitle.setText(localstationdata.STATION_NAME);
             localstationdata.NEW_DEVICE_CNT = localstationdata.NEW_DEVICE_CNT ==null ? 0 : localstationdata.NEW_DEVICE_CNT;
@@ -445,9 +458,6 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             tvAddress.setText("");
             lvBottomInfo.setVisibility(View.VISIBLE);
             lvBottomInfoDetail.setVisibility(View.GONE);
-
-        }else if(mapType.equals("localstation")) {
-
         }
         else
         {
@@ -477,8 +487,14 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
             intent.putExtra("SIGN_CODE", signagedata.SIGN_CODE);
             Global.getCurrentActivity().startActivity(intent);
         }else if(mapType.equals("localbox")) {
+            Intent intent = new Intent(Global.getCurrentActivity(), LocalboxbannerListActivity.class);
+            intent.putExtra("DEVICE_CODE", devicedata.DEVICE_CODE);
+            intent.putExtra("DEVICE_NAME", devicedata.DEVICE_NAME);
+            Global.getCurrentActivity().startActivity(intent);
+        }else if(mapType.equals("localstation")) {
             Intent intent = new Intent(Global.getCurrentActivity(), LocalboxListActivity.class);
-            intent.putExtra("STATION_CODE", localstationdata.STATION_CODE );
+            intent.putExtra("STATION_CODE", localstationdata.STATION_CODE);
+            intent.putExtra("STATION_NAME", localstationdata.STATION_NAME);
             Global.getCurrentActivity().startActivity(intent);
         }
     }

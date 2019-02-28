@@ -522,7 +522,7 @@ public class SearchActivity extends BaseActivity {
                             DEVICE_LOCATION data = adapter.getItem(position);
                             //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(activity, LocalboxbannerListActivity.class);
-                            intent.putExtra("DEVICE_CODE", Long.parseLong(data.DEVICE_CODE) );
+                            intent.putExtra("DEVICE_CODE", data.DEVICE_CODE );
                             activity.startActivity(intent);
                         }
                     });

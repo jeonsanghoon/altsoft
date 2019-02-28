@@ -137,7 +137,8 @@ public class TabFragment_localbox extends BaseFragment {
                                     selectedData = data;
                                     //Toast.makeText(Global.getCurrentActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(getContext(), LocalboxbannerListActivity.class);
-                                    intent.putExtra("DEVICE_CODE", Long.parseLong(data.DEVICE_CODE) );
+                                    intent.putExtra("DEVICE_CODE", data.DEVICE_CODE );
+                                    intent.putExtra("DEVICE_NAME", data.DEVICE_NAME );
                                     getContext().startActivity(intent);
 
                                 }

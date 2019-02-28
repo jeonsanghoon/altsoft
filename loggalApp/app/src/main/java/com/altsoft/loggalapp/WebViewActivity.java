@@ -16,6 +16,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.module.BaseActivity;
@@ -47,7 +49,13 @@ public class WebViewActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ComponentInit();
-        doQuery();
+        Intent intent = getIntent();
+        T_AD data = (T_AD) intent.getSerializableExtra("T_AD");
+        activity.setTitle(data.TITLE);
+
+        ((TextView)findViewById(R.id.tvTitle)).setText(data.TITLE);
+        doQuery(data);
+
     }
     private void ComponentInit()
     {
@@ -211,10 +219,7 @@ public class WebViewActivity extends BaseActivity {
             }
         });
     }
-    private void doQuery(){
-        Intent intent = getIntent();
-        T_AD data = (T_AD) intent.getSerializableExtra("T_AD");
-        setTitle(data.TITLE);
+    private void doQuery( T_AD data){
         MOBILE_AD_DETAIL_COND Cond = new MOBILE_AD_DETAIL_COND();
         Cond.AD_CODE = data.AD_CODE;
         Cond.USER_ID = Global.getLoginInfo().USER_ID;
