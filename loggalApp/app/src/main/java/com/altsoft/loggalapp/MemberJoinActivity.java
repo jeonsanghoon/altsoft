@@ -71,6 +71,8 @@ public class MemberJoinActivity extends BaseActivity {
     }
     private void ComponentInit()
     {
+        super.appBarInit_titleOnly("회원가입");
+
         Intent intent = getIntent();
         SNS_ID.KAKAO_ID = intent.getStringExtra("KAKAO_ID");
         SNS_ID.GOOGLE_ID = intent.getStringExtra("GOOGLE_ID");

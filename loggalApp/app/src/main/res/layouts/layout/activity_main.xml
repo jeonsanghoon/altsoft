@@ -81,19 +81,9 @@
         android:layout_height="match_parent"
         android:background="#ffffff"
         android:paddingTop="100dp"></android.support.v4.view.ViewPager>
--->
-    <ProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp"
-        android:indeterminate="true"
-        android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/progress" />
 
+-->
+    <include layout="@layout/layoutprogress" />
 </RelativeLayout>
 
 

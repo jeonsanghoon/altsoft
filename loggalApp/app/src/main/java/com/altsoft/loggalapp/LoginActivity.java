@@ -63,7 +63,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.tb_toolbarlogin);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mContext = getApplicationContext();
 
@@ -76,11 +76,10 @@ public class LoginActivity extends BaseActivity {
         getSupportActionBar().setTitle("로그인");
     }
 
-
-
-
     private void ComponentInit()
     {
+        appBarInit( "로그인", true,false);
+
         findViewById(R.id.btnMemberJoin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

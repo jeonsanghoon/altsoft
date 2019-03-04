@@ -85,7 +85,7 @@ public class MyBannerBookMarkList extends BaseActivity {
     }
     private void ComponentInit()
     {
-
+        super.appBarInit_titleOnly("북마크");
     }
     private void GetBookMarkList() {
 

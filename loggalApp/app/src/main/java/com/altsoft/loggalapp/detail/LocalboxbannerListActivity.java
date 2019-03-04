@@ -59,10 +59,9 @@ public class LocalboxbannerListActivity extends BaseActivity {
         adapter = new LocalBoxListItemAdapter();
         activity = this;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Intent intent = getIntent();
+
         ComponentInit();
-        deviceCode =  (Long)intent.getLongExtra("DEVICE_CODE",0);
-        ((TextView)findViewById(R.id.tvTitle)).setText(intent.getStringExtra("DEVICE_NAME"));
+
         this.GetLocalBoxBannerList();
 
     }
@@ -83,6 +82,9 @@ public class LocalboxbannerListActivity extends BaseActivity {
     }
     private void ComponentInit()
     {
+        Intent intent = getIntent();
+        deviceCode =  (Long)intent.getLongExtra("DEVICE_CODE",0);
+        super.appBarInit_titleOnly(intent.getStringExtra("DEVICE_NAME"));
         detailData = new AD_DEVICE_MOBILE_M();
         btnBookmark = (ImageView)findViewById(R.id.btnBookmark);
 
@@ -215,7 +217,7 @@ public class LocalboxbannerListActivity extends BaseActivity {
                 if(detailData == null) return;
                 if(detailData.BOOKMARK_YN)  btnBookmark.setImageResource(R.drawable.ic_baseline_bookmark_24px);
                 else btnBookmark.setImageResource(R.drawable.ic_baseline_bookmark_border_24px);
-                activity.setTitle(detailData.DEVICE_NAME);
+                //activity.setTitle(detailData.DEVICE_NAME);
                 List<AD_DEVICE_MOBILE_LIST> list = detailData.AD_LIST;
 
                 if(bLastPage) {

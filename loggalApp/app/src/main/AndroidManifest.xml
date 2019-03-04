@@ -30,8 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="HardcodedDebugMode">
-        <activity android:name=".UserInfo.MyBannerBookMarkList"></activity>
-        <activity android:name=".FindPasswordActivity" />
+
 
         <meta-data
             android:name="com.kakao.sdk.ClientSecret"
@@ -52,32 +51,45 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".UserInfo.MyBannerBookMarkList"
+                    android:configChanges="orientation|screenSize|keyboardHidden"
+                    android:launchMode="singleTask"></activity>
+        <activity android:name=".FindPasswordActivity"
+                   android:configChanges="orientation|screenSize|keyboardHidden"
+                    android:launchMode="singleTask"/>
         <activity
             android:name=".detail.LocalboxListActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".MemberJoinActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".WebViewActivity"
 
 
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_web_view"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".SignageControlActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".detail.LocalboxbannerListActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".SearchActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"/>
         <activity
 
             android:name=".locationMapActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -89,13 +101,16 @@
         <activity
             android:name=".MapsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:launchMode="singleTask"/>
         <activity
             android:name="com.altsoft.map.kakaoMapActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".LoginActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"/>
     </application>
 
 </manifest>

@@ -20,12 +20,15 @@ import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.loggalapp.R;
 import com.altsoft.model.DEVICE_LOCATION;
 import com.altsoft.model.DEVICE_LOCATION_COND;
+import com.altsoft.model.device.AD_DEVICE_MOBILE_LIST;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
 public class LocalboxListActivity extends BaseActivity  {
     LocalBoxListViewAdapter adapter;
@@ -38,6 +41,9 @@ public class LocalboxListActivity extends BaseActivity  {
     public  List<DEVICE_LOCATION> list;
     Activity activity;
     Integer stationCode;
+
+    View selectedview;
+    DEVICE_LOCATION selectedData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,15 +52,34 @@ public class LocalboxListActivity extends BaseActivity  {
         android.support.v7.widget.Toolbar mToolbar = (android.support.v7.widget.Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.ComponentInit();
 
-        activity = this;
-        Intent intent = getIntent();
-        stationCode = intent.getIntExtra("STATION_CODE",0);
-        adapter = new LocalBoxListViewAdapter();
-        ((TextView)findViewById(R.id.tvTitle)).setText(intent.getStringExtra("STATION_NAME"));
         GetDeviceLocation();
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(selectedview != null)
+        {
+            if(Global.getData().LOCALBOX_BOOKMARK_YN !=null) {
+                selectedData.BOOKMARK_YN = Global.getData().LOCALBOX_BOOKMARK_YN;
+                adapter.setItem(selectedview, selectedData);
+            }
+        }
+        selectedview = null;
+        selectedData = null;
+        Global.getData().LOCALBOX_BOOKMARK_YN = null;
+    }
+    /// 컴포넌트 초기화
+    public void ComponentInit()
+    {
+        activity = this;
 
+        adapter = new LocalBoxListViewAdapter();
+        Intent intent = getIntent();
+        stationCode = intent.getIntExtra("STATION_CODE",0);
+        super.appBarInit_titleOnly(intent.getStringExtra("STATION_NAME"));
+    }
     public void GetDeviceLocation()
     {
         this.GetDeviceLocation(null);
@@ -125,16 +150,15 @@ public class LocalboxListActivity extends BaseActivity  {
                     listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            DEVICE_LOCATION data = adapter.getItem(position);
+                            selectedData = adapter.getItem(position);
+                            selectedview = view;
                             //Toast.makeText(Global.getCurrentActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(activity, LocalboxbannerListActivity.class);
-                            intent.putExtra("DEVICE_CODE", data.DEVICE_CODE );
+                            intent.putExtra("DEVICE_CODE", selectedData.DEVICE_CODE );
+                            intent.putExtra("DEVICE_NAME", selectedData.DEVICE_NAME );
                             activity.startActivity(intent);
-
                         }
                     });
-
-
                 }
 
                 @Override

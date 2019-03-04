@@ -44,6 +44,7 @@
     <string name="hint_name">사용자</string>
     <string name="hint_passwordchange">암호변경</string>
     <string name="login">로그인</string>
+    <string name="loginout">로그아웃</string>
     <string name="register">회원가입</string>
     <string name="tmptomail">임시패스워드 메일발송</string>
     <string name="btn_link_to_register">회원이 아닙니다. 가입하시겠습니까?</string>
@@ -57,7 +58,12 @@
     <string name="tab_localbox">로컬박스</string>
     <string name="tab_localstation">로컬스테이션</string>
     <string name="tab_myinfo">내정보</string>
-
+    <string name="bookmark">북마크</string>
     <string name="title_activity_localbox_list">LocalboxListActivity</string>
+
+    <string name="ftpUserHost">ftp://106.246.255.132:27021/</string>
+    <string name="ftpUserPort">27021/</string>
+    <string name="ftpUserID">ftpfiles</string>
+    <string name="ftpUserPW">altsoft!@34</string>
 </resources>
 

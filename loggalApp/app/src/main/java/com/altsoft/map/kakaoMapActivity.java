@@ -546,19 +546,13 @@ public class kakaoMapActivity extends BaseActivity implements MapView.MapViewEve
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     autoCompleteTextView.dismissDropDown();
-
                     adapter.setSelectedItem(adapter.getObject(position));
-
                     moveMarker(adapter.getObject(position).latitude,adapter.getObject(position).longitude);
-
-
                 }
             });
             autoCompleteTextView.addTextChangedListener(new TextWatcher() {
-
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-
                 }
 
                 @Override

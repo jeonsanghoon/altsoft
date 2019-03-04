@@ -12,8 +12,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.altsoft.Framework.DataInfo.EMail;
@@ -22,6 +24,8 @@ import com.altsoft.Interface.AsyncCallbackOnEventListener;
 import com.altsoft.loggalapp.FindPasswordActivity;
 import com.altsoft.loggalapp.R;
 import com.altsoft.model.MAIL_INFO;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +103,22 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void appBarInit_titleOnly(String title)
+    {
+        appBarInit(title, true,false);
+    }
+    /// AppBar 셋팅
+    public void appBarInit(String title,Boolean bTitle, Boolean bBookmark  )
+    {
+        TextView tvTitle = findViewById(R.id.tvTitle);
+        if(title != null) tvTitle.setText(title);
+
+        if(!(bTitle == null || bTitle == true))
+            tvTitle.setVisibility(View.GONE);
+        if(!(bBookmark == null || bBookmark == true))
+            findViewById(R.id.btnBookmark).setVisibility(View.GONE);
     }
     //endregion
 

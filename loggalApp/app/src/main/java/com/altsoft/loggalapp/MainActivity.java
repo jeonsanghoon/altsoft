@@ -127,7 +127,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                         }
                         break;
                     case 2:
-                        if(!(Global.getData().devicelist == null || Global.getData().devicelist.size() == 0)) {
+                        if(!(Global.getData().stationlist == null || Global.getData().stationlist.size() == 0)) {
                             //intent.putExtra("list2", (ArrayList<DEVICE_LOCATION>) Global.getData().devicelist);
                             intent.putExtra("mapType", "localstation");
                             this.startActivityForResult(intent, enResult.LoglstationRequest.getValue());
@@ -159,12 +159,21 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == enResult.LoginRequest.getValue() )
         if (resultCode == RESULT_OK) {
-            //LoginInfoSet();
-            return;
+            if (requestCode == enResult.BannerRequest.getValue()) {
+                try {
+                    ((TabFragment_Banner) mPagerAdapter.adapterList.get(0)).GetBannerList();
+                }catch(Exception ex){}
+                try {
+                    ((TabFragment_localbox) mPagerAdapter.adapterList.get(1)).GetDeviceLocation();
+                }catch(Exception ex)
+                {}
+            } else if (requestCode == enResult.LoginRequest.getValue()) {
+
+            }
         }
     }
+
 
     // 로그인정보 셋팅
     private void LoginInfoSet()
@@ -201,12 +210,14 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         Global.getCommon().ProgressHide(this);
     }
     private Menu mOptionsMenu;
-    private  void setVisibleMapButton(Boolean isVisible)
+    private  void setVisibleButton(Boolean bSearch, Boolean bMap)
     {
         try {
             if(mOptionsMenu != null) {
+                MenuItem searchitem = mOptionsMenu.findItem(R.id.action_search);
+                searchitem.setVisible(bSearch);
                 MenuItem item = mOptionsMenu.findItem(R.id.action_map_search);
-                item.setVisible(isVisible);
+                item.setVisible(bMap);
             }
         }catch(Exception ex){}
     }
@@ -221,25 +232,29 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         bottomNavigation.setOnSelectedItemChangeListener(new OnSelectedItemChangeListener() {
             @Override
             public void onSelectedItemChanged(int itemId) {
-                setVisibleMapButton(true);
+                setVisibleButton(false, false);
 
                 switch (itemId){
                     case R.id.tab_banner:
                         mViewPager.setCurrentItem(0,false);
+                        setVisibleButton(true, true);
                         break;
                     case R.id.tab_localbox:
                         mViewPager.setCurrentItem(1,false);
+                        setVisibleButton(true, true);
                         break;
                     case R.id.tab_localstation:
                         mViewPager.setCurrentItem(2,false);
+                        setVisibleButton(false, false );
                         break;
                     case R.id.tab_myinfo:
                         mViewPager.setCurrentItem(3,false);
+
                         if(!Global.getLoginInfo().isLogin()) {
                             Intent intent = new Intent(Global.getCurrentActivity(), LoginActivity.class);
                             Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
                         }
-                        setVisibleMapButton(false);
+                        setVisibleButton(false, false );
                         if(Global.getLoginInfo().isLogin()) {
                             LoginInfoSet();
                         }
@@ -305,6 +320,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         mPagerAdapter.addFragment( new TabFragment_localbox());
         mPagerAdapter.addFragment( new TabFragment_localStation());
         mPagerAdapter.addFragment( new TabFragment_Myinfo());
+
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override

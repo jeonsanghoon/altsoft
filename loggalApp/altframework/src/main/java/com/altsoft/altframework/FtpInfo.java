@@ -14,8 +14,9 @@ import java.io.FileOutputStream;
 
 public  class FtpInfo {
     FTPClient ftp;
+
     private final String TAG = "Connect FTP";
-    private static final String Host = "ftp://106.246.255.132:27021/";
+    private static final String Host =  "ftp://106.246.255.132:27021/";
     private static final String USER_ID = "ftpfiles" ;
     private static final String PW = "altsoft!@34";
     private static final Integer Port = 27021;
