@@ -114,7 +114,7 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<LOGIN_DATA> call, Response<LOGIN_DATA> response) {
                         LOGIN_DATA rtn = response.body();
-
+                        Global.getCommon().ProgressHide();
                         if(!rtn.ERROR_MESSAGE.equals("") ){
                             Toast.makeText(
                                     getApplicationContext(),
@@ -129,7 +129,7 @@ public class LoginActivity extends BaseActivity {
                             setResult(RESULT_OK,resultIntent);
                             finish();
                         }
-                        Global.getCommon().ProgressHide();
+
                     }
                     @Override
                     public void onFailure(Call<LOGIN_DATA> call, Throwable t) {
@@ -255,11 +255,12 @@ public class LoginActivity extends BaseActivity {
                 private void LoginExec(final LOGIN_COND Cond) {
 
                     Call<LOGIN_DATA> call = Global.getAPIService().GetMobileLogin(Cond);
+                    Global.getCommon().ProgressShow();
                     call.enqueue(new Callback<LOGIN_DATA>() {
                         @Override
                         public void onResponse(Call<LOGIN_DATA> call, Response<LOGIN_DATA> response) {
                             LOGIN_DATA data = response.body();
-
+                            Global.getCommon().ProgressHide();
                             if(data.ERROR_MESSAGE.equals("")) {
                                 /*아이디로 */
                                 Toast.makeText(
@@ -271,7 +272,7 @@ public class LoginActivity extends BaseActivity {
                                 data.thumnailPath = Cond.thumnailPath;
                                 Global.getLoginInfo().setData(data);
                                 resultIntent.putExtra("result",response.body());
-                                Global.getCurrentActivity().setResult(RESULT_OK,resultIntent);
+                                Global.getCurrentActivity().startActivityForResult(resultIntent, enResult.LoginRequest.getValue());
                                 Global.getCurrentActivity().finish();
                             }
                             else {

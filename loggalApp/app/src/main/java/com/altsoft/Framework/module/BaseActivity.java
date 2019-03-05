@@ -1,12 +1,15 @@
 package com.altsoft.Framework.module;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -121,5 +124,26 @@ public abstract class BaseActivity extends AppCompatActivity {
             findViewById(R.id.btnBookmark).setVisibility(View.GONE);
     }
     //endregion
+    String StorageTag ="ExternalStoragePermission";
+    protected boolean grantExternalStoragePermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(StorageTag,"Permission is granted");
+                return true;
+            }else{
+                Log.v(StorageTag,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+                return false;
+            }
+        }else{
+            Toast.makeText(this, "External Storage Permission is Grant", Toast.LENGTH_SHORT).show();
+            Log.d(StorageTag, "External Storage Permission is Grant ");
+            return true;
+        }
+
+    }
+
 
 }

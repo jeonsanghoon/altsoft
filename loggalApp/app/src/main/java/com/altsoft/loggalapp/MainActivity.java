@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,14 +39,20 @@ import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
 import com.altsoft.loggalapp.Fragement.TabFragment_localStation;
 import com.altsoft.map.kakaoMapActivity;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
 import com.ss.bottomnavigation.events.OnSelectedItemChangeListener;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import gun0912.tedbottompicker.TedBottomPicker;
 
 /**
  *
@@ -70,11 +79,11 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
         Log.d("hashKey",Global.getCommon().getKeyHash(this));
         getSupportActionBar().setTitle("loggal");
+        this.LoginInfoSet();
     }
     @Override
     public void onResume() {
         super.onResume();
-        this.LoginInfoSet();
     }
     private void CheckOnline() {
         if(!Global.getValidityCheck().isOnline())
@@ -159,6 +168,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Global.getCommon().ProgressHide();
         if (resultCode == RESULT_OK) {
             if (requestCode == enResult.BannerRequest.getValue()) {
                 try {
@@ -169,12 +179,89 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                 }catch(Exception ex)
                 {}
             } else if (requestCode == enResult.LoginRequest.getValue()) {
+                LoginInfoSet();
+            }else if(requestCode == enResult.ImagePic.getValue())
+            {
+
 
             }
+
         }
     }
 
+    public void ImagePic()
+    {
+        if(grantExternalStoragePermission()) {
 
+            TedBottomPicker tedBottomPicker = new TedBottomPicker.Builder(MainActivity.this)
+                    .showTitle(false)
+                    .showGalleryTile(false)
+                    .setPreviewMaxCount(300)
+                    .setImageProvider(new TedBottomPicker.ImageProvider() {
+                        @Override
+                        public void onProvideImage(ImageView imageView, Uri imageUri) {
+
+                            RequestOptions options = new RequestOptions().centerCrop();
+                            Glide.with(getBaseContext()).load(imageUri).apply(options).into(imageView);
+                            Log.d("Log", "Uri Log : " + imageUri.toString());
+
+                        }
+                    })
+                    .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                        @Override
+                        public void onImageSelected(Uri uri) {
+                            if(uri == null) return;
+                            Uri imageUri = uri;
+                            InputStream in = null;
+                            try {
+                                in = getContentResolver().openInputStream(imageUri);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            Bitmap img = BitmapFactory.decodeStream(in);
+                            try {
+                                in.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            // 이미지 표시
+                            ImageDraw(img);
+                        }
+                    }) /*.setOnMultiImageSelectedListener(new TedBottomPicker.OnMultiImageSelectedListener() {
+                        @Override
+                        public void onImagesSelected(ArrayList<Uri> uriList) {
+
+
+                        }
+                    })*/.setOnErrorListener(new TedBottomPicker.OnErrorListener(){
+                        @Override
+                        public void onError(String message){
+
+                        }
+                    })
+                    .create();
+
+            tedBottomPicker.show(getSupportFragmentManager());
+/*
+            TedBottomPicker bottomSheetDialogFragment = new TedBottomPicker.Builder(Global.getCurrentActivity())
+                    .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                        @Override
+                        public void onImageSelected(Uri uri) {
+
+                        }
+                    })
+                    .create();
+
+            bottomSheetDialogFragment.show(getSupportFragmentManager());
+*/
+        }
+        else{
+            Toast.makeText(
+                    getApplicationContext(),
+                    "스토리지권한이 없습니다.",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
     // 로그인정보 셋팅
     private void LoginInfoSet()
     {
@@ -184,19 +271,30 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                 if(bottomNavigation.getSelectedItem() == 3) {
                     ((TextView) findViewById(R.id.tvUserName)).setText(Global.getLoginInfo().getData().USER_NAME );
                     ((TextView) findViewById(R.id.tvUserId)).setText(Global.getLoginInfo().getData().USER_ID );
-                    ImageView img_profile = findViewById(R.id.img_profile);
-                    Glide.with(Global.getCurrentActivity())
-                            .load(Global.getLoginInfo().getData().thumnailPath)
-                            .apply(new RequestOptions().override(100, 100))
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(img_profile)
-                    ;
+
+                    ImageDraw(Global.getCommon().getBitmapFromURL(Global.getLoginInfo().getData().thumnailPath));
                     ((Button)findViewById(R.id.btnLogin)).setVisibility(View.GONE);
                     ((Button)findViewById(R.id.btnLogout)).setVisibility(View.VISIBLE);
                 }
             }catch(Exception ex){}
         }
     }
+
+    private void ImageDraw(Bitmap imgUrl)
+    {
+        ImageView img_profile = findViewById(R.id.img_profile);
+        RequestOptions requestOptions  =  new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                //.override(100, 100)
+                .circleCropTransform();
+        Glide.with(Global.getCurrentActivity())
+                .load(imgUrl)
+                .apply(requestOptions)
+                .into(img_profile)
+        ;
+    }
+
 
 
     private void onInitView() {
@@ -241,11 +339,11 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                         break;
                     case R.id.tab_localbox:
                         mViewPager.setCurrentItem(1,false);
-                        setVisibleButton(true, true);
+                        setVisibleButton(true, false);
                         break;
                     case R.id.tab_localstation:
                         mViewPager.setCurrentItem(2,false);
-                        setVisibleButton(false, false );
+                        setVisibleButton(false, true );
                         break;
                     case R.id.tab_myinfo:
                         mViewPager.setCurrentItem(3,false);

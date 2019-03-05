@@ -2,6 +2,8 @@ package com.altsoft.loggalapp.Fragement;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.enResult;
@@ -27,50 +30,70 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
 
+import gun0912.tedbottompicker.TedBottomPicker;
+
+import static android.app.Activity.RESULT_OK;
+
 public class TabFragment_Myinfo extends BaseFragment {
     TextView tvUserId;
     TextView tvUserName;
     LinearLayout layLogined;
     Button btnLogin;
     public View view;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_tab_myinfo,container,false);
-        tvUserId  = ((TextView) view.findViewById(R.id.tvUserId));;
-        tvUserName  = ((TextView) view.findViewById(R.id.tvUserName));;
+        final View view = inflater.inflate(R.layout.fragment_tab_myinfo, container, false);
+        tvUserId = ((TextView) view.findViewById(R.id.tvUserId));
+        ;
+        tvUserName = ((TextView) view.findViewById(R.id.tvUserName));
+        ;
 
         btnLogin = view.findViewById(R.id.btnLogin);
         final Button btnLogout = view.findViewById(R.id.btnLogout);
         layLogined = view.findViewById(R.id.layLogined);
 
-       if(Global.getLoginInfo().isLogin()) {
+        if (Global.getLoginInfo().isLogin()) {
             btnLogin.setVisibility(View.GONE);
-          //  btnLogout.setVisibility(View.VISIBLE);
-           layLogined.setVisibility(View.VISIBLE);
-           tvUserId.setText(Global.getLoginInfo().getData().USER_ID);
-           tvUserName.setText(Global.getLoginInfo().getData().USER_NAME);
+            //  btnLogout.setVisibility(View.VISIBLE);
+            layLogined.setVisibility(View.VISIBLE);
+            tvUserId.setText(Global.getLoginInfo().getData().USER_ID);
+            tvUserName.setText(Global.getLoginInfo().getData().USER_NAME);
 
-           ImageView img_profile = view.findViewById(R.id.img_profile);
-           if(!Global.getValidityCheck().isEmpty(Global.getLoginInfo().getData().thumnailPath)) {
-               Glide.with(Global.getCurrentActivity())
-                       .load(Global.getLoginInfo().getData().thumnailPath)
-                       .apply(new RequestOptions().override(100, 100))
-                       .apply(RequestOptions.circleCropTransform())
-                       .into(img_profile)
-               ;
-           }
+            ImageView img_profile = view.findViewById(R.id.img_profile);
+            if (!Global.getValidityCheck().isEmpty(Global.getLoginInfo().getData().thumnailPath)) {
+                Glide.with(Global.getCurrentActivity())
+                        .load(Global.getLoginInfo().getData().thumnailPath)
+                        .apply(new RequestOptions().override(100, 100))
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(img_profile)
+                ;
+            }
+        } else {
+            btnLogin.setVisibility(View.VISIBLE);
+            layLogined.setVisibility(View.GONE);
         }
-        else {
-           btnLogin.setVisibility(View.VISIBLE);
-           layLogined.setVisibility(View.GONE);
-       }
+
+        view.findViewById(R.id.btnImgPic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)Global.getCurrentActivity()).ImagePic();
+            /*    Intent i = new Intent(
+                        Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                getActivity().startActivityForResult(i, enResult.ImagePic.getValue());*/
+            }
+        });
+
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +108,7 @@ public class TabFragment_Myinfo extends BaseFragment {
                 UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
                     @Override
                     public void onCompleteLogout() {
-                        Log.d("로그아웃","로그아웃되었음");
+                        Log.d("로그아웃", "로그아웃되었음");
 
 
                     }
@@ -121,10 +144,11 @@ public class TabFragment_Myinfo extends BaseFragment {
 
         return view;
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode == enResult.LoginRequest.getValue() ) {
+        if (requestCode == enResult.LoginRequest.getValue()) {
             if (resultCode == -1) {
 
                 return;
@@ -135,7 +159,7 @@ public class TabFragment_Myinfo extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(btnLogin !=null) {
+        if (btnLogin != null) {
             if (Global.getLoginInfo().isLogin()) {
                 btnLogin.setVisibility(View.GONE);
                 //  btnLogout.setVisibility(View.VISIBLE);
