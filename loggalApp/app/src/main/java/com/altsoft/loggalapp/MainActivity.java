@@ -27,10 +27,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.altsoft.Framework.DataInfo.FtpFIleUploadTask;
+import com.altsoft.Framework.FtpInfo;
 import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.map.MapInfo;
+import com.altsoft.Interface.AsyncCallbackOnEventListener;
 import com.altsoft.loggalapp.Fragement.TabFragment_Banner;
 import com.altsoft.loggalapp.Fragement.TabFragment_localbox;
 
@@ -49,7 +52,9 @@ import com.ss.bottomnavigation.events.OnSelectedItemChangeListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import gun0912.tedbottompicker.TedBottomPicker;
@@ -191,7 +196,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
     public void ImagePic()
     {
-        if(grantExternalStoragePermission()) {
+        if(grantExternalStoragePermission() && grantCameraPermission()) {
 
             TedBottomPicker tedBottomPicker = new TedBottomPicker.Builder(MainActivity.this)
                     .showTitle(false)
@@ -207,23 +212,65 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
                         }
                     })
+
                     .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
                         @Override
                         public void onImageSelected(Uri uri) {
                             if(uri == null) return;
                             Uri imageUri = uri;
-                            InputStream in = null;
+
+
+                            String realUrl = Global.getCommon().getRealPath(activity,uri);
+                            String filename=realUrl.substring(realUrl.lastIndexOf("/")+1);
+                            String extension = filename.substring(filename.lastIndexOf("."));
+
+                            String dir = new SimpleDateFormat("yyyyMM").format(new Date());
+                            String newFileName =  new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + extension;
+
+
+                          /*  try {
+                                new FtpInfo().ftpUploadFile(realUrl,filename,dir );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }*/
+
+
+
+                          /**
+                          * 파일업로드
+                          * @author 전상훈
+                          * @version 1.0.0
+                          * @since 2019-03-06 오후 6:12
+                          **/
+                             new FtpFIleUploadTask(new AsyncCallbackOnEventListener<String>() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    //Toast.makeText(getApplicationContext(), editMail.getText().toString() + "로 임시 비밀번호가 방송되었습니다.", Toast.LENGTH_LONG).show();
+                                    Global.getCommon().ProgressHide();
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Toast.makeText(getApplicationContext(), "ERROR: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    Global.getCommon().ProgressHide();
+                                }
+                            }).execute(realUrl,newFileName,dir);;
+
+                            /*InputStream in = null;
                             try {
                                 in = getContentResolver().openInputStream(imageUri);
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
                             Bitmap img = BitmapFactory.decodeStream(in);
-                            try {
+                             try {
                                 in.close();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+                            */
+                            Bitmap img = Global.getCommon().getBitmapRotate(realUrl);
+
                             // 이미지 표시
                             ImageDraw(img);
                         }
@@ -282,6 +329,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
     private void ImageDraw(Bitmap imgUrl)
     {
+
         ImageView img_profile = findViewById(R.id.img_profile);
         RequestOptions requestOptions  =  new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)

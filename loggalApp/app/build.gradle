@@ -82,6 +82,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.jcraft:jsch:0.1.55'
 
     implementation 'gun0912.ted:tedbottompicker:1.1.0'
     // 카카오톡 SDK 추가

@@ -145,5 +145,26 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
+    String CameraTag ="CameraPermission";
+    protected boolean grantCameraPermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+
+            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(CameraTag,"Permission is granted CAMERA");
+                return true;
+            }else{
+                Log.v(CameraTag,"Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+
+                return false;
+            }
+        }else{
+            Toast.makeText(this, "Camera Permission is Grant", Toast.LENGTH_SHORT).show();
+            Log.d(CameraTag, "Camera Permission is Grant ");
+            return true;
+        }
+
+    }
+
 
 }

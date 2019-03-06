@@ -10,8 +10,15 @@ import com.groupbyinc.common.apache.commons.net.ftp.FTPReply;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
 
-
+/**
+*
+* @author 전상훈
+* @version 1.0.0
+* @since 2019-03-06 오전 10:15
+**/
 public  class FtpInfo {
     FTPClient ftp;
 
@@ -31,8 +38,12 @@ public  class FtpInfo {
         ftp = new FTPClient();
         ftpConnect(host,user,pwd,port);
     }
-    ///
-    // FTP 서버와 연결
+    /**
+    * FTP 서버와 연결
+    * @author 전상훈
+    * @version 1.0.0
+    * @since 2019-03-06 오전 10:18
+    **/
     public boolean ftpConnect(String host, String username, String pwd, int port) {
         boolean result = false;
         try{
@@ -117,6 +128,19 @@ public  class FtpInfo {
         return result;
     }
 
+    public boolean isDirectory(String directory){
+        try {
+            if(ftp.cwd(directory)==550){
+                return false;
+            }else if(ftp.cwd(directory)==250){
+                return true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean ftpDeleteDirectory(String directory) {
         boolean result = false;
         try {
@@ -138,7 +162,13 @@ public  class FtpInfo {
         return result;
     }
 
-    ///파일 이름 변경
+
+    /**
+    * 파일 이름 변경
+    * @author 전상훈
+    * @version 1.0.0
+    * @since
+    **/
     public boolean ftpRenameFile(String from, String to) {
         boolean result = false;
         try {
@@ -149,6 +179,15 @@ public  class FtpInfo {
         return result;
     }
 
+    /**
+     * 파일존재 유무 확인
+     */
+    public boolean isFile(String fileName) throws IOException
+    {
+        String[] files = ftp.listNames();
+
+        return Arrays.asList(files).contains(fileName);
+    }
     //// 파일 다운로드
     public boolean ftpDownloadFile(String srcFilePath, String desFilePath) {
         boolean result = false;

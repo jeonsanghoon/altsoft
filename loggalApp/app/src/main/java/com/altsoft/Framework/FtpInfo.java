@@ -1,45 +1,78 @@
 package com.altsoft.Framework;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.groupbyinc.common.apache.commons.net.ftp.FTP;
 import com.groupbyinc.common.apache.commons.net.ftp.FTPClient;
 import com.groupbyinc.common.apache.commons.net.ftp.FTPFile;
 import com.groupbyinc.common.apache.commons.net.ftp.FTPReply;
+import com.groupbyinc.common.apache.commons.net.ftp.FTPSClient;
+import com.groupbyinc.common.apache.commons.net.util.TrustManagerUtils;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
 
-public  class FtpInfo {
-    FTPClient ftp;
+import javax.net.ssl.SSLContext;
+
+/**
+ * FTP 업로드
+ *
+ * @author 전상훈
+ * @version 1.0.0
+ * @since 2019-03-06 오전 11:27
+ **/
+
+public class FtpInfo {
+    public FTPSClient ftp;
     private final String TAG = "Connect FTP";
-    private static final String Host = "ftp://106.246.255.132:27021/";
-    private static final String USER_ID = "ftpfiles" ;
-    private static final String PW = "altsoft!@34";
-    private static final Integer Port = 27021;
+    private static  String Host = "106.246.255.132";
+    private static  String USER_ID = "ftpfiles";
+    private static  String PW = "altsoft!@34";
+    private static  Integer Port = 27021;
 
-    public FtpInfo() throws Exception
-    {
-        ftpConnect(Host,USER_ID,PW,Port);
+    public FtpInfo() throws Exception {
+
     }
 
-    public FtpInfo(String host, String user, String pwd,int port  ) throws Exception
-    {
-        ftp = new FTPClient();
-        ftpConnect(host,user,pwd,port);
+    public FtpInfo(String host, String userid, String pwd, int port) throws Exception {
+
+        if(ftp == null) ftp = new FTPSClient("TLS", false);
+
+        Host = host;
+        USER_ID = userid;
+        PW = pwd;
+        Port = port;
+       // ftpConnect(host, user, pwd, port);
     }
+
     ///
     // FTP 서버와 연결
-    public boolean ftpConnect(String host, String username, String pwd, int port) {
+    public boolean ftpConnect(String host, String userid, String pwd, int port) {
+
+        //System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+
         boolean result = false;
-        try{
+        try {
+            if (ftp == null) ftp = new FTPSClient("TLS", false);
+            ftp.setTrustManager(TrustManagerUtils.getAcceptAllTrustManager());
             ftp.connect(host, port);
 
-            if(FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                result = ftp.login(username, pwd);
+            if (FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
+                result = ftp.login(userid, pwd);
+                ftp.setControlEncoding("UTF-8");
+                ftp.setFileType(FTP.BINARY_FILE_TYPE);
+                ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);
                 ftp.enterLocalPassiveMode();
+                if (ftp.getReplyCode() == 230) {
+                    ftp.sendCommand("OPTS UTF8 ON");
+                    ftp.execPBSZ(0);
+                    ftp.execPROT("P");
+                }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d(TAG, "Couldn't connect to host");
         }
         return result;
@@ -59,11 +92,11 @@ public  class FtpInfo {
     }
 
     ///현재 작업 경로 가져오기
-    public String ftpGetDirectory(){
+    public String ftpGetDirectory() {
         String directory = null;
-        try{
+        try {
             directory = ftp.printWorkingDirectory();
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.d(TAG, "Couldn't get current directory");
         }
         return directory;
@@ -71,11 +104,11 @@ public  class FtpInfo {
 
     /// 작업 경로 수정
     public boolean ftpChangeDirctory(String directory) {
-        try{
+        try {
             ftp.changeWorkingDirectory(directory);
-            ftp.changeWorkingDirectory(directory);
+
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.d(TAG, "Couldn't change the directory");
         }
         return false;
@@ -88,7 +121,7 @@ public  class FtpInfo {
         try {
             FTPFile[] ftpFiles = ftp.listFiles(directory);
             fileList = new String[ftpFiles.length];
-            for(FTPFile file : ftpFiles) {
+            for (FTPFile file : ftpFiles) {
                 String fileName = file.getName();
                 if (file.isFile()) {
                     fileList[i] = "(File) " + fileName;
@@ -107,8 +140,8 @@ public  class FtpInfo {
     public boolean ftpCreateDirectory(String directory) {
         boolean result = false;
         try {
-            result =  ftp.makeDirectory(directory);
-        } catch (Exception e){
+            result = ftp.makeDirectory(directory);
+        } catch (Exception e) {
             Log.d(TAG, "Couldn't make the directory");
         }
         return result;
@@ -127,7 +160,7 @@ public  class FtpInfo {
     ///파일 삭제
     public boolean ftpDeleteFile(String file) {
         boolean result = false;
-        try{
+        try {
             result = ftp.deleteFile(file);
         } catch (Exception e) {
             Log.d(TAG, "Couldn't remove the file");
@@ -149,31 +182,73 @@ public  class FtpInfo {
     //// 파일 다운로드
     public boolean ftpDownloadFile(String srcFilePath, String desFilePath) {
         boolean result = false;
-        try{
+        try {
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);
 
             FileOutputStream fos = new FileOutputStream(desFilePath);
             result = ftp.retrieveFile(srcFilePath, fos);
             fos.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.d(TAG, "Download failed");
         }
         return result;
     }
 
+    /**
+     * 폴더존재 유무 확인
+     *
+     * @author 전상훈
+     * @version 1.0.0
+     * @since 2019-03-06 오후 1:56
+     **/
+    public boolean isDirectory(String directory) {
+        try {
+            if (ftp.cwd(directory) == 550) {
+                return false;
+            } else if (ftp.cwd(directory) == 250) {
+                return true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 파일존재 유무 확인
+     */
+    public boolean isFile(String fileName) throws IOException {
+        String[] files = ftp.listNames();
+
+        return Arrays.asList(files).contains(fileName);
+    }
+
     /// FTP 서버에 파일 업로드
     public boolean ftpUploadFile(String srcFilePath, String desFileName, String desDirectory) {
+        ftpConnect(Host, USER_ID, PW, Port);
         boolean result = false;
+        if(desDirectory.indexOf("/")< 0) desDirectory = "/"+ desDirectory;
         try {
             FileInputStream fis = new FileInputStream(srcFilePath);
-            if(ftpChangeDirctory(desDirectory)) {
-                result = ftp.storeFile(desFileName, fis);
+
+            if (!isDirectory(desDirectory)) ftpCreateDirectory(desDirectory);
+
+            if (ftpChangeDirctory(desDirectory)) {
+                ftp.setUseEPSVwithIPv4(true);
+                if(ftp.storeFile(desDirectory + "/" + desFileName, fis)){
+                    result = true;
+                }
             }
             fis.close();
-        } catch(Exception e){
+
+
+        } catch (Exception e) {
             Log.d(TAG, "Couldn't upload the file");
         }
+        ftpDisconnect();
         return result;
     }
+
+
 }
