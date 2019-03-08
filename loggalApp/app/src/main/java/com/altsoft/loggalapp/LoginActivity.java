@@ -122,7 +122,7 @@ public class LoginActivity extends BaseActivity {
                                     Toast.LENGTH_LONG).show();
                         }
                         else {
-                            Global.getLoginInfo().setData(response.body());
+                            Global.getLoginInfo().setData(rtn);
 
                             Intent resultIntent = new Intent();
                             resultIntent.putExtra("result",rtn);
@@ -269,10 +269,13 @@ public class LoginActivity extends BaseActivity {
                                         Toast.LENGTH_LONG).show();
                                 Intent resultIntent = new Intent();
                                 data.profileImagePath = Cond.profileImagePath;
-                                data.thumnailPath = Cond.thumnailPath;
+                                if(Global.getValidityCheck().isEmpty(data.thumnailPath)) data.thumnailPath = Cond.thumnailPath;
+                                if(data.thumnailPath != null) Global.getLoginInfo().getData().thumnailPath = data.thumnailPath;
+                                //Global.getLoginInfo().getData().thumnailPath
                                 Global.getLoginInfo().setData(data);
                                 resultIntent.putExtra("result",response.body());
-                                Global.getCurrentActivity().startActivityForResult(resultIntent, enResult.LoginRequest.getValue());
+                                Global.getCurrentActivity().setResult(enResult.LoginRequest.getValue() );
+
                                 Global.getCurrentActivity().finish();
                             }
                             else {

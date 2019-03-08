@@ -65,5 +65,7 @@
     <string name="ftpUserPort">27021/</string>
     <string name="ftpUserID">ftpfiles</string>
     <string name="ftpUserPW">altsoft!@34</string>
+
+    <string name="filehost">https://altsoft.ze.am/files/</string>
 </resources>
 

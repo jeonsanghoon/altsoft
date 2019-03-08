@@ -23,7 +23,7 @@ import android.widget.VideoView;
 
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
-import com.altsoft.asynctask.FtpUploadAsyncTask;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -255,8 +255,8 @@ public class SignageControlActivity extends BaseActivity {
     /// 저장버튼클릭시  이벤트
     public void btnSave_onClick(View v) {
 
-        FtpUploadAsyncTask upload = new FtpUploadAsyncTask(this);
-        upload.execute(filePath);
+       // FtpFIleUploadTask upload = new FtpFIleUploadTask(this);
+       // upload.execute(filePath);
 
     }
     @Override

@@ -2,11 +2,9 @@ package com.altsoft.loggalapp;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,13 +25,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.altsoft.Framework.DataInfo.FtpFIleUploadTask;
-import com.altsoft.Framework.FtpInfo;
 import com.altsoft.Framework.enResult;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.map.MapInfo;
 import com.altsoft.Interface.AsyncCallbackOnEventListener;
+import com.altsoft.Interface.ServiceInfo;
+import com.altsoft.asynctask.FtpFileUploadTask;
 import com.altsoft.loggalapp.Fragement.TabFragment_Banner;
 import com.altsoft.loggalapp.Fragement.TabFragment_localbox;
 
@@ -41,6 +39,8 @@ import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
 
 import com.altsoft.loggalapp.Fragement.TabFragment_localStation;
 import com.altsoft.map.kakaoMapActivity;
+import com.altsoft.model.RTN_SAVE_DATA;
+import com.altsoft.model.common.T_FILE;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -49,15 +49,12 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
 import com.ss.bottomnavigation.events.OnSelectedItemChangeListener;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import gun0912.tedbottompicker.TedBottomPicker;
+import retrofit2.Call;
 
 /**
  *
@@ -89,6 +86,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     @Override
     public void onResume() {
         super.onResume();
+
     }
     private void CheckOnline() {
         if(!Global.getValidityCheck().isOnline())
@@ -192,6 +190,9 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
             }
 
         }
+        else if(resultCode == enResult.LoginRequest.getValue()) {
+            LoginInfoSet();
+        }
     }
 
     public void ImagePic()
@@ -207,6 +208,8 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                         public void onProvideImage(ImageView imageView, Uri imageUri) {
 
                             RequestOptions options = new RequestOptions().centerCrop();
+                            options.diskCacheStrategy(DiskCacheStrategy.NONE);
+                            options.skipMemoryCache(true);
                             Glide.with(getBaseContext()).load(imageUri).apply(options).into(imageView);
                             Log.d("Log", "Uri Log : " + imageUri.toString());
 
@@ -220,12 +223,12 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                             Uri imageUri = uri;
 
 
-                            String realUrl = Global.getCommon().getRealPath(activity,uri);
-                            String filename=realUrl.substring(realUrl.lastIndexOf("/")+1);
-                            String extension = filename.substring(filename.lastIndexOf("."));
+                            final String realUrl = Global.getCommon().getRealPath(activity,uri);
+                            final String filename=realUrl.substring(realUrl.lastIndexOf("/")+1);
+                            final String extension = filename.substring(filename.lastIndexOf("."));
 
-                            String dir = new SimpleDateFormat("yyyyMM").format(new Date());
-                            String newFileName =  new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + extension;
+                            final String dir = new SimpleDateFormat("yyyyMM").format(new Date());
+                            final String newFileName =  new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + extension;
 
 
                           /*  try {
@@ -242,10 +245,39 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                           * @version 1.0.0
                           * @since 2019-03-06 오후 6:12
                           **/
-                             new FtpFIleUploadTask(new AsyncCallbackOnEventListener<String>() {
+                          Global.getCommon().ProgressShow();
+                             new FtpFileUploadTask(new AsyncCallbackOnEventListener<String>() {
                                 @Override
                                 public void onSuccess(String result) {
                                     //Toast.makeText(getApplicationContext(), editMail.getText().toString() + "로 임시 비밀번호가 방송되었습니다.", Toast.LENGTH_LONG).show();
+                                    final String linkurl =  Global.getResourceInfo().getFileHost() +  dir + "/" + newFileName;
+                                    T_FILE file = new T_FILE("U", "T_MEMBER",  Integer.toString(Global.getLoginInfo().MEMBER_CODE), 1, 1, filename, extension, linkurl,"1","회원썸네일" );
+                                    Call<RTN_SAVE_DATA> call = Global.getAPIService().FileSave(file);
+                                    Global.getCallService().callService(call
+                                            , new ServiceInfo.Act<RTN_SAVE_DATA>() {
+                                                @Override
+                                                public void execute(RTN_SAVE_DATA rtn) {
+                                                    if(Global.getValidityCheck().isEmpty(rtn.ERROR_MESSAGE)) {
+                                                        Bitmap img = Global.getCommon().getBitmapRotate(realUrl);
+                                                        // 이미지 표시
+                                                        Global.getEditInfo().SetCirImageBmp( (ImageView)findViewById(R.id.img_profile), img);
+                                                        Global.getLoginInfo().setThumnailPath(linkurl);
+                                                    }
+                                                    else{
+                                                        Toast.makeText(
+                                                                getApplicationContext(),
+                                                                rtn.ERROR_MESSAGE,
+                                                                Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            },
+                                            new ServiceInfo.Act<Throwable>() {
+                                                @Override
+                                                public void execute(Throwable data) {
+                                                    //TODO: Do something!
+                                                }
+                                            }
+                                    );
                                     Global.getCommon().ProgressHide();
                                 }
 
@@ -269,10 +301,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                                 e.printStackTrace();
                             }
                             */
-                            Bitmap img = Global.getCommon().getBitmapRotate(realUrl);
 
-                            // 이미지 표시
-                            ImageDraw(img);
                         }
                     }) /*.setOnMultiImageSelectedListener(new TedBottomPicker.OnMultiImageSelectedListener() {
                         @Override
@@ -310,7 +339,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         }
     }
     // 로그인정보 셋팅
-    private void LoginInfoSet()
+    public void LoginInfoSet()
     {
         if(Global.getLoginInfo().isLogin()) {
             try {
@@ -319,31 +348,17 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                     ((TextView) findViewById(R.id.tvUserName)).setText(Global.getLoginInfo().getData().USER_NAME );
                     ((TextView) findViewById(R.id.tvUserId)).setText(Global.getLoginInfo().getData().USER_ID );
 
-                    ImageDraw(Global.getCommon().getBitmapFromURL(Global.getLoginInfo().getData().thumnailPath));
+
                     ((Button)findViewById(R.id.btnLogin)).setVisibility(View.GONE);
                     ((Button)findViewById(R.id.btnLogout)).setVisibility(View.VISIBLE);
                 }
             }catch(Exception ex){}
         }
+        Global.getCommon().ProgressHide();
+        try {
+            Global.getEditInfo().SetCirImage((ImageView) findViewById(R.id.img_profile), Global.getLoginInfo().getData().getThumnailPath());
+        }catch(Exception ex){}
     }
-
-    private void ImageDraw(Bitmap imgUrl)
-    {
-
-        ImageView img_profile = findViewById(R.id.img_profile);
-        RequestOptions requestOptions  =  new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                //.override(100, 100)
-                .circleCropTransform();
-        Glide.with(Global.getCurrentActivity())
-                .load(imgUrl)
-                .apply(requestOptions)
-                .into(img_profile)
-        ;
-    }
-
-
 
     private void onInitView() {
 

@@ -16,14 +16,29 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 public class LOGIN_DATA implements Serializable {
     public String ERROR_MESSAGE;
+    public int MEMBER_CODE;
     public String USER_ID;
     public String PASSWORD;
     public String USER_NAME;
     public String profileImagePath;
+
+    public void setThumnailPath(String thumnailPath) {
+        Global.getSaveSharedPreference().setData(MainActivity.activity, "thumnailPath",thumnailPath);
+        this.thumnailPath = thumnailPath;
+    }
+
+    public String getThumnailPath() {
+        if(Global.getValidityCheck().isEmpty(thumnailPath)) thumnailPath = "";
+        return thumnailPath;
+    }
+
     public String thumnailPath;
     public LOGIN_DATA()
     {
         try {
+            if(!Global.getValidityCheck().isEmpty(Global.getSaveSharedPreference().getData(MainActivity.activity, "MEMBER_CODE"))) {
+                MEMBER_CODE = Integer.parseInt(Global.getSaveSharedPreference().getData(MainActivity.activity, "MEMBER_CODE"));
+            }else MEMBER_CODE = 0;
             USER_ID = Global.getSaveSharedPreference().getData(MainActivity.activity, "USER_ID");
             PASSWORD = Global.getSaveSharedPreference().getData(MainActivity.activity, "PASSWORD");
             USER_NAME = Global.getSaveSharedPreference().getData(MainActivity.activity, "USER_NAME");
@@ -44,6 +59,7 @@ public class LOGIN_DATA implements Serializable {
          LOGIN_DATA rtn = new LOGIN_DATA();
          try {
              rtn.USER_ID = Global.getSaveSharedPreference().getData(MainActivity.activity, "USER_ID");
+             rtn.MEMBER_CODE = Integer.parseInt(Global.getSaveSharedPreference().getData(MainActivity.activity, "MEMBER_CODE"));
              if (Global.getValidityCheck().isEmpty(rtn.USER_ID)) {
                  throw new Exception("");
              }
@@ -53,18 +69,20 @@ public class LOGIN_DATA implements Serializable {
              rtn.thumnailPath = Global.getSaveSharedPreference().getData(MainActivity.activity, "thumnailPath");
              return rtn;
          } catch (Exception ex) {
-             return null;
+             return rtn;
          }
     }
 
     public LOGIN_DATA setData(LOGIN_DATA data)
     {
         if(data == null){Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_ID", null);
+            Global.getSaveSharedPreference().setData(MainActivity.activity, "MEMBER_CODE", "0");
             Global.getSaveSharedPreference().setData(MainActivity.activity, "PASSWORD", null);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_NAME", null);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "profileImagePath", null);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "thumnailPath", null);
             ERROR_MESSAGE = "";
+            MEMBER_CODE =0;
             USER_ID = null;
             PASSWORD = null;
             USER_NAME = null;
@@ -72,12 +90,14 @@ public class LOGIN_DATA implements Serializable {
             thumnailPath = null;
         }
         else {
+            Global.getSaveSharedPreference().setData(MainActivity.activity, "MEMBER_CODE", Integer.toString(data.MEMBER_CODE));
             Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_ID", data.USER_ID);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "PASSWORD", data.PASSWORD);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "USER_NAME", data.USER_NAME);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "profileImagePath", data.profileImagePath);
             Global.getSaveSharedPreference().setData(MainActivity.activity, "thumnailPath", data.thumnailPath);
             ERROR_MESSAGE = "";
+            MEMBER_CODE = data.MEMBER_CODE;
             USER_ID = data.USER_ID;
             PASSWORD = data.PASSWORD;
             USER_NAME = data.USER_NAME;

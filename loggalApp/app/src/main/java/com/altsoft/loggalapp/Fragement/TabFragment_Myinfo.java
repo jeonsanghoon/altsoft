@@ -25,6 +25,7 @@ import com.altsoft.loggalapp.MainActivity;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.UserInfo.MyBannerBookMarkList;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
@@ -40,7 +41,7 @@ public class TabFragment_Myinfo extends BaseFragment {
     LinearLayout layLogined;
     Button btnLogin;
     public View view;
-
+    ImageView img_profile;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,14 +55,16 @@ public class TabFragment_Myinfo extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_tab_myinfo, container, false);
         tvUserId = ((TextView) view.findViewById(R.id.tvUserId));
-        ;
         tvUserName = ((TextView) view.findViewById(R.id.tvUserName));
-        ;
-
         btnLogin = view.findViewById(R.id.btnLogin);
         final Button btnLogout = view.findViewById(R.id.btnLogout);
         layLogined = view.findViewById(R.id.layLogined);
-
+        img_profile = view.findViewById(R.id.img_profile);
+        final RequestOptions requestOptions  =  new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .override(100, 100)
+                .circleCropTransform();
         if (Global.getLoginInfo().isLogin()) {
             btnLogin.setVisibility(View.GONE);
             //  btnLogout.setVisibility(View.VISIBLE);
@@ -69,15 +72,9 @@ public class TabFragment_Myinfo extends BaseFragment {
             tvUserId.setText(Global.getLoginInfo().getData().USER_ID);
             tvUserName.setText(Global.getLoginInfo().getData().USER_NAME);
 
-            ImageView img_profile = view.findViewById(R.id.img_profile);
-            if (!Global.getValidityCheck().isEmpty(Global.getLoginInfo().getData().thumnailPath)) {
-                Glide.with(Global.getCurrentActivity())
-                        .load(Global.getLoginInfo().getData().thumnailPath)
-                        .apply(new RequestOptions().override(100, 100))
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(img_profile)
-                ;
-            }
+
+
+            Global.getEditInfo().SetCirImage(img_profile, Global.getLoginInfo().getData().thumnailPath);
         } else {
             btnLogin.setVisibility(View.VISIBLE);
             layLogined.setVisibility(View.GONE);
@@ -118,11 +115,8 @@ public class TabFragment_Myinfo extends BaseFragment {
                 tvUserName.setText("");
                 bottomNavigation.getTabItems().get(3).setText("내정보");
                 ImageView img_profile = view.findViewById(R.id.img_profile);
-                Glide.with(Global.getCurrentActivity())
-                        .load("")
-                        .apply(new RequestOptions().override(100, 100))
-                        .into(img_profile)
-                ;
+
+                Global.getEditInfo().SetCirImage(img_profile, null);
                 Global.getLoginInfo().setData(null);
                 Toast.makeText(
                         Global.getCurrentActivity(),
@@ -141,7 +135,12 @@ public class TabFragment_Myinfo extends BaseFragment {
                 Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
             }
         });
-
+        view.findViewById(R.id.btnImgLoad).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Global.getEditInfo().SetCirImage(img_profile, Global.getLoginInfo().getThumnailPath());
+            }
+        });
         return view;
     }
 
@@ -170,5 +169,6 @@ public class TabFragment_Myinfo extends BaseFragment {
                 layLogined.setVisibility(View.GONE);
             }
         }
+      //  if(view != null) view.findViewById(R.id.btnImgLoad).performClick();
     }
 }

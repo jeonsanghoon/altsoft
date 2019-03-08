@@ -9,4 +9,6 @@ public class ResourceInfo {
     public String getkakaoRestkey(){  return Global.getCurrentActivity().getString(R.string.kakaoRestkey);};
     public String getkakaoJavascriptkey(){    return Global.getCurrentActivity().getString(R.string.kakaoJavascriptkey);};
     public String getkakaoAdminkey(){    return Global.getCurrentActivity().getString(R.string.kakaoAdminkey); };
+
+    public String getFileHost(){    return Global.getCurrentActivity().getString(R.string.filehost); };
 }

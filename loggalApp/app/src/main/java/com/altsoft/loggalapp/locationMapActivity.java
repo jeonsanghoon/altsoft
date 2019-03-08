@@ -33,6 +33,7 @@ import com.altsoft.Adapter.SearchAdapter;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.control.altAutoCmpleateTextView;
 import com.altsoft.Framework.module.BaseActivity;
+import com.altsoft.Interface.ServiceInfo;
 import com.altsoft.model.keyword.CODE_DATA;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -235,7 +236,9 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
         List<Address> addressList = null;
         try {
 
-            if(geocoder == null) {geocoder = new Geocoder(this, Locale.getDefault());}
+            if (geocoder == null) {
+                geocoder = new Geocoder(this, Locale.getDefault());
+            }
             // editText에 입력한 텍스트(주소, 지역, 장소 등)을 지오 코딩을 이용해 변환
             addressList = geocoder.getFromLocationName(
                     str, // 주소
@@ -246,8 +249,8 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
 
         System.out.println(addressList.get(0).toString());
         // 콤마를 기준으로 split
-        String []splitStr = addressList.get(0).toString().split(",");
-        String address = splitStr[0].substring(splitStr[0].indexOf("\"") + 1,splitStr[0].length() - 2); // 주소
+        String[] splitStr = addressList.get(0).toString().split(",");
+        String address = splitStr[0].substring(splitStr[0].indexOf("\"") + 1, splitStr[0].length() - 2); // 주소
         System.out.println(address);
 
         String latitude = splitStr[10].substring(splitStr[10].indexOf("=") + 1); // 위도
@@ -318,8 +321,6 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
         Log.d(TAG, "onMapReady :");
 
 
-
-
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에
         //지도의 초기위치를 서울로 이동
 
@@ -381,44 +382,47 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
 
         JSONObject obj = new JSONObject();
         Call<JsonObject> call = Global.getKakaoMapAPIService().GetLatiLongiToAddress(lati, longi);
+        Global.getCallService().callService(call, new ServiceInfo.Act<JsonObject>() {
+                    @Override
+                    public void execute(JsonObject data) {
+                        if (currentMarker != null) currentMarker.remove();
+                        Log.d(TAG, "onMapClick :");
+                        MarkerOptions mOptions = new MarkerOptions();
+                        /*https://developers.kakao.com/docs/restapi/local#%EC%A3%BC%EC%86%8C-%EB%B3%80%ED%99%98*/
+                        String title = "";
+                        try {
+                            if (!data.get("documents").getAsJsonArray().get(0).getAsJsonObject().get("road_address").isJsonNull())
+                                title = data.get("documents").getAsJsonArray().get(0).getAsJsonObject().get("road_address").getAsJsonObject().get("address_name").getAsString();
+                            else
+                                title = data.get("documents").getAsJsonArray().get(0).getAsJsonObject().get("address").getAsJsonObject().get("address_name").getAsString();
+                        } catch (Exception ex) {
+                            title = data.get("documents").getAsJsonArray().get(0).getAsJsonObject().get("address").getAsJsonObject().get("address_name").getAsString();
+                        }
 
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (currentMarker != null) currentMarker.remove();
-                Log.d(TAG, "onMapClick :");
-                MarkerOptions mOptions = new MarkerOptions();
-                /*https://developers.kakao.com/docs/restapi/local#%EC%A3%BC%EC%86%8C-%EB%B3%80%ED%99%98*/
-                String title = "";
-                try {
-                    if(!response.body().get("documents").getAsJsonArray().get(0).getAsJsonObject().get("road_address").isJsonNull())
-                        title  =response.body().get("documents").getAsJsonArray().get(0).getAsJsonObject().get("road_address").getAsJsonObject().get("address_name").getAsString();
-                    else
-                        title  =response.body().get("documents").getAsJsonArray().get(0).getAsJsonObject().get("address").getAsJsonObject().get("address_name").getAsString();
-                }catch(Exception ex) {
-                    title  =response.body().get("documents").getAsJsonArray().get(0).getAsJsonObject().get("address").getAsJsonObject().get("address_name").getAsString();
+                        mOptions.title(title);
+                        Double latitude = _latLng.latitude; // 위도
+                        Double longitude = _latLng.longitude; // 경도
+
+                        // 마커의 스니펫(간단한 텍스트) 설정
+                        mOptions.snippet(latitude.toString() + ", " + longitude.toString());
+                        // LatLng: 위도 경도 쌍을 나타냄
+                        mOptions.position(new LatLng(latitude, longitude));
+                        // 마커(핀) 추가
+                        currentMarker = mMap.addMarker(mOptions);
+                        // 해당 좌표로 화면 줌
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mOptions.getPosition(), 15));
+                    }
+                },
+                new ServiceInfo.Act<Throwable>() {
+                    @Override
+                    public void execute(Throwable data) {
+                        //TODO: Do something!
+                    }
                 }
+        );
 
-                mOptions.title(title);
-                Double latitude = _latLng.latitude; // 위도
-                Double longitude = _latLng.longitude; // 경도
-
-                // 마커의 스니펫(간단한 텍스트) 설정
-                mOptions.snippet(latitude.toString() + ", " + longitude.toString());
-                // LatLng: 위도 경도 쌍을 나타냄
-                mOptions.position(new LatLng(latitude, longitude));
-                // 마커(핀) 추가
-                currentMarker = mMap.addMarker(mOptions);
-                // 해당 좌표로 화면 줌
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mOptions.getPosition(),15));
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-            }
-        });
     }
+
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
@@ -532,8 +536,6 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
     }
 
 
-
-
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -542,13 +544,10 @@ public class locationMapActivity extends BaseActivity implements OnMapReadyCallb
     }
 
 
-
-
-
     public void setDefaultLocation() {
 
         mMoveMapByUser = false;
-        SetMarker(Global.getMapInfo().latitude,Global.getMapInfo().longitude );
+        SetMarker(Global.getMapInfo().latitude, Global.getMapInfo().longitude);
     }
 
 

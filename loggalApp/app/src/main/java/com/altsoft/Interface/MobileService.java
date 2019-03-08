@@ -17,6 +17,7 @@ import com.altsoft.model.UserInfo.T_MEMBER_PASSWROD_CHANGE;
 import com.altsoft.model.UserInfo.T_MEMBER_SNS_UPDATE;
 import com.altsoft.model.category.CATEGORY_COND;
 import com.altsoft.model.category.CATEGORY_LIST;
+import com.altsoft.model.common.T_FILE;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_COND;
 import com.altsoft.model.device.AD_DEVICE_MOBILE_M;
 import com.altsoft.model.device.T_DEVICE_STATION;
@@ -77,5 +78,12 @@ public interface MobileService {
 
     @POST("/api/loggalBox/GetDeviceStationMapList")
     Call<List<T_DEVICE_STATION>> GetDeviceStationMapList(@Body T_DEVICE_STATION_COND Cond);
+
+
+    @POST("/api/loggalBox/GetFileList")
+    Call<List<T_FILE>> GetFileList(@Body T_DEVICE_STATION_COND Cond);
+
+    @POST("/api/common/FileSave")
+    Call<RTN_SAVE_DATA> FileSave(@Body T_FILE Cond);
 }
 

@@ -3,6 +3,7 @@ package com.altsoft.Framework;
 import android.app.Activity;
 
 import com.altsoft.Framework.DataInfo.EMail;
+import com.altsoft.Framework.Editor.EditInfo;
 import com.altsoft.model.UserInfo.DataList;
 import com.altsoft.Framework.DataInfo.DotNetDateConverter;
 import com.altsoft.Framework.DataInfo.FileInfo;
@@ -99,6 +100,14 @@ public class Global {
             _CallService = new ServiceInfo();
         }
         return _CallService;
+    }
+
+    static EditInfo _editInfo;
+    public static EditInfo getEditInfo ( ) {
+        if (_editInfo == null) {
+            _editInfo = new EditInfo();
+        }
+        return _editInfo;
     }
 
 
