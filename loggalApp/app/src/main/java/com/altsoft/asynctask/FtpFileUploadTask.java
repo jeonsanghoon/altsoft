@@ -27,10 +27,13 @@ public class FtpFileUploadTask extends AsyncTask<String, Integer, String> {
         String uploadFileName = strings[1];
         try {
 
-            Global.getFtpInfo().ftpUploadFile(strings[0],strings[1],strings[2]);
+            /*업로드 storeFile가  false일 경우 Ftp 서버에 FTP SSL 설정에 인증서가 선택되어 있는지 확인 */
+            Boolean bChk = Global.getFtpInfo().ftpUploadFile(strings[0],strings[1],strings[2]);
+            if(!bChk) throw new Exception("업로드에 실패하였습니다.");
 
         } catch (Exception e) {
             e.printStackTrace();
+            mException = e;
         }
         return uploadFileName;
     }

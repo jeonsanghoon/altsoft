@@ -193,6 +193,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         else if(resultCode == enResult.LoginRequest.getValue()) {
             LoginInfoSet();
         }
+        Global.getCommon().ProgressHide();
     }
 
     public void ImagePic()
@@ -260,7 +261,8 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                                                     if(Global.getValidityCheck().isEmpty(rtn.ERROR_MESSAGE)) {
                                                         Bitmap img = Global.getCommon().getBitmapRotate(realUrl);
                                                         // 이미지 표시
-                                                        Global.getEditInfo().SetCirImageBmp( (ImageView)findViewById(R.id.img_profile), img);
+                                                        //Global.getEditInfo().SetCircleImageBmp( (ImageView)findViewById(R.id.img_profile), img);
+                                                        Global.getEditInfo().SetCircleImage((ImageView)findViewById(R.id.img_profile),realUrl);
                                                         Global.getLoginInfo().setThumnailPath(linkurl);
                                                     }
                                                     else{
@@ -347,7 +349,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                 if(bottomNavigation.getSelectedItem() == 3) {
                     ((TextView) findViewById(R.id.tvUserName)).setText(Global.getLoginInfo().getData().USER_NAME );
                     ((TextView) findViewById(R.id.tvUserId)).setText(Global.getLoginInfo().getData().USER_ID );
-
+                    Global.getEditInfo().SetCircleImage((ImageView)findViewById(R.id.img_profile), Global.getLoginInfo().getData().getThumnailPath());
 
                     ((Button)findViewById(R.id.btnLogin)).setVisibility(View.GONE);
                     ((Button)findViewById(R.id.btnLogout)).setVisibility(View.VISIBLE);
@@ -356,7 +358,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         }
         Global.getCommon().ProgressHide();
         try {
-            Global.getEditInfo().SetCirImage((ImageView) findViewById(R.id.img_profile), Global.getLoginInfo().getData().getThumnailPath());
+            Global.getEditInfo().SetCircleImage((ImageView) findViewById(R.id.img_profile), Global.getLoginInfo().getData().getThumnailPath());
         }catch(Exception ex){}
     }
 

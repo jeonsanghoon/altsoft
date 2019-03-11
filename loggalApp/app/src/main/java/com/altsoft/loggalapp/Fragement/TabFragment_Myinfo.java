@@ -60,11 +60,7 @@ public class TabFragment_Myinfo extends BaseFragment {
         final Button btnLogout = view.findViewById(R.id.btnLogout);
         layLogined = view.findViewById(R.id.layLogined);
         img_profile = view.findViewById(R.id.img_profile);
-        final RequestOptions requestOptions  =  new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .override(100, 100)
-                .circleCropTransform();
+
         if (Global.getLoginInfo().isLogin()) {
             btnLogin.setVisibility(View.GONE);
             //  btnLogout.setVisibility(View.VISIBLE);
@@ -72,9 +68,7 @@ public class TabFragment_Myinfo extends BaseFragment {
             tvUserId.setText(Global.getLoginInfo().getData().USER_ID);
             tvUserName.setText(Global.getLoginInfo().getData().USER_NAME);
 
-
-
-            Global.getEditInfo().SetCirImage(img_profile, Global.getLoginInfo().getData().thumnailPath);
+            Global.getEditInfo().SetCircleImage(img_profile, Global.getLoginInfo().getData().thumnailPath);
         } else {
             btnLogin.setVisibility(View.VISIBLE);
             layLogined.setVisibility(View.GONE);
@@ -116,7 +110,7 @@ public class TabFragment_Myinfo extends BaseFragment {
                 bottomNavigation.getTabItems().get(3).setText("내정보");
                 ImageView img_profile = view.findViewById(R.id.img_profile);
 
-                Global.getEditInfo().SetCirImage(img_profile, null);
+                Global.getEditInfo().SetCircleImage(img_profile, null);
                 Global.getLoginInfo().setData(null);
                 Toast.makeText(
                         Global.getCurrentActivity(),
@@ -138,7 +132,7 @@ public class TabFragment_Myinfo extends BaseFragment {
         view.findViewById(R.id.btnImgLoad).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Global.getEditInfo().SetCirImage(img_profile, Global.getLoginInfo().getThumnailPath());
+               Global.getEditInfo().SetCircleImage(img_profile, Global.getLoginInfo().getThumnailPath());
             }
         });
         return view;
