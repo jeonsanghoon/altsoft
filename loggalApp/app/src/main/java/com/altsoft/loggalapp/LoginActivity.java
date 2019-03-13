@@ -256,6 +256,7 @@ public class LoginActivity extends BaseActivity {
 
                 private void LoginExec(final LOGIN_COND Cond) {
 
+                    Cond.KAKAO_ID = Global.getSecurityInfo().EncryptAes(Cond.KAKAO_ID);
                     Call<LOGIN_DATA> call = Global.getAPIService().GetMobileLogin(Cond);
                     Global.getCommon().ProgressShow();
                     call.enqueue(new Callback<LOGIN_DATA>() {
@@ -272,7 +273,7 @@ public class LoginActivity extends BaseActivity {
                                 Intent resultIntent = new Intent();
                                 data.profileImagePath = Cond.profileImagePath;
                                 if(Global.getValidityCheck().isEmpty(data.thumnailPath)) data.thumnailPath = Cond.thumnailPath;
-                                if(data.thumnailPath != null) Global.getLoginInfo().getData().thumnailPath = data.thumnailPath;
+                                if(!Global.getValidityCheck().isEmpty(data.thumnailPath)) Global.getLoginInfo().getData().thumnailPath = data.thumnailPath;
                                 //Global.getLoginInfo().getData().thumnailPath
                                 Global.getLoginInfo().setData(data);
                                 resultIntent.putExtra("result",response.body());
