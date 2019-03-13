@@ -107,8 +107,10 @@ public class LocalboxbannerListActivity extends BaseActivity {
                                         public void onClick(DialogInterface dialog, int which) {
 
                                             T_MEMBER_BOOKMARK Param = new T_MEMBER_BOOKMARK();
-                                            Param.USER_ID = Global.getLoginInfo().USER_ID;
+                                            Param.USER_ID = Global.getSecurityInfo().EncryptAes(Global.getLoginInfo().USER_ID);
+
                                             Param.DEVICE_CODE = detailData.DEVICE_CODE;
+
                                             Param.SAVE_MODE = "D";
                                             Global.getCommon().ProgressShow();
                                             Call<RTN_SAVE_DATA> call = Global.getAPIService().MemberbookmarkSave(Param);
@@ -153,6 +155,7 @@ public class LocalboxbannerListActivity extends BaseActivity {
                                         public void onClick(DialogInterface dialog, int which) {
                                             T_MEMBER_BOOKMARK Param = new T_MEMBER_BOOKMARK();
                                             Param.USER_ID = Global.getLoginInfo().USER_ID;
+                                            Param.USER_ID = Global.getSecurityInfo().EncryptAes(Global.getLoginInfo().USER_ID);
                                             Param.DEVICE_CODE = detailData.DEVICE_CODE;
                                             Param.TITLE = detailData.DEVICE_NAME;
 
@@ -202,7 +205,7 @@ public class LocalboxbannerListActivity extends BaseActivity {
         AD_DEVICE_MOBILE_COND Cond = new AD_DEVICE_MOBILE_COND();
         Cond.PAGE_COUNT = 10000;
         Cond.PAGE = 1;
-        Cond.USER_ID = Global.getLoginInfo().USER_ID;
+        Cond.USER_ID = Global.getSecurityInfo().EncryptAes(Global.getLoginInfo().USER_ID);
         Cond.DEVICE_CODE = deviceCode;
         Global.getCommon().ProgressShow(this);
 

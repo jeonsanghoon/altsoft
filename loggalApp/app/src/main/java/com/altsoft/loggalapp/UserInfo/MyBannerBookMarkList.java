@@ -93,6 +93,7 @@ public class MyBannerBookMarkList extends BaseActivity {
         Cond.PAGE_COUNT = 10000;
         Cond.PAGE = 1;
         Cond.USER_ID = Global.getLoginInfo().USER_ID;
+        Cond.USER_ID = Global.getSecurityInfo().EncryptAes(Cond.USER_ID);
         //Cond.BOOKMARK_TYPE = 2;
         Global.getCommon().ProgressShow(this);
 

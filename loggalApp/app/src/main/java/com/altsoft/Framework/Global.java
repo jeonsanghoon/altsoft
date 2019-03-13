@@ -2,6 +2,7 @@ package com.altsoft.Framework;
 
 import android.app.Activity;
 
+import com.altsoft.Framework.DataInfo.StringInfo;
 import com.altsoft.Framework.DataInfo.EMail;
 import com.altsoft.Framework.Editor.EditInfo;
 import com.altsoft.model.UserInfo.DataList;
@@ -109,6 +110,14 @@ public class Global {
         }
         return _editInfo;
     }
+    static StringInfo _stringInfo;
+    public static StringInfo getStringInfo ( ) {
+        if (_stringInfo == null) {
+            _stringInfo = new StringInfo();
+        }
+        return _stringInfo;
+    }
+
 
 
 

@@ -81,6 +81,7 @@ public class WebViewActivity extends BaseActivity {
 
                                             T_MEMBER_BOOKMARK Param = new T_MEMBER_BOOKMARK();
                                             Param.USER_ID = Global.getLoginInfo().USER_ID;
+                                            Param.USER_ID = Global.getSecurityInfo().EncryptAes(Global.getLoginInfo().USER_ID);
                                             Param.AD_CODE = detailData.AD_CODE;
                                             Param.SAVE_MODE = "D";
                                             Global.getCommon().ProgressShow();
@@ -126,6 +127,7 @@ public class WebViewActivity extends BaseActivity {
                                         public void onClick(DialogInterface dialog, int which) {
                                             T_MEMBER_BOOKMARK Param = new T_MEMBER_BOOKMARK();
                                             Param.USER_ID = Global.getLoginInfo().USER_ID;
+                                            Param.USER_ID = Global.getSecurityInfo().EncryptAes(Global.getLoginInfo().USER_ID);
                                             Param.AD_CODE = detailData.AD_CODE;
                                             Param.TITLE = detailData.TITLE;
 

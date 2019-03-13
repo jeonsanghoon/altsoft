@@ -54,8 +54,10 @@ public class TabFragment3 extends BaseFragment {
         MOBILE_SIGNAGE_COND Cond = new MOBILE_SIGNAGE_COND();
         try {
 
-            Cond.LATITUDE = Global.getMapInfo().latitude;
-            Cond.LONGITUDE = Global.getMapInfo().longitude;
+            //Cond.LATITUDE = Global.getMapInfo().latitude;
+            //Cond.LONGITUDE = Global.getMapInfo().longitude;
+            Cond.SEARCH_LAT = Global.getSecurityInfo().EncryptAes( Global.getMapInfo().latitude.toString());
+            Cond.SEARCH_LONG = Global.getSecurityInfo().EncryptAes( Global.getMapInfo().longitude.toString());
             Cond.PAGE_COUNT = nPageSize;
             Cond.PAGE  = page == null ? 1 : page;
             if(Cond.PAGE != 1 && bLastPage) {

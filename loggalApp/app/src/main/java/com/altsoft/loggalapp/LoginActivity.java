@@ -107,8 +107,10 @@ public class LoginActivity extends BaseActivity {
                 Global.getCommon().ProgressShow();
                 LOGIN_COND Cond = new LOGIN_COND();
                 Cond.USER_ID = ((EditText)findViewById(R.id.lEditEmail)).getText().toString();
+                Cond.USER_ID = Global.getSecurityInfo().EncryptAes(Cond.USER_ID);
                 Cond.PASSWORD = ((EditText)findViewById(R.id.lEditPassword)).getText().toString();
-                Cond.PASSWORD = Global.getSecurityInfo().ConvertSha( Cond.PASSWORD,SecurityInfo.enSecType.SHA1 );
+                Cond.PASSWORD = Global.getSecurityInfo().ConvertSha(Cond.PASSWORD);
+
                 Call<LOGIN_DATA> call =  Global.getAPIService().GetMobileLogin(Cond);
                 call.enqueue(new Callback<LOGIN_DATA>() {
                     @Override

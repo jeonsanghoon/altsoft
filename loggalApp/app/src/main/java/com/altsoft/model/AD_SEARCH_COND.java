@@ -14,6 +14,10 @@ public  class AD_SEARCH_COND implements Serializable
     public Double LATITUDE;
     /// 위도(클라이언트단말기 위치정보) >> 값이 있으면 조건에추가 dbo.FN_TO_DISTANCE(@LATITUDE, @LONGITUDE, C.LATITUDE, C.LONGITUDE,'KM') <= @RADIUS
     public Double LONGITUDE;
+    /// AES256으로 암호화된 위도
+    public String SEARCH_LAT;
+    /// AES256으로 암호화된 경도
+    public String SEARCH_LONG;
     /// 반경(km) : 클라이언트 단말기로 부터 검색 반경
     public Integer RADIUS;
     /// 키워드코드 >> 값이 있으면 조건에추가 IN (5,10)

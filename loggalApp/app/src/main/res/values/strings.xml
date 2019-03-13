@@ -67,5 +67,6 @@
     <string name="ftpUserPW">altsoft!@34</string>
 
     <string name="filehost">https://altsoft.ze.am/files/</string>
+    <string name="aeskey">altsoftweb</string>
 </resources>
 

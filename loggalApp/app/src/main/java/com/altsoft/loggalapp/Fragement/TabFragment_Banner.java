@@ -99,8 +99,10 @@ public class TabFragment_Banner extends BaseFragment {
 
         try {
             Cond.USER_ID = Global.getLoginInfo().USER_ID;
-            Cond.LATITUDE = Global.getMapInfo().latitude;
-            Cond.LONGITUDE = Global.getMapInfo().longitude;
+            //Cond.LATITUDE = Global.getMapInfo().latitude;
+            //Cond.LONGITUDE = Global.getMapInfo().longitude;
+            Cond.SEARCH_LAT = Global.getSecurityInfo().EncryptAes( Global.getMapInfo().latitude.toString());
+            Cond.SEARCH_LONG = Global.getSecurityInfo().EncryptAes( Global.getMapInfo().longitude.toString());
             Cond.PageCount = nPageSize;
             Cond.Page = page;
             if (Cond.Page != 1 && bLastPage) {

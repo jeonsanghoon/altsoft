@@ -157,7 +157,19 @@ public class MemberJoinActivity extends BaseActivity {
             return null;
         }
 
-        param.PASSWORD = Global.getSecurityInfo().ConvertSha(param.PASSWORD, SecurityInfo.enSecType.SHA1);
+        param.USER_ID = Global.getSecurityInfo().EncryptAes(param.USER_ID);
+        param.EMAIL = Global.getSecurityInfo().EncryptAes(param.EMAIL);
+        param.KAKAO_ID = Global.getSecurityInfo().EncryptAes(param.KAKAO_ID);
+        param.GOOGLE_ID = Global.getSecurityInfo().EncryptAes(param.GOOGLE_ID);
+        param.NAVER_ID = Global.getSecurityInfo().EncryptAes(param.NAVER_ID);
+        param.FACEBOOK_ID = Global.getSecurityInfo().EncryptAes(param.FACEBOOK_ID);
+        param.profileImagePath = Global.getSecurityInfo().EncryptAes(param.profileImagePath);
+        param.USER_NAME = Global.getSecurityInfo().EncryptAes(param.USER_NAME);
+
+
+
+        param.PASSWORD = Global.getSecurityInfo().ConvertSha(param.PASSWORD);
+
 
         return param;
     }
@@ -183,13 +195,16 @@ public class MemberJoinActivity extends BaseActivity {
                         new AlertDialog.Builder(Global.getCurrentActivity()).setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                T_MEMBER_SNS_UPDATE Cond = new T_MEMBER_SNS_UPDATE();
-                                Cond.USER_ID = param.USER_ID;
-                                Cond.PASSWORD = param.PASSWORD;
-                                Cond.SNS_TYPE = 1;
-                                Cond.KAKAO_ID = param.KAKAO_ID;
+                                T_MEMBER_SNS_UPDATE Param = new T_MEMBER_SNS_UPDATE();
+                                Param.USER_ID = param.USER_ID;
+                                Param.PASSWORD = param.PASSWORD;
+                                Param.SNS_TYPE = 1;
+                                Param.KAKAO_ID = param.KAKAO_ID;
+
+                                Param.USER_ID = Global.getSecurityInfo().EncryptAes(param.USER_ID);
+                                Param.KAKAO_ID = Global.getSecurityInfo().EncryptAes(param.KAKAO_ID);
                                 Global.getCommon().ProgressShow();
-                                Call<RTN_SAVE_DATA> call = Global.getAPIService().MemberSnsIDUpdate(Cond);
+                                Call<RTN_SAVE_DATA> call = Global.getAPIService().MemberSnsIDUpdate(Param);
                                 call.enqueue(new Callback<RTN_SAVE_DATA>() {
                                     @Override
                                     public void onResponse(Call<RTN_SAVE_DATA> call, Response<RTN_SAVE_DATA> response) {

@@ -338,9 +338,12 @@ public class SearchActivity extends BaseActivity {
 
             Cond.PAGE_COUNT = pagesize;
             Cond.PAGE = page;
-            Cond.LONGITUDE = Global.getMapInfo().longitude;
-            Cond.LATITUDE  = Global.getMapInfo().latitude;
-            Cond.USER_ID = Global.getLoginInfo().USER_ID;
+            //Cond.LATITUDE = Global.getMapInfo().latitude;
+            //Cond.LONGITUDE = Global.getMapInfo().longitude;
+            Cond.SEARCH_LAT = Global.getSecurityInfo().EncryptAes( Global.getMapInfo().latitude.toString());
+            Cond.SEARCH_LONG = Global.getSecurityInfo().EncryptAes( Global.getMapInfo().longitude.toString());
+
+            Cond.USER_ID = Global.getSecurityInfo().EncryptAes(Global.getLoginInfo().USER_ID);
             Object[] arrCategory = searchCategory.multiCustomCompoundButton.getCheckedIds().toArray();
             for(int i=0;  i < arrCategory.length; i++){
                 if(i==0) Cond.CATEGORY_CODES =   arrCategory[i].toString();
@@ -483,9 +486,13 @@ public class SearchActivity extends BaseActivity {
 
             Cond.PAGE_COUNT = pagesize;
             Cond.PAGE = page;
-            Cond.LONGITUDE = Global.getMapInfo().longitude;
-            Cond.LATITUDE  = Global.getMapInfo().latitude;
+           // Cond.LONGITUDE = Global.getMapInfo().longitude;
+            //Cond.LATITUDE  = Global.getMapInfo().latitude;
 
+
+            Cond.SEARCH_LAT =  Global.getSecurityInfo().EncryptAes(Global.getMapInfo().longitude.toString()) ;
+            /// AES256으로 암호화된 경도
+            Cond.SEARCH_LONG = Global.getSecurityInfo().EncryptAes(Global.getMapInfo().latitude.toString());
             Object[] arrCategory = searchCategory.multiCustomCompoundButton.getCheckedIds().toArray();
 
             Cond.SEARCH_TEXT = searchAutoCompleate.autoCompleteTextView.getText().toString();

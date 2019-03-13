@@ -11,4 +11,6 @@ public class ResourceInfo {
     public String getkakaoAdminkey(){    return Global.getCurrentActivity().getString(R.string.kakaoAdminkey); };
 
     public String getFileHost(){    return Global.getCurrentActivity().getString(R.string.filehost); };
+
+    public String getAesKey(){    return Global.getCurrentActivity().getString(R.string.aeskey); };
 }

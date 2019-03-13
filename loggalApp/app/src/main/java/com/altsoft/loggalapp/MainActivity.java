@@ -81,7 +81,10 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
         Log.d("hashKey",Global.getCommon().getKeyHash(this));
         getSupportActionBar().setTitle("loggal");
+
         this.LoginInfoSet();
+
+
     }
     @Override
     public void onResume() {
@@ -252,7 +255,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                                 public void onSuccess(String result) {
                                     //Toast.makeText(getApplicationContext(), editMail.getText().toString() + "로 임시 비밀번호가 방송되었습니다.", Toast.LENGTH_LONG).show();
                                     final String linkurl =  Global.getResourceInfo().getFileHost() +  dir + "/" + newFileName;
-                                    T_FILE file = new T_FILE("U", "T_MEMBER",  Integer.toString(Global.getLoginInfo().MEMBER_CODE), 1, 1, filename, extension, linkurl,"1","회원썸네일" );
+                                    T_FILE file = new T_FILE("U", Global.getSecurityInfo().EncryptAes("T_MEMBER"),  Global.getSecurityInfo().EncryptAes(Integer.toString(Global.getLoginInfo().MEMBER_CODE)), 1, 1, filename, extension, linkurl,"1","회원썸네일" );
                                     Call<RTN_SAVE_DATA> call = Global.getAPIService().FileSave(file);
                                     Global.getCallService().callService(call
                                             , new ServiceInfo.Act<RTN_SAVE_DATA>() {
