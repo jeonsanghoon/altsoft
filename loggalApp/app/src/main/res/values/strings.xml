@@ -45,7 +45,9 @@
     <string name="hint_passwordchange">암호변경</string>
     <string name="login">로그인</string>
     <string name="loginout">로그아웃</string>
-    <string name="register">회원가입</string>
+    <string name="memberjoin">회원가입</string>
+    <string name="register">등록</string>
+    <string name="findpassword">패스워드찾기</string>
     <string name="tmptomail">임시패스워드 메일발송</string>
     <string name="btn_link_to_register">회원이 아닙니다. 가입하시겠습니까?</string>
     <string name="btn_link_to_login">이미 가입되었습니다. 로그인하세요.</string>

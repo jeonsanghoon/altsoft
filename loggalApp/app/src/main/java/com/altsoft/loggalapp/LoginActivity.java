@@ -84,6 +84,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Global.getCurrentActivity(), MemberJoinActivity.class);
+                Global.getLoginInfo().getData().thumnailPath = "";
                 Global.getCurrentActivity().startActivityForResult(intent, enResult.MemberJoin.getValue());
             }
         });

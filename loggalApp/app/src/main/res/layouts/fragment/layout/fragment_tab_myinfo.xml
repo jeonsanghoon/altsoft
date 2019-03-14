@@ -80,9 +80,7 @@
                     android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dip"
                     android:layout_marginBottom="10dp"
                     android:text="@string/login" />
                 <LinearLayout
@@ -102,16 +100,6 @@
                         android:layout_marginBottom="10dp"
                         android:text="@string/logout" />
                 </LinearLayout>
-                <Button
-                    android:id="@+id/btnImgLoad"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dip"
-                    android:layout_marginBottom="10dp"
-                    android:text="이미지재로드" />
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.altsoft.Framework.DataInfo.SecurityInfo;
@@ -48,17 +49,20 @@ public class MemberJoinActivity extends BaseActivity {
         public static EditText userName;
 
     }
+    private ImageView img_profile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_join);
 
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.tb_toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼
         ComponentInit();
-        getSupportActionBar().setTitle("회원가입");
+        getSupportActionBar().setTitle(this.getString(R.string.memberjoin));
     }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -71,8 +75,19 @@ public class MemberJoinActivity extends BaseActivity {
     }
     private void ComponentInit()
     {
-        super.appBarInit_titleOnly("회원가입");
+        super.appBarInit_titleOnly(this.getString(R.string.memberjoin));
+        img_profile = findViewById(R.id.img_profile);
+        Global.getEditInfo().SetCircleImage(img_profile, Global.getLoginInfo().getData().thumnailPath);
+        findViewById(R.id.btnImgPic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.getFileInfo().ImageProfilePic();
+            /*    Intent i = new Intent(
+                        Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
+                getActivity().startActivityForResult(i, enResult.ImagePic.getValue());*/
+            }
+        });
         Intent intent = getIntent();
         SNS_ID.KAKAO_ID = intent.getStringExtra("KAKAO_ID");
         SNS_ID.GOOGLE_ID = intent.getStringExtra("GOOGLE_ID");
@@ -136,8 +151,8 @@ public class MemberJoinActivity extends BaseActivity {
         param.GOOGLE_ID = SNS_ID.GOOGLE_ID;
         param.NAVER_ID = SNS_ID.NAVER_ID;
         param.FACEBOOK_ID = SNS_ID.FACEBOOK_ID;
-        param.profileImagePath = SNS_ID.profileImagePath;
-        param.thumnailPath = SNS_ID.thumnailPath;
+        param.thumnailPath =   Global.getLoginInfo().thumnailPath;
+        param.profileImagePath = Global.getLoginInfo().profileImagePath;
         param.PASSWORD =InputData.edPw.getText().toString();
         param.USER_NAME = InputData.userName.getText().toString();
         if(!Global.getValidityCheck().Email(param.USER_ID)) {
@@ -157,14 +172,6 @@ public class MemberJoinActivity extends BaseActivity {
             return null;
         }
 
-        param.USER_ID = Global.getSecurityInfo().EncryptAes(param.USER_ID);
-        param.EMAIL = Global.getSecurityInfo().EncryptAes(param.EMAIL);
-        param.KAKAO_ID = Global.getSecurityInfo().EncryptAes(param.KAKAO_ID);
-        param.GOOGLE_ID = Global.getSecurityInfo().EncryptAes(param.GOOGLE_ID);
-        param.NAVER_ID = Global.getSecurityInfo().EncryptAes(param.NAVER_ID);
-        param.FACEBOOK_ID = Global.getSecurityInfo().EncryptAes(param.FACEBOOK_ID);
-        param.profileImagePath = Global.getSecurityInfo().EncryptAes(param.profileImagePath);
-        param.USER_NAME = Global.getSecurityInfo().EncryptAes(param.USER_NAME);
 
 
 
@@ -174,19 +181,39 @@ public class MemberJoinActivity extends BaseActivity {
         return param;
     }
 
+    private T_MEMBER SetEncrypt(T_MEMBER param )
+    {
+        T_MEMBER rtn = new T_MEMBER();
+        rtn.USER_ID = Global.getSecurityInfo().EncryptAes(param.USER_ID);
+        rtn.EMAIL = Global.getSecurityInfo().EncryptAes(param.EMAIL);
+        rtn.KAKAO_ID = Global.getSecurityInfo().EncryptAes(param.KAKAO_ID);
+        rtn.GOOGLE_ID = Global.getSecurityInfo().EncryptAes(param.GOOGLE_ID);
+        rtn.NAVER_ID = Global.getSecurityInfo().EncryptAes(param.NAVER_ID);
+        rtn.FACEBOOK_ID = Global.getSecurityInfo().EncryptAes(param.FACEBOOK_ID);
+        rtn.thumnailPath = Global.getSecurityInfo().EncryptAes(param.thumnailPath);
+        rtn.profileImagePath = Global.getSecurityInfo().EncryptAes(param.profileImagePath);
+        rtn.USER_NAME = Global.getSecurityInfo().EncryptAes(param.USER_NAME);
+        rtn.PASSWORD = param.PASSWORD;
+        return rtn;
+    }
+
 
     private void MemberSave() {
         final T_MEMBER param = SetMemberSaveParam();
-        param.SAVE_MODE = "memberJoin";
+
+        if(param == null) return;
+        T_MEMBER saveparam = SetEncrypt(param);
+        saveparam.SAVE_MODE = "memberJoin";
         Global.getCommon().ProgressShow();
         if(param == null) return;
-        Call<RTN_SAVE_DATA> call =  Global.getAPIService().SaveMember(param);
+        Call<RTN_SAVE_DATA> call =  Global.getAPIService().SaveMember(saveparam);
         call.enqueue(new Callback<RTN_SAVE_DATA>() {
             @Override
             public void onResponse(Call<RTN_SAVE_DATA> call, Response<RTN_SAVE_DATA> response) {
                 RTN_SAVE_DATA rtn = response.body();
                 Global.getCommon().ProgressHide();
                 if(rtn.ERROR_MESSAGE.equals("") || rtn.MESSAGE.equals("LOGIN") ) {
+                    param.MEMBER_CODE = !Global.getValidityCheck().isEmpty(rtn.DATA) ? Integer.parseInt(rtn.DATA) : param.MEMBER_CODE;
                     if(rtn.MESSAGE.equals("LOGIN") && !Global.getValidityCheck().isEmpty(param.KAKAO_ID))
                     {
                         new AlertDialog.Builder(Global.getCurrentActivity()).setIcon(android.R.drawable.ic_dialog_alert);
@@ -195,7 +222,9 @@ public class MemberJoinActivity extends BaseActivity {
                         new AlertDialog.Builder(Global.getCurrentActivity()).setPositiveButton("예", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
                                 T_MEMBER_SNS_UPDATE Param = new T_MEMBER_SNS_UPDATE();
+
                                 Param.USER_ID = param.USER_ID;
                                 Param.PASSWORD = param.PASSWORD;
                                 Param.SNS_TYPE = 1;
@@ -209,11 +238,12 @@ public class MemberJoinActivity extends BaseActivity {
                                     @Override
                                     public void onResponse(Call<RTN_SAVE_DATA> call, Response<RTN_SAVE_DATA> response) {
                                         LOGIN_DATA data = new LOGIN_DATA();
+                                        data.MEMBER_CODE = param.MEMBER_CODE;
                                         data.USER_ID = param.USER_ID;
-                                        data.PASSWORD = param.PASSWORD;
-                                        data.USER_NAME = param.USER_NAME;
-                                        data.profileImagePath = param.profileImagePath;
-                                        data.thumnailPath = param.thumnailPath;
+                                        //data.PASSWORD = param.PASSWORD;
+                                        data.USER_NAME =  param.USER_NAME;
+                                        data.profileImagePath =  param.profileImagePath;
+                                        data.thumnailPath =  param.thumnailPath;
                                         Global.getLoginInfo().setData(data);
                                         Intent resultIntent = new Intent();
                                         resultIntent.putExtra("result",data);

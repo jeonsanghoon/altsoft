@@ -57,6 +57,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     {
         super.onStart();
         Global.setCurrentActivity(this);
+        Global.setFragmentManager(getSupportFragmentManager());
         if(Global.getCommon().getComponentName(this).toLowerCase() != "mainactivity") {
             actList.add(this);
         }
@@ -123,48 +124,4 @@ public abstract class BaseActivity extends AppCompatActivity {
         if(!(bBookmark == null || bBookmark == true))
             findViewById(R.id.btnBookmark).setVisibility(View.GONE);
     }
-    //endregion
-    String StorageTag ="ExternalStoragePermission";
-    protected boolean grantExternalStoragePermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
-
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(StorageTag,"Permission is granted");
-                return true;
-            }else{
-                Log.v(StorageTag,"Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-
-                return false;
-            }
-        }else{
-            Toast.makeText(this, "External Storage Permission is Grant", Toast.LENGTH_SHORT).show();
-            Log.d(StorageTag, "External Storage Permission is Grant ");
-            return true;
-        }
-
-    }
-
-    String CameraTag ="CameraPermission";
-    protected boolean grantCameraPermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
-
-            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(CameraTag,"Permission is granted CAMERA");
-                return true;
-            }else{
-                Log.v(CameraTag,"Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
-
-                return false;
-            }
-        }else{
-            Toast.makeText(this, "Camera Permission is Grant", Toast.LENGTH_SHORT).show();
-            Log.d(CameraTag, "Camera Permission is Grant ");
-            return true;
-        }
-
-    }
-
-
 }

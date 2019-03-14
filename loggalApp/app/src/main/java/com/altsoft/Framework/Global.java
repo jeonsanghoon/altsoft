@@ -1,7 +1,9 @@
 package com.altsoft.Framework;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentManager;
 
+import com.altsoft.Framework.DataInfo.AuthInfo;
 import com.altsoft.Framework.DataInfo.StringInfo;
 import com.altsoft.Framework.DataInfo.EMail;
 import com.altsoft.Framework.Editor.EditInfo;
@@ -59,6 +61,12 @@ public class Global {
         }
         return _mapInfo;
     }
+
+    static FragmentManager _fragmentManager;
+    public static void setFragmentManager(FragmentManager frg) {
+        _fragmentManager = frg;
+    }
+    public static FragmentManager getFragmentManager(){return _fragmentManager;}
     public static void setMapInfo(MapInfo val) {
         _mapInfo = val;
     }
@@ -177,6 +185,15 @@ public class Global {
         }
         return _EMail;
     }
+
+    static AuthInfo _authInfo;
+    public static AuthInfo getAuthInfo ( ) {
+        if (_authInfo == null) {
+            _authInfo = new AuthInfo();
+        }
+        return _authInfo;
+    }
+
 
     static MobileService _apiservice;
     public static MobileService getAPIService()

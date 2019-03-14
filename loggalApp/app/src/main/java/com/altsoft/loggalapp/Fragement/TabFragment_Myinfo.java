@@ -77,7 +77,7 @@ public class TabFragment_Myinfo extends BaseFragment {
         view.findViewById(R.id.btnImgPic).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)Global.getCurrentActivity()).ImagePic();
+                Global.getFileInfo().ImageProfilePic();
             /*    Intent i = new Intent(
                         Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
@@ -100,8 +100,6 @@ public class TabFragment_Myinfo extends BaseFragment {
                     @Override
                     public void onCompleteLogout() {
                         Log.d("로그아웃", "로그아웃되었음");
-
-
                     }
                 });
                 BottomNavigation bottomNavigation = (BottomNavigation) MainActivity.activity.findViewById(R.id.bottom_navigation);
@@ -129,12 +127,7 @@ public class TabFragment_Myinfo extends BaseFragment {
                 Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
             }
         });
-        view.findViewById(R.id.btnImgLoad).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               Global.getEditInfo().SetCircleImage(img_profile, Global.getLoginInfo().getThumnailPath());
-            }
-        });
+
         return view;
     }
 
