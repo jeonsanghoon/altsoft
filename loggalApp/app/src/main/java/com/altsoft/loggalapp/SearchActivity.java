@@ -157,12 +157,12 @@ public class SearchActivity extends BaseActivity {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"Say something");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"아무 말이나 해보세요");
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
             Toast.makeText(getApplicationContext(),
-                    "Sorry! Your device doesn\\'t support speech input",
+                    "인식하지 못했습니다. 다시 말해 주세요.",
                     Toast.LENGTH_SHORT).show();
         }
     }
