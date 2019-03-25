@@ -19,13 +19,13 @@ public class AuthInfo {
         public static String CameraTag = "CameraPermission";
     }
     public boolean grantExternalStoragePermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             if (Global.getCurrentActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(LogTag.StorageTag, "Permission is granted");
+                Log.v(LogTag.StorageTag, "External Storage Permission is granted");
                 return true;
             } else {
-                Log.v(LogTag.StorageTag, "Permission is revoked");
+                Log.v(LogTag.StorageTag, "External Storage Permission is revoked");
                 ActivityCompat.requestPermissions(Global.getCurrentActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
                 return false;
@@ -37,14 +37,35 @@ public class AuthInfo {
         }
     }
 
+    public boolean grantDevicePermission()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if (Global.getCurrentActivity().checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                Log.v(LogTag.StorageTag, "Read Phone Permission is granted");
+                return true;
+            } else {
+                Log.v(LogTag.StorageTag, "Read Phone Permission is revoked");
+                ActivityCompat.requestPermissions(Global.getCurrentActivity(), new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+
+                return false;
+            }
+        } else {
+            Toast.makeText(Global.getCurrentActivity(), "Read Phone Permission is Grant", Toast.LENGTH_SHORT).show();
+            Log.d(LogTag.StorageTag, "Read Phone Permission is Grant ");
+            return true;
+        }
+    }
+
+
     public boolean grantCameraPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
 
             if (Global.getCurrentActivity().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                Log.v(LogTag.CameraTag, "Permission is granted CAMERA");
+                Log.v(LogTag.CameraTag, "Camera Permission is granted CAMERA");
                 return true;
             } else {
-                Log.v(LogTag.CameraTag, "Permission is revoked");
+                Log.v(LogTag.CameraTag, "Camera Permission is revoked");
                 ActivityCompat.requestPermissions(Global.getCurrentActivity(), new String[]{Manifest.permission.CAMERA}, 1);
 
                 return false;

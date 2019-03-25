@@ -29,13 +29,13 @@ public class EditInfo {
 
         if (Global.getValidityCheck().isEmpty(src)) {
             src = null;
-            Picasso.with(Global.getCurrentActivity()).load(src).transform(new CircleTransform()).rotate(0).into(view);
+            Picasso.with(Global.getCurrentActivity()).load(src).resize(100,100).transform(new CircleTransform()).rotate(0).into(view);
         } else {
             int rotate =  0;//360-getCameraPhotoOrientation(src);
             if (src.indexOf("/storage/emulated/0") >= 0) {
-                Picasso.with(Global.getCurrentActivity()).load(new File(src)).transform(new CircleTransform()).rotate(rotate).into(view);
+                Picasso.with(Global.getCurrentActivity()).load(new File(src)).resize(100,100).transform(new CircleTransform()).rotate(rotate).into(view);
             } else
-                Picasso.with(Global.getCurrentActivity()).load(src).transform(new CircleTransform()).rotate(90).into(view);
+                Picasso.with(Global.getCurrentActivity()).load(src).resize(100,100).transform(new CircleTransform()).rotate(90).into(view);
         }
     }
 

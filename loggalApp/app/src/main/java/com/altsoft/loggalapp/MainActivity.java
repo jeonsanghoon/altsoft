@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.altsoft.Framework.enResult;
+import com.altsoft.Framework.map.GpsInfo;
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.map.MapInfo;
@@ -67,6 +68,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
     public  static Activity activity;
     private ViewPager mViewPager;
+
     private PagerAdapter mPagerAdapter;
 
     @Override
@@ -77,14 +79,14 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         this.onInitView();
         this.initViewPager();
         this.tabInit();
-        this.gpsInit();
+
+
 
         Log.d("hashKey",Global.getCommon().getKeyHash(this));
         getSupportActionBar().setTitle("loggal");
 
+        this.gpsInit();
         this.LoginInfoSet();
-
-
     }
     @Override
     public void onResume() {
@@ -311,7 +313,6 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         }
         return isPermission;
     }
-
     private void gpsInit() {
         // 권한 요청을 해야 함
         if(!callPermission()) return;

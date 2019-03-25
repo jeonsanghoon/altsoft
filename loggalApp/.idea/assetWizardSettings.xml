@@ -14,9 +14,9 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_baseline_device_hub_24px" />
+                            <entry key="outputName" value="ic_baseline_mic_none_24px" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\jsh\Downloads\baseline-device_hub-24px.svg" />
+                            <entry key="sourceFile" value="C:\Users\jsh\Downloads\baseline-mic_none-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

@@ -25,7 +25,6 @@ public class ServiceInfo {
                 success.execute(response.body());
 
             }
-
             @Override
             public void onFailure(Call<T> call, Throwable t) {
                 Global.getCommon().ProgressHide();

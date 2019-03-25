@@ -1,5 +1,9 @@
 package com.altsoft.Framework.DataInfo;
 
+import android.widget.Toast;
+
+import com.altsoft.Framework.Global;
+
 public class StringInfo {
     public String padRight(String s, int n, char padding){
         StringBuilder builder = new StringBuilder(s.length() + n);
@@ -16,5 +20,10 @@ public class StringInfo {
             builder.append(Character.toString(padding));
         }
         return builder.append(s).toString();
+    }
+
+    public void MessageShow(String text)
+    {
+        Toast.makeText(Global.getCurrentActivity(),text, Toast.LENGTH_LONG).show();
     }
 }

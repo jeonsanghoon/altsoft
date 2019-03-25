@@ -111,6 +111,8 @@
             android:name=".LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"/>
+
+        <service android:enabled="true" android:name="com.altsoft.Framework.map.GpsInfo" />
     </application>
 
 </manifest>

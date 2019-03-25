@@ -2,8 +2,11 @@ package com.altsoft.loggalapp;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,11 +43,12 @@ import com.altsoft.togglegroupbutton.MultiSelectToggleGroup;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+import static android.speech.tts.TextToSpeech.ERROR;
 public class SearchActivity extends BaseActivity {
     private String TAG = SearchActivity.class.getSimpleName();
     private android.support.v7.widget.Toolbar tbMainSearch;
@@ -56,6 +60,7 @@ public class SearchActivity extends BaseActivity {
     SearchLocalBox searchLocalBox;
    // SearchSignage searchSignage;
 
+    private TextToSpeech tts;              // TTS 변수 선언
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +111,25 @@ public class SearchActivity extends BaseActivity {
                 doQuery();
             }
         });
+        // TTS를 생성하고 OnInitListener로 초기화 한다.
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != ERROR) {
+                    // 언어를 선택한다.
+                    tts.setLanguage(Locale.KOREAN);
+                }
+            }
+        });
+        findViewById(R.id.btnMic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                promptSpeechInput();
+            }
+        });
+
+
+
 
         ((TextView)findViewById(R.id.tvBannerPlus)).setOnClickListener(new View.OnClickListener() {
              @Override
@@ -123,7 +147,46 @@ public class SearchActivity extends BaseActivity {
         Global.getCommon().ProgressHide(this);
         doQuery();
     }
+    private final int REQ_CODE_SPEECH_INPUT = 100;
+    /**
+     * Showing google speech input dialog
+     * */
 
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"Say something");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    "Sorry! Your device doesn\\'t support speech input",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+    /**
+     * Receiving speech input
+     * */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    searchAutoCompleate.autoCompleteTextView.setText(result.get(0));
+                    //txtSpeechInput.setText(result.get(0));
+                }
+                break;
+            }
+
+        }
+    }
 
     /// 전체조회
     private void doQuery() {
@@ -427,8 +490,7 @@ public class SearchActivity extends BaseActivity {
                                 e.printStackTrace();
                             }
                             //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-                            Toast.makeText(activity,adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-
+                            Global.getStringInfo().MessageShow(adItem.TITLE  + "가 선택되었습니다.");
                             Intent intent = new Intent(activity, WebViewActivity.class);
                             intent.putExtra("T_AD", adItem);
                             activity.startActivity(intent);
