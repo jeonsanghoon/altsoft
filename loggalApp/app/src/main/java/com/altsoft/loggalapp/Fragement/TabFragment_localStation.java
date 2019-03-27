@@ -51,10 +51,8 @@ public class TabFragment_localStation extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
-        if(adapter == null) adapter = new LocalStationListAdapter();
-        if (nPage == 1) GetLocalStation();
+        adapter = new LocalStationListAdapter();
+        GetLocalStation();
 
         return inflater.inflate(R.layout.fragment_tab_localstation, container, false);
     }

@@ -45,8 +45,8 @@ public class TabFragment_localbox extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        if(adapter == null) adapter = new LocalBoxListViewAdapter();
-        if(nPage == 1) GetDeviceLocation();
+        adapter = new LocalBoxListViewAdapter();
+        GetDeviceLocation();
         return inflater.inflate(R.layout.fragment_tab_localbox, container, false);
     }
 

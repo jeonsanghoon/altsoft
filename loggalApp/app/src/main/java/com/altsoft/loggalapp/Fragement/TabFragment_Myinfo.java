@@ -2,8 +2,7 @@ package com.altsoft.loggalapp.Fragement;
 
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -15,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
+
 
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.enResult;
@@ -24,16 +23,11 @@ import com.altsoft.loggalapp.LoginActivity;
 import com.altsoft.loggalapp.MainActivity;
 import com.altsoft.loggalapp.R;
 import com.altsoft.loggalapp.UserInfo.MyBannerBookMarkList;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
+
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
 
-import gun0912.tedbottompicker.TedBottomPicker;
-
-import static android.app.Activity.RESULT_OK;
 
 public class TabFragment_Myinfo extends BaseFragment {
     TextView tvUserId;
@@ -121,8 +115,11 @@ public class TabFragment_Myinfo extends BaseFragment {
                         "로그아웃되었습니다.",
                         Toast.LENGTH_LONG).show();
                 btnLogin.setVisibility(View.VISIBLE);
+
                 view.findViewById(R.id.layLogined).setVisibility(View.GONE);
                 //view.findViewById(R.id.layLogined).setVisibility(View.GONE);
+                ((MainActivity)getActivity()).afterLoginExec();
+
             }
         });
 
@@ -130,7 +127,7 @@ public class TabFragment_Myinfo extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Global.getCurrentActivity(), MyBannerBookMarkList.class);
-                Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
+                Global.getCurrentActivity().startActivityForResult(intent, enResult.BannerRequest.getValue());
             }
         });
 

@@ -26,10 +26,12 @@ import java.util.List;
 
 import retrofit2.Call;
 
-
 /**
-
- */
+* 배너 탭 프레그먼트
+* @author 전상훈
+* @version 1.0.0
+* @since 2019-03-27 오후 5:39
+**/
 public class TabFragment_Banner extends BaseFragment {
     BannerListViewAdapter adapter;
     boolean lastitemVisibleFlag = false;
@@ -43,7 +45,6 @@ public class TabFragment_Banner extends BaseFragment {
 
     View selectedview;
     T_AD selectedData;
-    boolean bLoad = false;
 
     public TabFragment_Banner() {
     }
@@ -53,16 +54,8 @@ public class TabFragment_Banner extends BaseFragment {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_tab_banner, container, false);
-        if(adapter == null) adapter = new BannerListViewAdapter();
-        if(nPage == 1) GetBannerList();
-        else{
-            if(listview == null) {
-                listview = (ListView) view.findViewById(R.id.listview1);
-
-            }
-
-        }
-        bLoad = true;
+        adapter = new BannerListViewAdapter();
+        GetBannerList();
         return view;
     }
 

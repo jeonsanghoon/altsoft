@@ -6,8 +6,19 @@ import com.altsoft.Framework.Global;
 
 import java.util.regex.Pattern;
 
+/**
+* 유효성체크
+* @author 전상훈
+* @version 1.0.0
+* @since 2019-03-27 오후 5:38
+**/
 public class ValidityCheck {
-    //이메일형식체크
+    /**
+    * 이메일형식체크
+    * @author 전상훈
+    * @version 1.0.0
+    * @since 2019-03-27 오후 5:38
+    **/
     public Boolean Email(String email) {
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Toast.makeText(Global.getCurrentActivity(), "이메일 형식이 아닙니다", Toast.LENGTH_SHORT).show();
@@ -17,7 +28,12 @@ public class ValidityCheck {
         return true;
     }
 
-    ///모바일폰 유효성 검사
+    /**
+    * 모바일폰 유효성 검사
+    * @author 전상훈
+    * @version 1.0.0
+    * @since 2019-03-27 오후 5:38
+    **/
     public Boolean MobilePhone(String phoneNum) {
 
         if (!Pattern.matches("^01(?:0|1|[6-9]) - (?:\\d{3}|\\d{4}) - \\d{4}$", phoneNum)) {
@@ -27,7 +43,12 @@ public class ValidityCheck {
         }
         return true;
     }
-    ///비밀번호 유효성 검사
+    /**
+    * 패스워드 유효성 검사
+    * @author 전상훈
+    * @version 1.0.0
+    * @since 2019-03-27 오후 5:38
+    **/
     public Boolean Password(String pw)
     {
         if(!Pattern.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,}$", pw))
@@ -39,6 +60,12 @@ public class ValidityCheck {
         return true;
     }
 
+    /**
+    * 패스워드 확인
+    * @author 전상훈
+    * @version 1.0.0
+    * @since 2019-03-27 오후 5:37
+    **/
     public Boolean PasswordConfirm(String pw, String pw2)
     {
 
@@ -57,6 +84,12 @@ public class ValidityCheck {
     }
 
 
+    /**
+    * 인터넷 연결 여부
+    * @author 전상훈
+    * @version 1.0.0
+    * @since 2019-03-27 오후 5:36
+    **/
     public  boolean isOnline() {
         CheckConnect cc = new CheckConnect("http://clients3.google.com/generate_204");
         cc.start();
@@ -68,7 +101,12 @@ public class ValidityCheck {
         }
         return false;
     }
-
+    /**
+    * 문자열 공백 또는 null 체크
+    * @author 전상훈
+    * @version 1.0.0
+    * @since 2019-03-27 오후 5:37
+    **/
     public boolean isEmpty(String Val){
         if(Val == null || Val.trim().equals("") ) {
             return true;

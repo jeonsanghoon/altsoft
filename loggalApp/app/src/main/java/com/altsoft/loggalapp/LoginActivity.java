@@ -34,19 +34,11 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
-import com.ss.bottomnavigation.TabItem;
-
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-
-import javax.mail.AuthenticationFailedException;
-import javax.mail.MessagingException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.kakao.util.helper.Utility.getPackageInfo;
 
 public class LoginActivity extends BaseActivity {
     private SessionCallback callback;

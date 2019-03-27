@@ -178,7 +178,9 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                 {}
             } else if (requestCode == enResult.LoginRequest.getValue()) {
                 LoginInfoSet();
-                if(Global.getLoginInfo().isLogin()) bottomNavigation.setSelectedItem(0);
+                afterLoginExec();
+              //  if(Global.getLoginInfo().isLogin()) bottomNavigation.setSelectedItem(0);
+
             }else if(requestCode == enResult.ImagePic.getValue())
             {
 
@@ -188,9 +190,19 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         }
         else if(resultCode == enResult.LoginRequest.getValue()) {
             LoginInfoSet();
-            if(Global.getLoginInfo().isLogin()) bottomNavigation.setSelectedItem(0);
+            afterLoginExec();
+           // if(Global.getLoginInfo().isLogin()) bottomNavigation.setSelectedItem(0);
+        }
+        else if(resultCode == enResult.LogOut.getValue()) {
+            afterLoginExec();
         }
         Global.getCommon().ProgressHide();
+    }
+    public void afterLoginExec()
+    {
+        ((TabFragment_Banner)mPagerAdapter.getItem(0)).GetBannerList();
+        ((TabFragment_localbox)mPagerAdapter.getItem(1)).GetDeviceLocation();
+        ((TabFragment_localStation)mPagerAdapter.getItem(2)).GetLocalStation();
     }
 
 
@@ -373,7 +385,6 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         ArrayList<android.support.v4.app.Fragment> adapterList = new ArrayList<>();
         public PagerAdapter(FragmentManager fm) {
             super(fm);
-
         }
 
         public void addFragment(android.support.v4.app.Fragment frag)
