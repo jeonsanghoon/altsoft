@@ -4,8 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +13,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
+
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,13 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.altsoft.Framework.enResult;
-import com.altsoft.Framework.map.GpsInfo;
+
 import com.altsoft.Framework.module.BaseActivity;
 import com.altsoft.Framework.Global;
 import com.altsoft.Framework.map.MapInfo;
-import com.altsoft.Interface.AsyncCallbackOnEventListener;
-import com.altsoft.Interface.ServiceInfo;
-import com.altsoft.asynctask.FtpFileUploadTask;
+
 import com.altsoft.loggalapp.Fragement.TabFragment_Banner;
 import com.altsoft.loggalapp.Fragement.TabFragment_localbox;
 
@@ -40,22 +38,14 @@ import com.altsoft.loggalapp.Fragement.TabFragment_Myinfo;
 
 import com.altsoft.loggalapp.Fragement.TabFragment_localStation;
 import com.altsoft.map.kakaoMapActivity;
-import com.altsoft.model.RTN_SAVE_DATA;
-import com.altsoft.model.common.T_FILE;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
+
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.ss.bottomnavigation.BottomNavigation;
 import com.ss.bottomnavigation.events.OnSelectedItemChangeListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-import gun0912.tedbottompicker.TedBottomPicker;
-import retrofit2.Call;
 
 /**
  *
@@ -188,6 +178,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                 {}
             } else if (requestCode == enResult.LoginRequest.getValue()) {
                 LoginInfoSet();
+                if(Global.getLoginInfo().isLogin()) bottomNavigation.setSelectedItem(0);
             }else if(requestCode == enResult.ImagePic.getValue())
             {
 
@@ -197,6 +188,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         }
         else if(resultCode == enResult.LoginRequest.getValue()) {
             LoginInfoSet();
+            if(Global.getLoginInfo().isLogin()) bottomNavigation.setSelectedItem(0);
         }
         Global.getCommon().ProgressHide();
     }
@@ -215,6 +207,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
                     ((Button)findViewById(R.id.btnLogin)).setVisibility(View.GONE);
                     ((Button)findViewById(R.id.btnLogout)).setVisibility(View.VISIBLE);
+
                 }
             }catch(Exception ex){}
         }
@@ -337,8 +330,9 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     }
 
     private void initViewPager() {
+
         mViewPager = findViewById(R.id.pager);
-        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        mPagerAdapter = new PagerAdapter( getSupportFragmentManager());
 
         mPagerAdapter.addFragment( new TabFragment_Banner());
         mPagerAdapter.addFragment( new TabFragment_localbox());
@@ -346,13 +340,14 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         mPagerAdapter.addFragment( new TabFragment_Myinfo());
 
         mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
             @Override
             public void onPageSelected(int position) {
-                bottomNavigation.setSelectedItem(position);
+               bottomNavigation.setSelectedItem(position);
             }
             @Override
             public void onPageScrollStateChanged(int state) {

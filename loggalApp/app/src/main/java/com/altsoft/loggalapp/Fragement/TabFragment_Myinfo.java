@@ -40,9 +40,12 @@ public class TabFragment_Myinfo extends BaseFragment {
     TextView tvUserName;
     LinearLayout layLogined;
     Button btnLogin;
+    Button btnImgPic;
     public View view;
     ImageView img_profile;
+    public TabFragment_Myinfo(){
 
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,21 +63,24 @@ public class TabFragment_Myinfo extends BaseFragment {
         final Button btnLogout = view.findViewById(R.id.btnLogout);
         layLogined = view.findViewById(R.id.layLogined);
         img_profile = view.findViewById(R.id.img_profile);
-
+        btnImgPic =view.findViewById(R.id.btnImgPic);
         if (Global.getLoginInfo().isLogin()) {
             btnLogin.setVisibility(View.GONE);
             //  btnLogout.setVisibility(View.VISIBLE);
             layLogined.setVisibility(View.VISIBLE);
+            btnImgPic.setVisibility(View.VISIBLE);
             tvUserId.setText(Global.getLoginInfo().getData().USER_ID);
             tvUserName.setText(Global.getLoginInfo().getData().USER_NAME);
 
             Global.getEditInfo().SetCircleImage(img_profile, Global.getLoginInfo().getData().thumnailPath);
         } else {
+            Global.getEditInfo().SetCircleImage(img_profile,null);
             btnLogin.setVisibility(View.VISIBLE);
             layLogined.setVisibility(View.GONE);
+            btnImgPic.setVisibility(View.GONE);
         }
 
-        view.findViewById(R.id.btnImgPic).setOnClickListener(new View.OnClickListener() {
+        btnImgPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Global.getFileInfo().ImageProfilePic();

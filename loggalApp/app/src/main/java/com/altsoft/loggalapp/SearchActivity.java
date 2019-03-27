@@ -48,7 +48,9 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import static android.speech.tts.TextToSpeech.ERROR;
+
 public class SearchActivity extends BaseActivity {
     private String TAG = SearchActivity.class.getSimpleName();
     private android.support.v7.widget.Toolbar tbMainSearch;
@@ -58,7 +60,7 @@ public class SearchActivity extends BaseActivity {
     SearchCategory searchCategory;
     SearchBanner searchBanner;
     SearchLocalBox searchLocalBox;
-   // SearchSignage searchSignage;
+    // SearchSignage searchSignage;
 
     private TextToSpeech tts;              // TTS 변수 선언
 
@@ -80,6 +82,7 @@ public class SearchActivity extends BaseActivity {
         super.onResume();
         searchAutoCompleate.onResume();
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -101,10 +104,11 @@ public class SearchActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         searchAutoCompleate.setUpViews();
-        searchBanner.setUpViews();;
+        searchBanner.setUpViews();
+        ;
         searchLocalBox.setUpViews();
         //  searchSignage.setUpViews();
-        ImageButton search = (ImageButton)findViewById(R.id.btnSearch);
+        ImageButton search = (ImageButton) findViewById(R.id.btnSearch);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +119,7 @@ public class SearchActivity extends BaseActivity {
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if(status != ERROR) {
+                if (status != ERROR) {
                     // 언어를 선택한다.
                     tts.setLanguage(Locale.KOREAN);
                 }
@@ -129,16 +133,14 @@ public class SearchActivity extends BaseActivity {
         });
 
 
+        ((TextView) findViewById(R.id.tvBannerPlus)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchBanner.doQuery(searchBanner.nPage + 1);
+            }
+        });
 
-
-        ((TextView)findViewById(R.id.tvBannerPlus)).setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 searchBanner.doQuery(searchBanner.nPage + 1);
-             }
-         });
-
-        ((TextView)findViewById(R.id.tvLocalboxPlus)).setOnClickListener(new View.OnClickListener() {
+        ((TextView) findViewById(R.id.tvLocalboxPlus)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchLocalBox.doQuery(searchLocalBox.nPage + 1);
@@ -147,17 +149,19 @@ public class SearchActivity extends BaseActivity {
         Global.getCommon().ProgressHide(this);
         doQuery();
     }
+
     private final int REQ_CODE_SPEECH_INPUT = 100;
+
     /**
      * Showing google speech input dialog
-     * */
+     */
 
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,"아무 말이나 해보세요");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "아무 말이나 해보세요");
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
@@ -166,9 +170,10 @@ public class SearchActivity extends BaseActivity {
                     Toast.LENGTH_SHORT).show();
         }
     }
+
     /**
      * Receiving speech input
-     * */
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -202,7 +207,6 @@ public class SearchActivity extends BaseActivity {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -215,14 +219,15 @@ public class SearchActivity extends BaseActivity {
     }
 
     /// 자동완성
-    private  class SearchAutoCompleate{
+    private class SearchAutoCompleate {
         SearchAdapter adapter;
         List<String> list;          // 데이터를 넣은 리스트변수
-        altAutoCmpleateTextView autoCompleteTextView ;
+        altAutoCmpleateTextView autoCompleteTextView;
         Boolean bAutoDrop = false;
         String beforeData = "";
 
-        private SearchAutoCompleate(){}
+        private SearchAutoCompleate() {
+        }
 
         private void onResume() {
             Global.getCommon().hideSoftInputWindow(activity, autoCompleteTextView, true);
@@ -238,7 +243,8 @@ public class SearchActivity extends BaseActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     autoCompleteTextView.dismissDropDown();
 
-                    adapter.setSelectedItem(adapter.getObject(position));;
+                    adapter.setSelectedItem(adapter.getObject(position));
+                    ;
 
                     bAutoDrop = false;
                 }
@@ -259,13 +265,12 @@ public class SearchActivity extends BaseActivity {
                 @Override
                 public void afterTextChanged(Editable s) {
                     String data = s.toString();
-                    if(!beforeData.equals(data)) {
+                    if (!beforeData.equals(data)) {
                         if (data.length() > 0) {
                             settingList(data);
                         }
-                        if(adapter != null) {
-                            if(!(adapter.getSelectedItem().NAME.equals(s.toString())))
-                            {
+                        if (adapter != null) {
+                            if (!(adapter.getSelectedItem().NAME.equals(s.toString()))) {
                                 adapter.setSelectedItem(new CODE_DATA());
                             }
                         }
@@ -276,7 +281,7 @@ public class SearchActivity extends BaseActivity {
         }
 
         /// 자동완성 값 셋팅
-        private void settingList(String query){
+        private void settingList(String query) {
             list = new ArrayList<String>();
 
             KEYWORD_COND Cond = new KEYWORD_COND();
@@ -289,37 +294,40 @@ public class SearchActivity extends BaseActivity {
                     public void onResponse(Call<List<CODE_DATA>> call, Response<List<CODE_DATA>> response) {
                         list = new ArrayList<String>();
                         List<CODE_DATA> rtn = response.body();
-                        for(CODE_DATA data : rtn) {
-                           list.add(data.NAME);
+                        for (CODE_DATA data : rtn) {
+                            list.add(data.NAME);
                         }
                         adapter = new SearchAdapter(activity, R.layout.autocomplate_list_item, rtn);
                         autoCompleteTextView.setAdapter(adapter);
-                        if(bAutoDrop) {
+                        if (bAutoDrop) {
                             autoCompleteTextView.showDropDown();
                         }
                     }
+
                     @Override
                     public void onFailure(Call<List<CODE_DATA>> call, Throwable t) {
 
                     }
                 });
 
-            }catch(Exception ex) {
+            } catch (Exception ex) {
                 Log.d("로그", ex.getMessage());
             }
         }
     }
+
     /// 카테고리 검색
-    private  class SearchCategory {
+    private class SearchCategory {
         MultiSelectToggleGroup multiCustomCompoundButton;
-        private SearchCategory(){
+
+        private SearchCategory() {
             multiCustomCompoundButton = activity.findViewById(R.id.group_multi_custom_compoundbutton);
             SetCategoryList();
             multiCustomCompoundButton.setOnCheckedChangeListener(new MultiSelectToggleGroup.OnCheckedStateChangeListener() {
                 @Override
                 public void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked) {
                     //Set<Integer> chklist = multiCustomCompoundButton.getCheckedIds();
-                    for(Integer  data: multiCustomCompoundButton.getCheckedIds())
+                    for (Integer data : multiCustomCompoundButton.getCheckedIds())
                         Log.v("dd", "onCheckedStateChanged(): " + checkedId + ", isChecked = " + isChecked);
 
                     searchBanner.doQuery(1);
@@ -342,58 +350,58 @@ public class SearchActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<List<CATEGORY_LIST>> call, Response<List<CATEGORY_LIST>> response) {
                         List<CATEGORY_LIST> list = response.body();
-                        for(CATEGORY_LIST data  : list)
-                        {
+                        for (CATEGORY_LIST data : list) {
                             multiCustomCompoundButton.addButton(data.CATEGORY_CODE, data.CATEGORY_NAME);
                         }
                     }
+
                     @Override
                     public void onFailure(Call<List<CATEGORY_LIST>> call, Throwable t) {
                     }
                 });
 
-            }catch(Exception ex) {
+            } catch (Exception ex) {
                 Log.d("로그", ex.getMessage());
             }
         }
     }
+
     /// 배너검색
-    private  class SearchBanner {
+    private class SearchBanner {
 
         SearchBannerAdapter adapter;
-        ListView listview ;
+        ListView listview;
         boolean bLastPage = false;
         Integer nFirstPageSize = 3;
         Integer nPageSize = 20;
         Integer nPage = 1;
 
 
-
-
-        private void setUpViews()
-        {
+        private void setUpViews() {
             listview = (ListView) activity.findViewById(R.id.listview1);
             adapter = new SearchBannerAdapter();
 
         }
-        private void doQuery()
-        {
+
+        private void doQuery() {
             this.doQuery(1);
         }
-        private void doQuery(Integer page)
-        {
+
+        private void doQuery(Integer page) {
 
             try {
                 bLastPage = false;
 
                 doQuery(page, (page == 1) ? nFirstPageSize : nPageSize);
-            }catch(Exception ex){ Log.d(TAG, ex.getMessage());}
+            } catch (Exception ex) {
+                Log.d(TAG, ex.getMessage());
+            }
         }
+
         /// 모바일 조회
-        private void doQuery(Integer page, Integer pagesize)
-        {
-            if( bLastPage ) {
-                Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+        private void doQuery(Integer page, Integer pagesize) {
+            if (bLastPage) {
+                Toast.makeText(activity, "데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                 return;
             }
             nPage = page;
@@ -403,25 +411,22 @@ public class SearchActivity extends BaseActivity {
             Cond.PAGE = page;
             //Cond.LATITUDE = Global.getMapInfo().latitude;
             //Cond.LONGITUDE = Global.getMapInfo().longitude;
-            Cond.SEARCH_LAT = Global.getSecurityInfo().EncryptAes( Global.getMapInfo().latitude.toString());
-            Cond.SEARCH_LONG = Global.getSecurityInfo().EncryptAes( Global.getMapInfo().longitude.toString());
+            Cond.SEARCH_LAT = Global.getSecurityInfo().EncryptAes(Global.getMapInfo().latitude.toString());
+            Cond.SEARCH_LONG = Global.getSecurityInfo().EncryptAes(Global.getMapInfo().longitude.toString());
 
             Cond.USER_ID = Global.getSecurityInfo().EncryptAes(Global.getLoginInfo().USER_ID);
             Object[] arrCategory = searchCategory.multiCustomCompoundButton.getCheckedIds().toArray();
-            for(int i=0;  i < arrCategory.length; i++){
-                if(i==0) Cond.CATEGORY_CODES =   arrCategory[i].toString();
+            for (int i = 0; i < arrCategory.length; i++) {
+                if (i == 0) Cond.CATEGORY_CODES = arrCategory[i].toString();
                 else Cond.CATEGORY_CODES = Cond.CATEGORY_CODES + "," + arrCategory[i].toString();
             }
 
-            if(searchAutoCompleate.adapter != null
+            if (searchAutoCompleate.adapter != null
                     && searchAutoCompleate.adapter.getSelectedItem() != null
-                    && searchAutoCompleate.adapter.getSelectedItem().CODE != null)
-            {
+                    && searchAutoCompleate.adapter.getSelectedItem().CODE != null) {
                 Cond.KEYWORD_CODE = searchAutoCompleate.adapter.getSelectedItem().CODE;
                 Cond.KEYWORD_CODE = (Cond.KEYWORD_CODE == null || Cond.KEYWORD_CODE < 0) ? null : Cond.KEYWORD_CODE;
-            }
-            else
-            {
+            } else {
                 Cond.KEYWORD_NAME = searchAutoCompleate.autoCompleteTextView.getText().toString();
             }
 
@@ -437,13 +442,13 @@ public class SearchActivity extends BaseActivity {
                     List<MOBILE_AD_SEARCH_DATA> list = response.body();
                     Global.getCommon().ProgressHide(activity);
 
-                    if((nPage ==  1 &&  list.size() < nFirstPageSize)
-                            || ( list.size() > nFirstPageSize && list.size() < nPageSize)) {
+                    if ((nPage == 1 && list.size() < nFirstPageSize)
+                            || (list.size() > nFirstPageSize && list.size() < nPageSize)) {
                         bLastPage = true;
                     }
 
                     //if(searchBannerAdapter.SetDataBind(list, (list.size() <= 4) ? true : false  ) == true) return;
-                    if(adapter.SetDataBind(list, nPage == 1 ? true : false) ) return;
+                    if (adapter.SetDataBind(list, nPage == 1 ? true : false)) return;
                     listview.setAdapter(adapter);
                     Global.getCommon().getTotalHeightofListView(listview);
                     /*if(listview.getCount() == 0) {
@@ -479,7 +484,7 @@ public class SearchActivity extends BaseActivity {
                     }
                 });
 */
-                   listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             MOBILE_AD_SEARCH_DATA data = adapter.getItem(position);
@@ -490,7 +495,7 @@ public class SearchActivity extends BaseActivity {
                                 e.printStackTrace();
                             }
                             //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
-                            Global.getStringInfo().MessageShow(adItem.TITLE  + "가 선택되었습니다.");
+                            Global.getStringInfo().MessageShow(adItem.TITLE + "가 선택되었습니다.");
                             Intent intent = new Intent(activity, WebViewActivity.class);
                             intent.putExtra("T_AD", adItem);
                             activity.startActivity(intent);
@@ -499,6 +504,7 @@ public class SearchActivity extends BaseActivity {
                         }
                     });
                 }
+
                 @Override
                 public void onFailure(Call<List<MOBILE_AD_SEARCH_DATA>> call, Throwable t) {
                     Global.getCommon().ProgressHide(activity);
@@ -507,10 +513,11 @@ public class SearchActivity extends BaseActivity {
         }
 
     }
+
     /// 로컬박스 조회
-    private  class SearchLocalBox {
+    private class SearchLocalBox {
         LocalBoxListViewAdapter adapter;
-        ListView listview ;
+        ListView listview;
         boolean bLastPage = false;
         Integer nFirstPageSize = 3;
         Integer nPageSize = 20;
@@ -518,29 +525,30 @@ public class SearchActivity extends BaseActivity {
         boolean lastitemVisibleFlag = false;
         boolean mLockListView = false;          // 데이터 불러올때 중복안되게 하기위한 변수
 
-        private void setUpViews()
-        {
+        private void setUpViews() {
             listview = (ListView) activity.findViewById(R.id.listview_localbox);
             adapter = new LocalBoxListViewAdapter();
 
         }
-        private void doQuery()
-        {
+
+        private void doQuery() {
             doQuery(1);
         }
-        private void doQuery(Integer page)
-        {
+
+        private void doQuery(Integer page) {
 
             try {
                 bLastPage = false;
                 doQuery(page, (page == 1) ? nFirstPageSize : nPageSize);
-            }catch(Exception ex){ Log.d(TAG, ex.getMessage());}
+            } catch (Exception ex) {
+                Log.d(TAG, ex.getMessage());
+            }
         }
+
         /// 모바일 조회
-        private void doQuery(Integer page, Integer pagesize)
-        {
-            if( bLastPage ) {
-                Toast.makeText(activity,"데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
+        private void doQuery(Integer page, Integer pagesize) {
+            if (bLastPage) {
+                Toast.makeText(activity, "데이터가 모두 검색되었습니다.", Toast.LENGTH_LONG).show();
                 return;
             }
             nPage = page;
@@ -548,11 +556,11 @@ public class SearchActivity extends BaseActivity {
 
             Cond.PAGE_COUNT = pagesize;
             Cond.PAGE = page;
-           // Cond.LONGITUDE = Global.getMapInfo().longitude;
+            // Cond.LONGITUDE = Global.getMapInfo().longitude;
             //Cond.LATITUDE  = Global.getMapInfo().latitude;
 
 
-            Cond.SEARCH_LAT =  Global.getSecurityInfo().EncryptAes(Global.getMapInfo().longitude.toString()) ;
+            Cond.SEARCH_LAT = Global.getSecurityInfo().EncryptAes(Global.getMapInfo().longitude.toString());
             /// AES256으로 암호화된 경도
             Cond.SEARCH_LONG = Global.getSecurityInfo().EncryptAes(Global.getMapInfo().latitude.toString());
             Object[] arrCategory = searchCategory.multiCustomCompoundButton.getCheckedIds().toArray();
@@ -570,13 +578,13 @@ public class SearchActivity extends BaseActivity {
                     List<DEVICE_LOCATION> list = response.body();
                     Global.getCommon().ProgressHide(activity);
 
-                    if((nPage ==  1 &&  list.size() < nFirstPageSize)
-                            || ( list.size() > nFirstPageSize && list.size() < nPageSize)) {
+                    if ((nPage == 1 && list.size() < nFirstPageSize)
+                            || (list.size() > nFirstPageSize && list.size() < nPageSize)) {
                         bLastPage = true;
                     }
 
                     //if(searchBannerAdapter.SetDataBind(list, (list.size() <= 4) ? true : false  ) == true) return;
-                    if(adapter.SetDataBind(list, nPage == 1 ? true : false) ) return;
+                    if (adapter.SetDataBind(list, nPage == 1 ? true : false)) return;
                     listview.setAdapter(adapter);
                  /*   if(listview.getCount() == 0) {
                         activity.findViewById(R.id.laylocalbox).setVisibility(LinearLayout.GONE);
@@ -591,7 +599,7 @@ public class SearchActivity extends BaseActivity {
                             DEVICE_LOCATION data = adapter.getItem(position);
                             //Toast.makeText(getActivity(),adItem.TITLE  + "가 선택되었습니다.", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(activity, LocalboxbannerListActivity.class);
-                            intent.putExtra("DEVICE_CODE", data.DEVICE_CODE );
+                            intent.putExtra("DEVICE_CODE", data.DEVICE_CODE);
                             activity.startActivity(intent);
                         }
                     });

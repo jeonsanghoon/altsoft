@@ -43,6 +43,7 @@ android {
 
             mavenCentral()
             maven { url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/' }
+            maven { url 'https://jitpack.io' }
         }
     }
     sourceSets {
@@ -110,6 +111,7 @@ dependencies {
     implementation files('libs/libDaumMapAndroid.jar')
     implementation project(':bottomnavigation')
     implementation project(':altframework')
+    implementation 'com.github.abumoallim:Android-Multi-Select-Dialog:v1.9'
 
 
 }

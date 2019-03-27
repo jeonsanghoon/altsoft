@@ -44,22 +44,23 @@
                         android:id="@+id/btnMic"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
+                        android:layout_alignTop="@+id/autoCompleteTextView"
+                        android:layout_alignRight="@+id/autoCompleteTextView"
+                        android:layout_alignBottom="@+id/autoCompleteTextView"
                         android:background="@android:color/transparent"
                         android:paddingRight="10dp"
-                        android:layout_alignTop="@+id/autoCompleteTextView"
-                        android:layout_alignBottom="@+id/autoCompleteTextView"
-                        android:layout_alignRight="@+id/autoCompleteTextView"
                         android:src="@drawable/ic_baseline_mic_none_24px" />
+
                     <ImageButton
                         android:id="@+id/btnSearch"
                         android:layout_width="wrap_content"
                         android:layout_height="48dp"
+                        android:layout_alignTop="@+id/autoCompleteTextView"
+                        android:layout_alignRight="@+id/autoCompleteTextView"
+                        android:layout_alignBottom="@+id/autoCompleteTextView"
                         android:background="@android:color/transparent"
                         android:paddingRight="10dp"
-                        android:layout_alignTop="@+id/autoCompleteTextView"
-                        android:layout_alignBottom="@+id/autoCompleteTextView"
-                        android:layout_alignRight="@+id/autoCompleteTextView"
-                        android:src="@drawable/ic_search" />
+                        android:src="@drawable/ic_baseline_search_24px" />
                 </LinearLayout>
 
 
@@ -75,13 +76,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="55dp"
-            android:paddingBottom="20dp"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
 
             <LinearLayout
                 android:id="@+id/laybanner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -101,10 +104,14 @@
                     android:layout_height="1dp"
                     android:background="@color/gray" />
 
+
                 <com.altsoft.togglegroupbutton.MultiSelectToggleGroup
                     android:id="@+id/group_multi_custom_compoundbutton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+
+                    android:background="@color/black"
                     android:padding="8dp"
                     app:tbgChildSpacing="8dp"></com.altsoft.togglegroupbutton.MultiSelectToggleGroup>
 
@@ -131,8 +138,7 @@
                     android:gravity="right"
                     android:paddingTop="5dp"
                     android:text="더보기"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
@@ -168,6 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/gray" />
+
                 <TextView
                     android:id="@+id/tvLocalboxPlus"
                     android:layout_width="match_parent"
@@ -175,60 +182,59 @@
                     android:gravity="right"
                     android:paddingTop="5dp"
                     android:text="더보기"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
             </LinearLayout>
-<!--
-            <LinearLayout
-                android:id="@+id/laySignage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <!--
+                        <LinearLayout
+                            android:id="@+id/laySignage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:background="@color/gray"></LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="5dp"
+                                android:background="@color/gray"></LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="사이니지"
-                    android:textSize="16dp" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="사이니지"
+                                android:textSize="16dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/gray" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/gray" />
 
-                <ListView
-                    android:id="@+id/listview_signage"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:scrollbars="none" />
+                            <ListView
+                                android:id="@+id/listview_signage"
+                                android:layout_width="match_parent"
+                                android:layout_height="300dp"
+                                android:scrollbars="none" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/gray" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="right"
-                    android:paddingTop="5dp"
-                    android:text="더보기" />
-            </LinearLayout>
--->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/gray" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right"
+                                android:paddingTop="5dp"
+                                android:text="더보기" />
+                        </LinearLayout>
+            -->
             <TextView
                 android:id="@+id/txtSearchNo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:paddingTop="20dp"
+                android:text="검색된 데이터가 없습니다."
                 android:textSize="20dp"
-                android:visibility="gone"
-                android:text="검색된 데이터가 없습니다."/>
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 

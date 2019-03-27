@@ -19,7 +19,7 @@ import java.util.List;
 
 public class BannerListViewAdapter extends BaseAdapter {
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<T_AD> listViewItemList = new ArrayList<T_AD>() ;
+    public ArrayList<T_AD> listViewItemList = new ArrayList<T_AD>() ;
 
     // ListViewAdapter의 생성자
     public BannerListViewAdapter() {

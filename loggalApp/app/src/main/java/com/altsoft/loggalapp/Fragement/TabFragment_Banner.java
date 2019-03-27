@@ -38,26 +38,32 @@ public class TabFragment_Banner extends BaseFragment {
     boolean bLastPage = false;
     Integer nPageSize = 30;
     Integer nPage = 1;
+    View view;
     int nCnt = 0;
-    private View mFragementView; //레이아웃이 담길 변수
 
-    private static List<T_AD> list;
-    Boolean bFirst = true;
     View selectedview;
     T_AD selectedData;
     boolean bLoad = false;
+
+    public TabFragment_Banner() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        adapter = new BannerListViewAdapter();
+        view = inflater.inflate(R.layout.fragment_tab_banner, container, false);
+        if(adapter == null) adapter = new BannerListViewAdapter();
+        if(nPage == 1) GetBannerList();
+        else{
+            if(listview == null) {
+                listview = (ListView) view.findViewById(R.id.listview1);
 
-        GetBannerList();
+            }
 
+        }
         bLoad = true;
-        return inflater.inflate(R.layout.fragment_tab_banner, container, false);
-
+        return view;
     }
 
     @Override
@@ -65,11 +71,10 @@ public class TabFragment_Banner extends BaseFragment {
         super.onStart();
     }
 
-    /*
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }*/
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -85,8 +90,6 @@ public class TabFragment_Banner extends BaseFragment {
         Global.getData().BANNER_BOOKMARK_YN = null;
     }
 
-    private void setContentView(int activity_main) {
-    }
 
     public void GetBannerList() {
         this.GetBannerList(1);
@@ -101,8 +104,8 @@ public class TabFragment_Banner extends BaseFragment {
             Cond.USER_ID = Global.getLoginInfo().USER_ID;
             //Cond.LATITUDE = Global.getMapInfo().latitude;
             //Cond.LONGITUDE = Global.getMapInfo().longitude;
-            Cond.SEARCH_LAT = Global.getSecurityInfo().EncryptAes( Global.getMapInfo().latitude.toString());
-            Cond.SEARCH_LONG = Global.getSecurityInfo().EncryptAes( Global.getMapInfo().longitude.toString());
+            Cond.SEARCH_LAT = Global.getSecurityInfo().EncryptAes(Global.getMapInfo().latitude.toString());
+            Cond.SEARCH_LONG = Global.getSecurityInfo().EncryptAes(Global.getMapInfo().longitude.toString());
             Cond.PageCount = nPageSize;
             Cond.Page = page;
             if (Cond.Page != 1 && bLastPage) {
@@ -115,7 +118,7 @@ public class TabFragment_Banner extends BaseFragment {
             if (Cond.Page == 1 && listview != null) {
                 adapter.clearData();
                 listview.setAdapter(adapter);
-                listview.setAdapter(null);
+               // listview.setAdapter(null);
             }
             String sAddr = Global.getMapInfo().currentLocationAddress;
             Call<List<T_AD>> call = Global.getAPIService().GetBannerList(Cond);
@@ -133,7 +136,7 @@ public class TabFragment_Banner extends BaseFragment {
                             if (adapter.SetDataBind(list) == true) {
                                 return;
                             }
-                            listview = (ListView) getView().findViewById(R.id.listview1);
+                            if(listview == null) listview = (ListView) getView().findViewById(R.id.listview1);
                             listview.setAdapter(adapter);
                             listViewEventInit();
                         }
