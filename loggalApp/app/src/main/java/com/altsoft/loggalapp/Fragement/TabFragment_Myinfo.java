@@ -107,7 +107,7 @@ public class TabFragment_Myinfo extends BaseFragment {
                 tvUserName.setText("");
                 bottomNavigation.getTabItems().get(3).setText("내정보");
                 ImageView img_profile = view.findViewById(R.id.img_profile);
-
+                img_profile.setVisibility(View.GONE);
                 Global.getEditInfo().SetCircleImage(img_profile, null);
                 Global.getLoginInfo().setData(null);
                 Toast.makeText(

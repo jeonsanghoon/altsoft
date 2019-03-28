@@ -230,6 +230,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
             } catch (Exception ex) {
             }
+        }else{
+            ((Button) findViewById(R.id.btnImgPic)).setVisibility(View.GONE);
         }
 
         Global.getCommon().ProgressHide();
