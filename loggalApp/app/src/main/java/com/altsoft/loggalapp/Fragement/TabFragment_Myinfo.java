@@ -154,7 +154,10 @@ public class TabFragment_Myinfo extends BaseFragment {
                 //  btnLogout.setVisibility(View.VISIBLE);
                 layLogined.setVisibility(View.VISIBLE);
 
+
+
             } else {
+                Global.getEditInfo().SetCircleImage(img_profile, "");
                 btnLogin.setVisibility(View.VISIBLE);
                 layLogined.setVisibility(View.GONE);
             }

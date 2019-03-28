@@ -50,13 +50,13 @@ import java.util.ArrayList;
 /**
  *
  */
-public class MainActivity  extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     BottomNavigation bottomNavigation;
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
     private final int PERMISSIONS_ACCESS_COARSE_LOCATION = 1001;
     private boolean isPermission = false;
 
-    public  static Activity activity;
+    public static Activity activity;
     private ViewPager mViewPager;
 
     private PagerAdapter mPagerAdapter;
@@ -71,27 +71,34 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         this.tabInit();
 
 
-
-        Log.d("hashKey",Global.getCommon().getKeyHash(this));
+        Log.d("hashKey", Global.getCommon().getKeyHash(this));
         getSupportActionBar().setTitle("loggal");
 
         this.gpsInit();
         this.LoginInfoSet();
     }
+
+    Boolean bImgProfilLoad = false;
+
     @Override
     public void onResume() {
         super.onResume();
-
-    }
-    private void CheckOnline() {
-        if(!Global.getValidityCheck().isOnline())
-        {
-            Toast.makeText(
-                    getApplicationContext(),
-                    "인터넷 연결을 확인하시고 다시 실행하세요",
-                    Toast.LENGTH_LONG).show();
+        if (bImgProfilLoad) {
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        public void run() {
+                            try {
+                                Global.getEditInfo().SetCircleImage((ImageView) findViewById(R.id.img_profile), Global.getLoginInfo().getData().getThumnailPath());
+                                bImgProfilLoad = false;
+                            } catch (Exception ex) {
+                            }
+                        }
+                    },
+                    500);
+            bImgProfilLoad = false;
         }
     }
+
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -108,8 +115,8 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (item.getItemId()){
-            case android.R.id.home:{ //toolbar의 back키 눌렀을 때 동작
+        switch (item.getItemId()) {
+            case android.R.id.home: { //toolbar의 back키 눌렀을 때 동작
                 finish();
                 return true;
             }
@@ -121,20 +128,20 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
             case R.id.action_map_search: {
                 Intent intent = new Intent(this, kakaoMapActivity.class);
 
-                switch(bottomNavigation.getSelectedItem()) {
+                switch (bottomNavigation.getSelectedItem()) {
                     case 0:
-                            intent.putExtra("mapType", "banner");
-                            this.startActivityForResult(intent, enResult.BannerRequest.getValue());
+                        intent.putExtra("mapType", "banner");
+                        this.startActivityForResult(intent, enResult.BannerRequest.getValue());
                         break;
                     case 1:
-                        if(!(Global.getData().devicelist == null || Global.getData().devicelist.size() == 0)) {
+                        if (!(Global.getData().devicelist == null || Global.getData().devicelist.size() == 0)) {
                             //intent.putExtra("list2", (ArrayList<DEVICE_LOCATION>) Global.getData().devicelist);
                             intent.putExtra("mapType", "localbox");
                             this.startActivityForResult(intent, enResult.LocalboxRequest.getValue());
                         }
                         break;
                     case 2:
-                        if(!(Global.getData().stationlist == null || Global.getData().stationlist.size() == 0)) {
+                        if (!(Global.getData().stationlist == null || Global.getData().stationlist.size() == 0)) {
                             //intent.putExtra("list2", (ArrayList<DEVICE_LOCATION>) Global.getData().devicelist);
                             intent.putExtra("mapType", "localstation");
                             this.startActivityForResult(intent, enResult.LoglstationRequest.getValue());
@@ -148,7 +155,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
                             this.startActivityForResult(intent, enResult.LoglstationRequest.getValue());
                         }
                         break;*/
-                   case 3:
+                    case 3:
 
                         /*if(!(Global.getData().signagelist == null || Global.getData().signagelist.size() == 0))
                         {
@@ -163,6 +170,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         }
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -171,92 +179,93 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
             if (requestCode == enResult.BannerRequest.getValue()) {
                 try {
                     ((TabFragment_Banner) mPagerAdapter.adapterList.get(0)).GetBannerList();
-                }catch(Exception ex){}
+                } catch (Exception ex) {
+                }
                 try {
                     ((TabFragment_localbox) mPagerAdapter.adapterList.get(1)).GetDeviceLocation();
-                }catch(Exception ex)
-                {}
+                } catch (Exception ex) {
+                }
             } else if (requestCode == enResult.LoginRequest.getValue()) {
                 LoginInfoSet();
                 afterLoginExec();
-              //  if(Global.getLoginInfo().isLogin()) bottomNavigation.setSelectedItem(0);
+                //  if(Global.getLoginInfo().isLogin()) bottomNavigation.setSelectedItem(0);
 
-            }else if(requestCode == enResult.ImagePic.getValue())
-            {
+            } else if (requestCode == enResult.ImagePic.getValue()) {
 
 
             }
 
-        }
-        else if(resultCode == enResult.LoginRequest.getValue()) {
+        } else if (resultCode == enResult.LoginRequest.getValue()) {
             LoginInfoSet();
             afterLoginExec();
-           // if(Global.getLoginInfo().isLogin()) bottomNavigation.setSelectedItem(0);
-        }
-        else if(resultCode == enResult.LogOut.getValue()) {
+            // if(Global.getLoginInfo().isLogin()) bottomNavigation.setSelectedItem(0);
+        } else if (resultCode == enResult.LogOut.getValue()) {
             afterLoginExec();
         }
         Global.getCommon().ProgressHide();
     }
-    public void afterLoginExec()
-    {
-        ((TabFragment_Banner)mPagerAdapter.getItem(0)).GetBannerList();
-        ((TabFragment_localbox)mPagerAdapter.getItem(1)).GetDeviceLocation();
-        ((TabFragment_localStation)mPagerAdapter.getItem(2)).GetLocalStation();
+
+    public void afterLoginExec() {
+        ((TabFragment_Banner) mPagerAdapter.getItem(0)).GetBannerList();
+        ((TabFragment_localbox) mPagerAdapter.getItem(1)).GetDeviceLocation();
+        ((TabFragment_localStation) mPagerAdapter.getItem(2)).GetLocalStation();
     }
 
 
     // 로그인정보 셋팅
-    public void LoginInfoSet()
-    {
-        if(Global.getLoginInfo().isLogin()) {
+    public void LoginInfoSet() {
+        if (Global.getLoginInfo().isLogin()) {
             try {
                 bottomNavigation.getTabItems().get(3).setText(Global.getLoginInfo().getData().USER_NAME);
-                if(bottomNavigation.getSelectedItem() == 3) {
-                    ((TextView) findViewById(R.id.tvUserName)).setText(Global.getLoginInfo().getData().USER_NAME );
-                    ((TextView) findViewById(R.id.tvUserId)).setText(Global.getLoginInfo().getData().USER_ID );
-                    Global.getEditInfo().SetCircleImage((ImageView)findViewById(R.id.img_profile), Global.getLoginInfo().getData().getThumnailPath());
+                if (bottomNavigation.getSelectedItem() == 3) {
+                    ((TextView) findViewById(R.id.tvUserName)).setText(Global.getLoginInfo().getData().USER_NAME);
+                    ((TextView) findViewById(R.id.tvUserId)).setText(Global.getLoginInfo().getData().USER_ID);
 
-                    ((Button)findViewById(R.id.btnLogin)).setVisibility(View.GONE);
-                    ((Button)findViewById(R.id.btnLogout)).setVisibility(View.VISIBLE);
 
+                    ((Button) findViewById(R.id.btnImgPic)).setVisibility(View.VISIBLE);
+                    ((Button) findViewById(R.id.btnLogin)).setVisibility(View.GONE);
+                    ((Button) findViewById(R.id.btnLogout)).setVisibility(View.VISIBLE);
+                    bImgProfilLoad = true;
+                    Global.getEditInfo().SetCircleImage((ImageView) findViewById(R.id.img_profile), Global.getLoginInfo().getData().getThumnailPath());
                 }
-            }catch(Exception ex){}
+            } catch (Exception ex) {
+            }
         }
+
         Global.getCommon().ProgressHide();
-        try {
-            Global.getEditInfo().SetCircleImage((ImageView) findViewById(R.id.img_profile), Global.getLoginInfo().getData().getThumnailPath());
-        }catch(Exception ex){}
+
     }
 
     private void onInitView() {
 
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this,android.R.color.white));
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
 
         Global.getCommon().ProgressHide(this);
     }
+
     private Menu mOptionsMenu;
-    private  void setVisibleButton(Boolean bSearch, Boolean bMap)
-    {
+
+    private void setVisibleButton(Boolean bSearch, Boolean bMap) {
         try {
-            if(mOptionsMenu != null) {
+            if (mOptionsMenu != null) {
                 MenuItem searchitem = mOptionsMenu.findItem(R.id.action_search);
                 searchitem.setVisible(bSearch);
                 MenuItem item = mOptionsMenu.findItem(R.id.action_map_search);
                 item.setVisible(bMap);
             }
-        }catch(Exception ex){}
+        } catch (Exception ex) {
+        }
     }
 
 
     private void tabInit() {
 
-        bottomNavigation=(BottomNavigation)findViewById(R.id.bottom_navigation);
-    //    bottomNavigation.setDefaultItem(0);
+        bottomNavigation = (BottomNavigation) findViewById(R.id.bottom_navigation);
+        //    bottomNavigation.setDefaultItem(0);
         bottomNavigation.setType(bottomNavigation.TYPE_FIXED);
 
         bottomNavigation.setOnSelectedItemChangeListener(new OnSelectedItemChangeListener() {
@@ -264,28 +273,28 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
             public void onSelectedItemChanged(int itemId) {
                 setVisibleButton(false, false);
 
-                switch (itemId){
+                switch (itemId) {
                     case R.id.tab_banner:
-                        mViewPager.setCurrentItem(0,false);
+                        mViewPager.setCurrentItem(0, false);
                         setVisibleButton(true, true);
                         break;
                     case R.id.tab_localbox:
-                        mViewPager.setCurrentItem(1,false);
+                        mViewPager.setCurrentItem(1, false);
                         setVisibleButton(true, false);
                         break;
                     case R.id.tab_localstation:
-                        mViewPager.setCurrentItem(2,false);
-                        setVisibleButton(false, true );
+                        mViewPager.setCurrentItem(2, false);
+                        setVisibleButton(false, true);
                         break;
                     case R.id.tab_myinfo:
-                        mViewPager.setCurrentItem(3,false);
+                        mViewPager.setCurrentItem(3, false);
 
-                        if(!Global.getLoginInfo().isLogin()) {
+                        if (!Global.getLoginInfo().isLogin()) {
                             Intent intent = new Intent(Global.getCurrentActivity(), LoginActivity.class);
                             Global.getCurrentActivity().startActivityForResult(intent, enResult.LoginRequest.getValue());
                         }
-                        setVisibleButton(false, false );
-                        if(Global.getLoginInfo().isLogin()) {
+                        setVisibleButton(false, false);
+                        if (Global.getLoginInfo().isLogin()) {
                             LoginInfoSet();
                         }
                         break;
@@ -293,7 +302,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
             }
         });
-     }
+    }
 
     // 위치 권한 요청
     private Boolean callPermission() {
@@ -308,7 +317,7 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
 
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED){
+                != PackageManager.PERMISSION_GRANTED) {
 
             requestPermissions(
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -318,9 +327,10 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
         }
         return isPermission;
     }
+
     private void gpsInit() {
         // 권한 요청을 해야 함
-        if(!callPermission()) return;
+        if (!callPermission()) return;
 
 
         // GPS 사용유무 가져오기
@@ -344,34 +354,38 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     private void initViewPager() {
 
         mViewPager = findViewById(R.id.pager);
-        mPagerAdapter = new PagerAdapter( getSupportFragmentManager());
+        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
 
-        mPagerAdapter.addFragment( new TabFragment_Banner());
-        mPagerAdapter.addFragment( new TabFragment_localbox());
-        mPagerAdapter.addFragment( new TabFragment_localStation());
-        mPagerAdapter.addFragment( new TabFragment_Myinfo());
+        mPagerAdapter.addFragment(new TabFragment_Banner());
+        mPagerAdapter.addFragment(new TabFragment_localbox());
+        mPagerAdapter.addFragment(new TabFragment_localStation());
+        mPagerAdapter.addFragment(new TabFragment_Myinfo());
 
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount());
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
+
             @Override
             public void onPageSelected(int position) {
-               bottomNavigation.setSelectedItem(position);
+                bottomNavigation.setSelectedItem(position);
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         });
     }
+
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
             @Override
-            public void onCompleteLogout() {}
+            public void onCompleteLogout() {
+            }
         });
     }
 
@@ -383,12 +397,12 @@ public class MainActivity  extends BaseActivity implements NavigationView.OnNavi
     public class PagerAdapter extends FragmentStatePagerAdapter {
 
         ArrayList<android.support.v4.app.Fragment> adapterList = new ArrayList<>();
+
         public PagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-        public void addFragment(android.support.v4.app.Fragment frag)
-        {
+        public void addFragment(android.support.v4.app.Fragment frag) {
             adapterList.add(frag);
         }
 
